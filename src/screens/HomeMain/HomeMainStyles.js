@@ -315,10 +315,10 @@ homeOptionText: {
     paddingVertical: 15,
     marginVertical: Platform.OS === 'ios' ? null : 20,
 },
-// headerLeft: {
-//     flexDirection: "row",
-//     alignItems: "center",
-// },
+headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+},
 profileImageContainer: {
     width: 50,
     height: 50,
