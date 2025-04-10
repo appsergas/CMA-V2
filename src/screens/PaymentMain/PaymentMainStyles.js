@@ -61,15 +61,7 @@ const styles = StyleSheet.create({
     // height: "100%",
     // overflow: "scroll"
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Regular",
-      fontSize: 16,
-      color: "rgba(142, 131, 131, 1)"
-  },
+ 
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,

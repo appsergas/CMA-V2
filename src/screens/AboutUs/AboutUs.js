@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './AboutUsStyles'
 
 import React, { Component } from 'react'

@@ -21,7 +21,9 @@ import InfoContainer from '../../components/molecules/InfoContainer';
 import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
-import { ArrowLeftIcon, DisConIcon, MeterIcon, NewConIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon, DisConIcon, MeterIcon, NewConIcon } from '../../../assets/icons'
 
 
 
@@ -88,19 +90,14 @@ class SupportMain extends Component {
 
     render() {
         return (
-            <ImageBackground
-                source={require('../../assets/images/coverheader.png')}
-                style={{ flex: 1, width: '100%', height: '100%' }}
-                resizeMode="cover">
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
                 <SafeAreaView style={{ height: "100%", flex: 1 }} >
-
-                    {/* header */}
                     <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
                         <View style={Mainstyles.headerLeft}>
                             <TouchableOpacity
                                 style={Mainstyles.backbutton}
                                 onPress={() => this.props.navigation.goBack()} >
-                                <ArrowLeftIcon />
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
                             <View style={Mainstyles.textContainer}>
                                 <View style={Mainstyles.nameRow}>
@@ -108,7 +105,6 @@ class SupportMain extends Component {
                                         Services
                                     </Text>
                                 </View>
-
                             </View>
                         </View>
                     </View>
@@ -117,9 +113,8 @@ class SupportMain extends Component {
                             Explore all our gas services, from new connections to meter readings and more!
                         </Text>
                     </View>
-                    {/* header */}
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
 
-                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ ...Mainstyles.body, height: Platform.OS == 'ios' ? Dimensions.HP_2 : Dimensions.HP_2, }}>
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
 
@@ -159,7 +154,7 @@ class SupportMain extends Component {
                                             </View>
                                             <View style={Mainstyles.payBillView}>
                                                 <TouchableOpacity style={Mainstyles.payBillButton}>
-                                                    <Text style={[ Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 } ]}>
+                                                    <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 }]}>
                                                         {t("home.updateNow")}
                                                     </Text>
 
@@ -189,7 +184,7 @@ class SupportMain extends Component {
                                             </View>
                                             <View style={Mainstyles.payBillView}>
                                                 <TouchableOpacity style={Mainstyles.payBillButton}>
-                                                    <Text style={[ Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 1 } ]}>
+                                                    <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 1 }]}>
                                                         {t("home.requestNow")}
                                                     </Text>
 
@@ -226,7 +221,7 @@ class SupportMain extends Component {
                                             </View>
                                             <View style={Mainstyles.payBillView}>
                                                 <TouchableOpacity style={Mainstyles.payBillButton}>
-                                                    <Text style={[ Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 } ]}>
+                                                    <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 }]}>
                                                         {t("home.requestNow")}
                                                     </Text>
 
@@ -344,7 +339,7 @@ class SupportMain extends Component {
                     </InfoContainer>
                     {/* </ImageBackground> */}
                 </SafeAreaView>
-            </ImageBackground>
+            </LinearGradient>
         )
     }
 

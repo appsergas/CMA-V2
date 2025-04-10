@@ -112,27 +112,23 @@ cardBodyText1: {
   scrollView: {
     // flex: 1,
     // display: "flex",
+    // flexGrow: 1,
+    // justifyContent: "flex-start",
+    // alignItems: 'center',
+    // alignContent: "center",
+    // paddingBottom: 80
+    // height: "100%",
+    // overflow: "scroll"
     flexGrow: 1,
     justifyContent: "flex-start",
     alignItems: 'center',
-    alignContent: "center",
     paddingBottom: 80
-    // height: "100%",
-    // overflow: "scroll"
   },
   tabNumberActive: { fontSize: 16, color: "#FFFFFF", fontFamily: "Tajawal-Bold" },
   tabNumberInactive: { fontSize: 16, color: "#8E9093", fontFamily: "Tajawal-Bold" },
   tabIconActive: { height: 24, width: 24, borderRadius: 16, backgroundColor: "#102D4F", alignItems: 'center', justifyContent: "center" },
   tabIconInactive: { height: 24, width: 24, borderRadius: 16, backgroundColor: "#E2E2E2", alignItems: 'center', justifyContent: "center" },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+
   userNameLabel: {
     fontFamily: "Tajawal-Bold",
     fontSize: 16,
@@ -272,7 +268,7 @@ payBillText: {
     marginBottom: 10
   },
   inputGroupStyle: {
-    width: "95%",
+    width: "100%",
     // flexDirection: "row",
     marginBottom: 10
   },
@@ -291,10 +287,11 @@ payBillText: {
     // borderColor: "rgba(110, 149, 213, 0.2)",
     // borderStyle: "solid",
     // borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 8,
     // flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    paddingLeft:20,
+    // justifyContent: "center",
     padding: 0,
     // alignSelf: "flex-end",
     width: "95%",
@@ -303,12 +300,14 @@ payBillText: {
     // shadowOffset: { height: 2, width: 2 }, // IOS
     // shadowOpacity: 1, // IOS
     // shadowRadius: 1, //IOS
-    backgroundColor: '#102D4F',
+    // backgroundColor: '#102D4F',
+    backgroundColor: '#0057A2',
     // elevation: 5,  // Android
   },
   buttonLabelStyle: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight:"500",
     fontFamily: "Tajawal-Medium"
   },
   registerButtonViewStyle: {

@@ -58,15 +58,7 @@ const styles = StyleSheet.create({
     // height: "100%",
     // overflow: "scroll"
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+ 
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,
@@ -298,7 +290,167 @@ payBillText: {
     resizeMode: 'stretch',
     marginLeft: 6
 
-  }
+  },
+
+
+
+
+
+
+  //Enayat
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+    marginTop: 10,
+    paddingHorizontal: 16,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginHorizontal: 4,
+    backgroundColor: '#E2E8F0',
+    alignItems: 'center',
+  },
+  activeTab: {
+    backgroundColor: '#102C4E',
+  },
+  inactiveTab: {
+    backgroundColor: '#E0E5EB',
+    borderWidth: 1,
+    borderColor: '#A2ADBC',
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  activeTabText: {
+    color: '#FFFFFF',
+  },
+  inactiveTabText: {
+    color: '#8D9BAC',
+  },
+
+  // Contact Card
+  contactItemWrapper: {
+    marginBottom: 14,
+    paddingHorizontal: 16,
+  },
+  contactCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  contactRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  contactIcon: {
+    fontSize: 22,
+    color: '#102D4F',
+    width: 26, // Ensures consistent spacing
+    marginRight: 14,
+  },
+  contactLabel: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#102D4F',
+  },
+  contactArrow: {
+    fontSize: 16,
+    color: '#102D4F',
+  },
+  divider: {
+    marginTop: 14,
+    height: 1,
+    backgroundColor: '#E5EEF6',
+  },
+  contactDetails: {
+    marginTop: 12,
+    paddingLeft: 40,
+  },
+  contactDetailLine: {
+    fontSize: 14,
+    color: '#4A5568',
+    marginBottom: 6,
+  },
+
+  // FAQ Accordion (same refinement)
+  accordionItem: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: '#E5EEF6',
+    shadowColor: '#000',
+    shadowOpacity: 0.02,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    elevation: 1,
+    marginHorizontal: 16,
+  },
+  accordionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  accordionTitle: {
+    fontWeight: '500',
+    fontSize: 14,
+    color: '#102D4F',
+    flex: 1,
+  },
+  arrow: {
+    fontSize: 16,
+    color: '#102D4F',
+    marginLeft: 10,
+  },
+  accordionContent: {
+    marginTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E5E5',
+    paddingTop: 10,
+  },
+  accordionText: {
+    fontSize: 11,
+    color: '#102D4F',
+    lineHeight: 10,
+    marginBottom: 6,
+  },
+
+
+
+  watchVideoButton: {
+    flexDirection:"row",
+    backgroundColor: "#102D4F",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    alignSelf: "flex-start", 
+},
+watchVideoButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+},
+optionIconViewCol1: {
+    flex: 1,
+},
+optionIconViewCol2: {
+    width: 20,
+    height: 20,
+},
+clickImage: {
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
+},
 })
 
 export default styles

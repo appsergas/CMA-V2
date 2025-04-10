@@ -1,8 +1,8 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './HelpMainStyles'
 
 import React, { Component } from 'react'
-import { View, Text, Image, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Image, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, LayoutAnimation, ActivityIndicator, ImageBackground, UIManager } from 'react-native'
 import { setI18nConfig, translationGetters, t } from '../../services/translate/i18n'
 import * as RNLocalize from 'react-native-localize';
 import TextInputControl from '../../controls/TextInput'
@@ -19,7 +19,13 @@ import InfoContainer from '../../components/molecules/InfoContainer';
 import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon } from '../../../assets/icons'
 
+if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental?.(true);
+}
 
 
 class HelpMain extends Component {
@@ -101,7 +107,10 @@ class HelpMain extends Component {
             toastMessage: "",
             apiCallFlags: {
                 getHelpDocsCalled: true
-            }
+            },
+
+            expandedIndex: null,
+
         }
         this.scrollView = React.createRef()
     }
@@ -163,92 +172,142 @@ class HelpMain extends Component {
             this.setState({ showToast: false, toastMessage: "" });
         }, 5000);
     }
+    handleToggle = (index) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.setState((prevState) => ({
+            expandedIndex: prevState.expandedIndex === index ? null : index,
+        }));
+    };
 
-    render() {
+
+
+    // renderAccordionItem = (item, index) => {
+    //     const isExpanded = this.state.expandedIndex === index;
+    //     return (
+    //         <View key={index} style={styles.accordionItem}>
+    //         <TouchableOpacity onPress={() => this.handleToggle(index)} style={styles.accordionHeader}>
+    //             <Text style={styles.accordionTitle}>{item.title}</Text>
+    //             <ArrowIcon direction={isExpanded ? "up" : "down"} size={20} color="#102D4F" />
+    //         </TouchableOpacity>
+
+    //         {isExpanded && (
+    //             <View style={styles.accordionContent}>
+    //                 {item.content.length > 0 ? (
+    //                     item.content.map((line, i) => (
+    //                         <Text key={i} style={styles.accordionText}>
+    //                             {`${i + 1}. ${line}`}
+    //                         </Text>
+    //                     ))
+    //                 ) : (
+    //                     <Text style={styles.accordionText}>Coming soon...</Text>
+    //                 )}
+    //                 <TouchableOpacity style={styles.watchVideoButton} onPress={() => this.handleWatchVideo(item.title)}>
+    //                     <Text style={styles.watchVideoButtonText}>Watch Video</Text>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         )}
+    //     </View>
+    //     );
+    // };
+
+
+    renderAccordionItem = (data, index) => {
+        const isExpanded = this.state.expandedIndex === index;
         return (
+            <View key={index} style={styles.accordionItem}>
+                <TouchableOpacity onPress={() => this.handleToggle(index)} style={styles.accordionHeader}>
+                    <Text style={styles.accordionTitle}>{data.QUESTION}</Text>
+                    <ArrowIcon direction={isExpanded ? "up" : "down"} size={20} color="#102D4F" />
+                </TouchableOpacity>
 
+                {isExpanded && (
+                    <View style={styles.accordionContent}>
+                        {data.ANSWER ? (
+                            <Text style={styles.accordionText}>{data.ANSWER}</Text>
+                        ) : (
+                            <Text style={styles.accordionText}>Coming soon...</Text>
+                        )}
 
-            <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-                <View style={{ ...styles.headerView, height: Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                                <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                    <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
-                                </TouchableOpacity>
-                                <Text style={styles.welcomeLabel} >
-                                    Safety Tips
-                                </Text>
-                        </View>
-                    </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
-
-                    </View>
-                </View>
-
-                {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
-                <View style={{
-                    height: Platform.OS == 'ios' ? "90%" : "100%", backgroundColor: "#FFFFFF", overflow: 'hidden',
-                    borderTopLeftRadius: 24,
-                    borderTopRightRadius: 24,
-                    width: '100%'
-                }} >
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1, paddingBottom: 60 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
-                            showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
-
-                            {/* <View style={{ ...styles.accountsLabelView }}>
-                <Text style={styles.accountsLabel} >
-                    My Account
-                </Text>
-            </View> */}
-                            <View style={{ ...styles.cardView, marginTop: 60 }}>
-                                {
-                                    this.state.apiCallFlags.getHelpDocsCalled ?
-                                        <ActivityIndicator size={'large'} color={"#577ABD"} /> :
-                                        this.state.howTo.map((data,index) => {
-                                            return <><TouchableOpacity
-                                                style={{ height: 50, flexDirection: 'row', width: "90%" }}
-                                                onPress={() => this.props.navigation.navigate("HelpAnswer", { "helpData": data })}
-                                            >
-                                                {/* <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>{data.QUESTIONSTION}</Text>
-                                    </View> */}
-                                                <View style={styles.optionIconViewCol1}>
-                                                    <Text style={styles.accountNumberText}>{data.QUESTION}</Text>
-                                                </View>
-                                                <View style={styles.optionIconViewCol2}>
-                                                    <Image
-                                                        source={require('../../../assets/images/ClickNew.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                            </TouchableOpacity>
-                                            {
-                                                index+1 != this.state.howTo.length ? <View style={{ width: "90%", height: 0, borderTopWidth: 0.4, borderStyle: "solid", borderColor: "#ABB2AC", alignSelf: 'center' }} /> : null
-                                            }
-                                                
-                                                </>
-                                        })
-                                }
+                        <TouchableOpacity
+                            style={styles.watchVideoButton}
+                            onPress={() => this.props.navigation.navigate("HelpAnswer", { "helpData": data })}
+                        >
+                            <View>
+                                <Text style={styles.watchVideoButtonText}>Watch Video</Text>
                             </View>
 
-
-                        </ScrollView>
-                    </KeyboardAwareScrollView>
+                        </TouchableOpacity>
                     </View>
-                {/* </InfoContainer> */}
-            </SafeAreaView>
+                )}
+            </View>
+        );
+    };
+
+
+    render() {
+
+        return (
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
+                            </TouchableOpacity>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Safety Tips
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            Stay safe with our essential gas safety tips and guidelines.
+                        </Text>
+                    </View>
+                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            style={{ flex: 1 }}
+                            enabled
+                            showsVerticalScrollIndicator={false}
+                        >
+                            {/* <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={styles.scrollView}> */}
+
+
+
+                            {/* Tabs */}
+                            <View style={styles.tabContainer}>
+
+
+
+                            </View>
+                            {/* Tab Content */}
+
+                            <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+                                {/* {this.state.howTo.map(this.renderAccordionItem)} */}
+                                {this.state.howTo.map(this.renderAccordionItem)}
+                            </ScrollView>
+
+
+                            {/* </ScrollView> */}
+                        </KeyboardAwareScrollView>
+                    </InfoContainer>
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
+
 
 }
 

@@ -22,25 +22,25 @@ const styles = StyleSheet.create({
     height: 200,
     // marginTop: -125,
   },
-  headerView: {
-    // position: "absolute",
-    flexDirection: "row",
-    paddingHorizontal: 15,
-    alignItems: "center",
-    marginVertical: Platform.OS === 'ios' ? null : 10,
-    minHeight: Platform.OS === 'ios' ? null : 60,
-    // zIndex: 2
-  },
-  headerCol1: {
-    width: "75%",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-  },
-  headerCol2:{
-    width: "25%",
-    alignItems: "flex-end"
-  },
+  // headerView: {
+  //   // position: "absolute",
+  //   flexDirection: "row",
+  //   paddingHorizontal: 15,
+  //   alignItems: "center",
+  //   marginVertical: Platform.OS === 'ios' ? null : 10,
+  //   minHeight: Platform.OS === 'ios' ? null : 60,
+  //   // zIndex: 2
+  // },
+  // headerCol1: {
+  //   width: "75%",
+  //   alignItems: "center",
+  //   flexDirection: "row",
+  //   justifyContent: "flex-start",
+  // },
+  // headerCol2:{
+  //   width: "25%",
+  //   alignItems: "flex-end"
+  // },
   amountView: {
     width: "95%",
     height: 48,
@@ -49,18 +49,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     alignItems: "center",
     zIndex: 2,
-    backgroundColor: "#FEFBF6",
+    // backgroundColor: "#FEFBF6",
     marginBottom: 50
   },
   amountCol1: {
-    width: "60%",
+    // width: "60%",
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "flex-start",
   },
   amountCol2:{
-    width: "40%",
-    alignItems: "flex-end"
+    // width: "40%",
+    // alignItems: "flex-end"
   },
   amountLabel: {
     fontFamily: "Tajawal-Bold",
@@ -77,25 +77,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#FFFFFF"
   },
-  scrollView: {
-    // flex: 1,
-    // display: "flex",
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    alignItems: 'center',
-    paddingBottom: 80
-    // height: "100%",
-    // overflow: "scroll"
-  },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+ 
+
   userNameLabel: {
     fontFamily: "Tajawal-Bold",
     fontSize: 16,
@@ -124,6 +107,7 @@ const styles = StyleSheet.create({
   accountLabel: {
     fontFamily: "Tajawal-Medium",
     fontSize: 16,
+    fontWeight:"700",
     color: "#102D4F"
   },
   cardView: {
@@ -268,33 +252,33 @@ payBillText: {
     paddingHorizontal: 15,
     marginVertical: 25
   },
-  buttonStyle: {
-    // backgroundColor: "rgb(79, 194, 212)",
-    // borderColor: "rgba(110, 149, 213, 0.2)",
-    // borderStyle: "solid",
-    // borderWidth: 1,
-    flexDirection: "row",
-    borderRadius: 4,
-    // flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 0,
-    // alignSelf: "flex-end",
-    width: "95%",
-    height: 40,
-    // shadowColor: 'rgba(0,0,0, .4)',
-    // shadowOffset: { height: 2, width: 2 }, // IOS
-    // shadowOpacity: 1, // IOS
-    // shadowRadius: 1, //IOS
-    backgroundColor: '#102D4F',
-    // elevation: 5,  // Android
-  },
-  buttonLabelStyle: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Tajawal-Regular",
-    fontWeight:"bold"
-  },
+  // buttonStyle: {
+  //   // backgroundColor: "rgb(79, 194, 212)",
+  //   // borderColor: "rgba(110, 149, 213, 0.2)",
+  //   // borderStyle: "solid",
+  //   // borderWidth: 1,
+  //   flexDirection: "row",
+  //   borderRadius: 4,
+  //   // flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   padding: 0,
+  //   // alignSelf: "flex-end",
+  //   // width: "95%",
+  //   height: 40,
+  //   // shadowColor: 'rgba(0,0,0, .4)',
+  //   // shadowOffset: { height: 2, width: 2 }, // IOS
+  //   // shadowOpacity: 1, // IOS
+  //   // shadowRadius: 1, //IOS
+  //   backgroundColor: '#102D4F',
+  //   // elevation: 5,  // Android
+  // },
+  // buttonLabelStyle: {
+  //   color: "#FFFFFF",
+  //   fontSize: 14,
+  //   fontFamily: "Tajawal-Regular",
+  //   fontWeight:"bold"
+  // },
   registerButtonViewStyle: {
     width: "95%",
   },

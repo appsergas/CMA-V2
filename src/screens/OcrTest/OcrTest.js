@@ -26,7 +26,9 @@ import { API_PATH } from '../../services/api/data/data/api-utils';
 import { connect } from 'react-redux';
 import { updateContracts } from '../../stores/actions/contracts.action';
 import { updateUserDetails } from '../../stores/actions/user.action';
-import { ArrowLeftIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon, IdentificationIcon, ScanIcon, TypeCursorIcon } from '../../../assets/icons'
 
 
 
@@ -183,21 +185,22 @@ class OcrTest extends Component {
         }, 5000);
     }
 
+    formatEid = (eid) => {
+        if (!eid) return "";
+        return eid.replace(/\D/g, "") // Remove non-numeric characters
+            .replace(/(\d{3})(\d{4})(\d{7})(\d{1})/, "$1-$2-$3-$4");
+    };
 
     render() {
         return (
-<ImageBackground
-                source={require('../../assets/images/coverheader.png')}
-                style={{ flex: 1, width: '100%', height: '100%' }}
-                resizeMode="cover">
+                    <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
                 <SafeAreaView style={{ height: "100%", flex: 1 }} >
-                    {/* header */}
                     <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
                         <View style={Mainstyles.headerLeft}>
                             <TouchableOpacity
                                 style={Mainstyles.backbutton}
                                 onPress={() => this.props.navigation.goBack()} >
-                                <ArrowLeftIcon />
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
                             <View style={Mainstyles.textContainer}>
                                 <View style={Mainstyles.nameRow}>
@@ -205,135 +208,109 @@ class OcrTest extends Component {
                                     Emirates ID
                                     </Text>
                                 </View>
-
                             </View>
                         </View>
                     </View>
-
-            {/* <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-                <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_20 : Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                            {this.props.route.params.fromOtp ? null :
-                                <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                    <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
-                                </TouchableOpacity>
-                            }
-                            <Text style={styles.welcomeLabel} >
-                                Emirates ID
-                            </Text>
-                        </View>
-                        <View style={styles.headerCol2}>
-                        {this.props.route.params.fromOtp ? 
-                                <TouchableOpacity style={{ marginRight: 5, flexDirection: 'row', alignItems: 'center' }} onPress={() => { this.props.navigation.navigate("HomeBase") }}>
-                                    <Text style={{...styles.welcomeLabel,marginRight: 5}}>Skip</Text>
-                                    <Image source={require('../../assets/images/SkipButton.png')} style={{ height: 40, width: 40, }}></Image>
-                                </TouchableOpacity> : null
-                            }
-                        </View>
-                    </View>
-                    <View >
                     
-                    </View>
-                </View> */}
-
-                <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}>
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
+                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            style={{ flex: 1 }}
+                            enabled
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
+                        >
+                            <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={styles.scrollView}>
+                                {
+                                    this.state.getEidDetailsCalled ?
+                                        <ActivityIndicator size={'small'} color={"#102D4F"} />
+                                        :
+                                        (this.state.existingDetails && !this.state.updateId && (this.state.existingDetails.EID_IMAGE_URL != "")) ?
+                                            <>
+                                                <View style={styles.bodyview}>
+                                                    <Text style={styles.labelText}>Full Name</Text>
+                                                    <View style={styles.valueRow}>
+                                                        <TypeCursorIcon size={20} color="#102D4F" style={styles.verifiedIcon} />
+                                                        <Text style={styles.accountNumberText}>Eslam Abdelkhaleq</Text>
+                                                    </View>
+                                                    <TouchableOpacity style={styles.editButton}>
+                                                        <Text style={styles.editText}>Edit</Text>
+                                                    </TouchableOpacity>
+                                                </View>
 
+                                                <View style={styles.bodyview}>
+                                                    <Text style={styles.labelText}> Emirates ID Number</Text>
+                                                    <View style={styles.valueRow}>
+                                                        <IdentificationIcon width={30} height={30} strokeWidth="1.5" />
+                                                        <Text style={styles.accountNumberText}>{this.formatEid(this.state.existingDetails.EID)}</Text>
+                                                    </View>
+                                                </View>
 
-                            {
-                                this.state.getEidDetailsCalled ?
-                                    <ActivityIndicator size={'small'} color={"#102D4F"} />
-                                    :
-                                    (this.state.existingDetails && !this.state.updateId && (this.state.existingDetails.EID_IMAGE_URL != "")) ?
-                                        <>
-                                            <View style={{ ...styles.accountsLabelView, marginTop: 30 }}>
-                                                <Text style={styles.accountsLabel} >
-                                                    Emirates ID Number
-                                                </Text>
-                                            </View>
-                                            <TouchableOpacity style={{ ...styles.cardView, ...{ paddingHorizontal: 15, minHeight: 50, flexDirection: 'row', marginTop: 10, justifyContent: 'flex-start', backgroundColor: "#F7F9FB", borderWidth: 0, borderRadius: 4 } }}
-                                            // onPress={() => { Linking.openURL(`tel:600565657`) }}
-                                            >
-                                                <Image
-                                                    source={require('../../../assets/images/Eid.png')}
-                                                    style={{ ...styles.clickImage, height: 16, width: 16 }}
-                                                />
-
-                                                <Text style={styles.accountNumberText}>{this.state.existingDetails.EID}</Text>
-                                                {/* </View> */}
-                                            </TouchableOpacity>
-                                            <View style={{ ...styles.accountsLabelView, marginTop: 30 }}>
-                                                <Text style={styles.accountsLabel} >
-                                                    Emirates ID
-                                                </Text>
-                                            </View>
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <View style={{ ...styles.addImageView, justifyContent: 'space-between' }}>
-                                                    <View style={styles.addImageViewCol}>
+                                                <View style={styles.bodyview}>
+                                                    <Text style={styles.labelText}> Emirates ID</Text>
+                                                    <View style={styles.imgRow}>
                                                         <Image style={styles.addImage} source={{ uri: API_PATH + "/Documents/App/" + this.state.existingDetails.EID_IMAGE_URL.split(",")[0] }} />
                                                     </View>
-                                                    <View style={styles.addImageViewCol}>
+                                                    <View style={styles.imgRow}>
                                                         <Image style={styles.addImage} source={{ uri: API_PATH + "/Documents/App/" + this.state.existingDetails.EID_IMAGE_URL.split(",")[1] }} />
                                                     </View>
                                                 </View>
-                                            </View>
 
-                                            <TouchableOpacity
-                                                style={styles.buttonStyle}
-                                                // onPress={this.handleSubmit}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        updateId: true
-                                                    })
-                                                }}
-                                            >
-                                                {
-                                                    (this.state.apiCallFlags.requestDisconnectionApiCalled || this.state.apiCallFlags.updatePaymentApiCalled || this.state.makePaymentClicked) ?
-                                                        <ActivityIndicator size='small' color='white' /> :
-                                                        <Text
-                                                            style={styles.buttonLabelStyle}>Edit</Text>
-                                                }
-                                            </TouchableOpacity>
-                                        </>
-                                        :
-                                        this.state.emiratesIdBack == null ?
-                                            <View style={{
-                                                width: "95%",
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                marginTop: 20
+                                                <TouchableOpacity
+                                                    style={styles.Labellink}
+                                                    // onPress={this.handleSubmit}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            updateId: true
+                                                        })
+                                                    }}
+                                                >
+                                                    {
+                                                        (this.state.apiCallFlags.requestDisconnectionApiCalled || this.state.apiCallFlags.updatePaymentApiCalled || this.state.makePaymentClicked) ?
+                                                            <ActivityIndicator size='small' color='white' /> :
+                                                            <View style={styles.LabelContainer}>
+                                                                <ScanIcon />
+                                                                <Text style={styles.Labeltxt}>  Re Capture</Text>
+                                                            </View>
+                                                    }
+                                                </TouchableOpacity>
 
-                                            }}>
-                                                <View style={{ height: 30, width: 30, borderRadius: 16, backgroundColor: "#E2E2E2", alignItems: 'center', borderColor: "#102D4F", borderWidth: 2, marginBottom: 10, justifyContent: "center" }}>
-                                                    <Text style={{ fontSize: 16, color: "#102D4F", fontFamily: "Tajawal-Bold" }}>
+                                                <TouchableOpacity style={styles.buttonStyle}>
+                                                    <Text style={styles.buttonLabelStyle}>  Submit</Text>
+                                                </TouchableOpacity>
+                                            </>
+                                            :
+                                            this.state.emiratesIdBack == null ?
+                                                <View style={{
+                                                    width: "95%",
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    marginTop: 20
+
+                                                }}>
+                                                    <View style={{ height: 30, width: 30, borderRadius: 16, backgroundColor: "#E2E2E2", alignItems: 'center', borderColor: "#102D4F", borderWidth: 2, marginBottom: 10, justifyContent: "center" }}>
+                                                        <Text style={{ fontSize: 16, color: "#102D4F", fontFamily: "Tajawal-Bold" }}>
+                                                            {
+                                                                this.state.emiratesIdFront == null ? "1" : "2"
+                                                            }
+                                                        </Text>
+                                                    </View>
+                                                    <Text style={{
+                                                        ...styles.accountNumberText,
+                                                        alignSelf: "center",
+                                                        marginBottom: 50
+                                                    }}>
                                                         {
-                                                            this.state.emiratesIdFront == null ? "1" : "2"
+                                                            this.state.emiratesIdFront == null ? "Scan Emirates ID Front" : "Scan Emirates ID Back"
                                                         }
                                                     </Text>
-                                                </View>
-                                                <Text style={{
-                                                    ...styles.accountNumberText,
-                                                    alignSelf: "center",
-                                                    marginBottom: 50
-                                                }}>
-                                                    {
-                                                        this.state.emiratesIdFront == null ? "Scan Emirates ID Front" : "Scan Emirates ID Back"
-                                                    }
-                                                </Text>
 
-                                                {/* <Image
+                                                    {/* <Image
                                                     source={this.state.emiratesIdFront == null ? require('../../../assets/images/eidScanFront1.gif') : require('../../../assets/images/eidScanBack1.gif')}
                                                     style={{
                                                         height: 200,
@@ -347,29 +324,29 @@ class OcrTest extends Component {
                                                         marginBottom: 20
                                                     }}
                                                 /> */}
-                                                <RNCamera
-                                                    ref={ref => { this.camera = ref; }}
-                                                    flashMode={this.state.torch}
-                                                    zoom={Platform.OS == 'ios' ? 0.005 : 0}
-                                                    onPictureTaken={() => {
+                                                    <RNCamera
+                                                        ref={ref => { this.camera = ref; }}
+                                                        flashMode={this.state.torch}
+                                                        zoom={Platform.OS == 'ios' ? 0.005 : 0}
+                                                        onPictureTaken={() => {
 
-                                                    }}
-                                                    style={{
-                                                        height: 200,
-                                                        width: 300,
-                                                        alignSelf: 'center',
-                                                        borderWidth: this.state.stayStill > 0 ? 4 : 0.4,
-                                                        borderColor: this.state.stayStill > 0 ? "#22DD22" : "#102D4F",
-                                                        borderStyle: "solid",
-                                                        borderRadius: 4,
-                                                        overflow: 'hidden',
-                                                        justifyContent: 'center'
-                                                    }}
-                                                    trackingEnabled
-                                                    onTextRecognized={(object) => {
-                                                        const { textBlocks } = object;
-                                                        this.setState({ recognizedFrontText: textBlocks })
-                                                        const textRecognition = textBlocks;
+                                                        }}
+                                                        style={{
+                                                            height: 200,
+                                                            width: 300,
+                                                            alignSelf: 'center',
+                                                            borderWidth: this.state.stayStill > 0 ? 4 : 0.4,
+                                                            borderColor: this.state.stayStill > 0 ? "#22DD22" : "#102D4F",
+                                                            borderStyle: "solid",
+                                                            borderRadius: 4,
+                                                            overflow: 'hidden',
+                                                            justifyContent: 'center'
+                                                        }}
+                                                        trackingEnabled
+                                                        onTextRecognized={(object) => {
+                                                            const { textBlocks } = object;
+                                                            this.setState({ recognizedFrontText: textBlocks })
+                                                            const textRecognition = textBlocks;
                                                             if (this.state.emiratesIdFront == null) {
                                                                 const EID = "784-";
                                                                 const NAME = "Name";
@@ -378,66 +355,66 @@ class OcrTest extends Component {
                                                                 const uaeIndex = textRecognition.findIndex((item) => item.value.toUpperCase().match("UNITED ARAB EMIRATES"));
                                                                 const idCardIndex = textRecognition.findIndex((item) => item.value.match("Resident Identity Card"));
                                                                 let alertMsg = idNumberIndex.toString() + "\n aaa" + nameIndex.toString() + "bbb"
-                                                                if ((idNumberIndex > -1) && (nameIndex > -1) && (uaeIndex > -1) 
-                                                                && /^\d{15}$/.test(textRecognition[idNumberIndex].value.slice(textRecognition[idNumberIndex].value.indexOf("784-")).toString().replace(/-/g, ""))
-                                                            && /^[a-zA-Z\s\.]+$/.test(textRecognition[nameIndex].value.toString().replace(/Name/g, "").replace(/: /g, "").replace(/:/g, "")) ) {
-                                                                this.setState({
-                                                                    stayStill: this.state.stayStill +1,
-                                                                    insideFront: true
-                                                                }, () => {
-                                                                    // setTimeout(() => {
-                                                                    if (this.state.stayStill == 5) {
-                                                                        this.camera.takePictureAsync({
-                                                                            base64: true,
-                                                                            quality: 0.1,
-                                                                            forceUpOrientation: true,
-                                                                            orientation: 'portrait'
-                                                                        }).then(res => {
-                                                                            this.setState({
-                                                                                emiratesIdFront: res
-                                                                            }, () => setTimeout(() => {
+                                                                if ((idNumberIndex > -1) && (nameIndex > -1) && (uaeIndex > -1)
+                                                                    && /^\d{15}$/.test(textRecognition[idNumberIndex].value.slice(textRecognition[idNumberIndex].value.indexOf("784-")).toString().replace(/-/g, ""))
+                                                                    && /^[a-zA-Z\s\.]+$/.test(textRecognition[nameIndex].value.toString().replace(/Name/g, "").replace(/: /g, "").replace(/:/g, ""))) {
+                                                                    this.setState({
+                                                                        stayStill: this.state.stayStill + 1,
+                                                                        insideFront: true
+                                                                    }, () => {
+                                                                        // setTimeout(() => {
+                                                                        if (this.state.stayStill == 5) {
+                                                                            this.camera.takePictureAsync({
+                                                                                base64: true,
+                                                                                quality: 0.1,
+                                                                                forceUpOrientation: true,
+                                                                                orientation: 'portrait'
+                                                                            }).then(res => {
                                                                                 this.setState({
-                                                                                    stayStill: 0
-                                                                                },() => {
-                                                                                    this.toastIt("ID Front scanned successfully", false)
+                                                                                    emiratesIdFront: res
+                                                                                }, () => setTimeout(() => {
+                                                                                    this.setState({
+                                                                                        stayStill: 0
+                                                                                    }, () => {
+                                                                                        this.toastIt("ID Front scanned successfully", false)
+                                                                                    })
+                                                                                }, 1000))
+
+                                                                            }
+                                                                            )
+
+                                                                            if (idNumberIndex > -1) {
+                                                                                this.setState({
+                                                                                    emiratesIdNumber: textRecognition[idNumberIndex].value.slice(textRecognition[idNumberIndex].value.indexOf("784-")).toString().replace(/-/g, ""),
                                                                                 })
-                                                                            }, 1000))
+                                                                            }
+                                                                            if (nameIndex > -1) {
+                                                                                this.setState({
+                                                                                    fullName: textRecognition[nameIndex].value.toString().replace(/Name/g, "").replace(/Date of Birth/g, "").replace(/: /g, "").replace(/:/g, ""),
+                                                                                })
+                                                                            }
 
                                                                         }
-                                                                        )
+                                                                        // },1500)
+                                                                    })
 
-                                                                        if (idNumberIndex > -1) {
-                                                                            this.setState({
-                                                                                emiratesIdNumber: textRecognition[idNumberIndex].value.slice(textRecognition[idNumberIndex].value.indexOf("784-")).toString().replace(/-/g, ""),
-                                                                            })
-                                                                        }
-                                                                        if (nameIndex > -1) {
-                                                                            this.setState({
-                                                                                fullName: textRecognition[nameIndex].value.toString().replace(/Name/g, "").replace(/Date of Birth/g, "").replace(/: /g, "").replace(/:/g, ""),
-                                                                            })
-                                                                        }
-                                                                        
-                                                                    }
-                                                                    // },1500)
-                                                                })
 
-                                                                    
                                                                     // this.camera.pausePreview()
 
-                                                                    
-                                                                    
+
+
                                                                 } else {
                                                                     this.setState({
                                                                         stayStill: 0,
                                                                         insideFront: false
                                                                     })
-                                                                
+
                                                                     // this.toastIt("Could not recognize the card", false)
                                                                 }
                                                             } else {
                                                                 const EID = "Issuing Place";
                                                                 const CardNumber = "Card Number";
-                                                            
+
                                                                 const cardNumberIndex = textRecognition.findIndex((item) => item.value.match(CardNumber));
                                                                 const idNumberIndex = textRecognition.findIndex((item) => item.value.match(this.state.emiratesIdNumber));
                                                                 if ((cardNumberIndex > -1) && (idNumberIndex > -1)) {
@@ -445,30 +422,30 @@ class OcrTest extends Component {
                                                                         stayStill: this.state.stayStill + 1,
                                                                         insideBack: true
                                                                     }, () => {
-                                                                            if (this.state.stayStill == 2 ) {
-                                                                                this.camera.takePictureAsync({
-                                                                                    base64: true,
-                                                                                    quality: 0.1,
-                                                                                    forceUpOrientation: true,
-                                                                                    orientation: 'portrait'
-                                                                                }).then(res => {
+                                                                        if (this.state.stayStill == 2) {
+                                                                            this.camera.takePictureAsync({
+                                                                                base64: true,
+                                                                                quality: 0.1,
+                                                                                forceUpOrientation: true,
+                                                                                orientation: 'portrait'
+                                                                            }).then(res => {
+                                                                                this.setState({
+                                                                                    emiratesIdBack: res
+                                                                                }, () => setTimeout(() => {
                                                                                     this.setState({
-                                                                                        emiratesIdBack: res
-                                                                                    }, () => setTimeout(() => {
-                                                                                        this.setState({
-                                                                                            stayStill: 0
-                                                                                        }, () => {
-                                                                                            this.toastIt("ID Rear scanned successfully", false)
-                                                                                        })
-                                                                                    }, 1000))
-                                                                                }
-                                                                                )
-                                                                                
-            
-                                                                                if (cardNumberIndex > -1) {
-                                                                                }
-                                                                                
+                                                                                        stayStill: 0
+                                                                                    }, () => {
+                                                                                        this.toastIt("ID Rear scanned successfully", false)
+                                                                                    })
+                                                                                }, 1000))
                                                                             }
+                                                                            )
+
+
+                                                                            if (cardNumberIndex > -1) {
+                                                                            }
+
+                                                                        }
                                                                     })
                                                                     // this.camera.pausePreview()
 
@@ -484,47 +461,48 @@ class OcrTest extends Component {
 
 
 
-                                                    }}
-                                                >
-                                                    {
-                                                        this.state.stayStill ? null : <Image
-                                                        source={this.state.emiratesIdFront == null ? require('../../../assets/images/eidScanFront1.gif') : require('../../../assets/images/FlipCard1.gif')}
-                                                        style={{
-                                                            height: 200,
-                                                            width: 300,
-                                                            alignSelf: 'center',
-                                                            borderWidth: 0.4,
-                                                            borderColor: "#102D4F",
-                                                            borderStyle: "solid",
-                                                            borderRadius: 40,
-                                                            resizeMode: 'stretch',
-                                                            opacity: this.state.emiratesIdFront == null ? 0.4 : 0.8
                                                         }}
-                                                    />
-                                                    }
-                                                    
-                                                </RNCamera>
-                                                {this.state.stayStill ? 
-                                                <Text style={{
+                                                    >
+                                                        {
+                                                            this.state.stayStill ? null : <Image
+                                                                source={this.state.emiratesIdFront == null ? require('../../../assets/images/eidScanFront1.gif') : require('../../../assets/images/FlipCard1.gif')}
+                                                                style={{
+                                                                    height: 200,
+                                                                    width: 300,
+                                                                    alignSelf: 'center',
+                                                                    borderWidth: 0.4,
+                                                                    borderColor: "#102D4F",
+                                                                    borderStyle: "solid",
+                                                                    borderRadius: 40,
+                                                                    resizeMode: 'stretch',
+                                                                    opacity: this.state.emiratesIdFront == null ? 0.4 : 0.8
+                                                                }}
+                                                            />
+                                                        }
+
+                                                    </RNCamera>
+                                                    {this.state.stayStill ?
+                                                        <Text style={{
                                                             fontFamily: "Tajawal-Bold",
                                                             fontSize: 28,
                                                             color: "#22DD22", alignSelf: 'center'
                                                         }}>Scanning... Hold still</Text>
-                                                        : null }
-                                                <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around', alignItems: 'center'}}>
-                                                    <Text style={styles.inputLabelStyle} >Flash light</Text>
-                                                <Switch value={this.state.torch == 'torch' ? true : false}
-                                                        style={{
-                                                        marginTop: 60,
-                                                        height: 40 }}
-                                                        thumbColor={'rgba(51, 93, 147, 1)'}
-                                                        trackColor={{ true: 'rgba(95, 138, 199, 1)' }}
-                                                        onValueChange={(value) => {
-                                                            this.setState({
-                                                                torch: this.state.torch == 'torch' ? 'off' : 'torch'
-                                                            })
-                                                        }}></Switch>
-                                                    {/* <TouchableOpacity
+                                                        : null}
+                                                    <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around', alignItems: 'center' }}>
+                                                        <Text style={styles.inputLabelStyle} >Flash light</Text>
+                                                        <Switch value={this.state.torch == 'torch' ? true : false}
+                                                            style={{
+                                                                marginTop: 60,
+                                                                height: 40
+                                                            }}
+                                                            thumbColor={'rgba(51, 93, 147, 1)'}
+                                                            trackColor={{ true: 'rgba(95, 138, 199, 1)' }}
+                                                            onValueChange={(value) => {
+                                                                this.setState({
+                                                                    torch: this.state.torch == 'torch' ? 'off' : 'torch'
+                                                                })
+                                                            }}></Switch>
+                                                        {/* <TouchableOpacity
                                                         style={{ ...styles.buttonStyle, width: "40%" }}
                                                         onPress={() => {
                                                             
@@ -537,283 +515,279 @@ class OcrTest extends Component {
                                                         </View>
 
                                                     </TouchableOpacity> */}
-                                                </View>
-                                            </View>
-                                            :
-                                            this.state.emiratesIdBack != null != "" ?
-                                                <View style={{ marginTop: 40, width: "100%", alignItems: 'center' }}>
-                                                    <Image source={{ uri: this.state.emiratesIdFront.uri }}
-                                                        style={{
-                                                            height: 200,
-                                                            width: 300,
-                                                            alignSelf: 'center',
-                                                            // borderWidth: 3,
-                                                            borderColor: "#102D4F",
-                                                            borderStyle: "solid",
-                                                            borderRadius: 4,
-                                                            overflow: 'hidden'
-                                                        }} />
-                                                    <Image source={{ uri: this.state.emiratesIdBack.uri }}
-                                                        style={{
-                                                            height: 200,
-                                                            width: 300,
-                                                            alignSelf: 'center',
-                                                            // borderWidth: 3,
-                                                            borderColor: "#102D4F",
-                                                            borderStyle: "solid",
-                                                            borderRadius: 4,
-                                                            overflow: 'hidden',
-                                                            marginTop: 20
-                                                        }} />
-
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Emirates ID Number :</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.emiratesIdNumber}</Text>
-                                                        </View>
                                                     </View>
+                                                </View>
+                                                :
+                                                this.state.emiratesIdBack != null != "" ?
+                                                    <View style={{ marginTop: 40, width: "100%", alignItems: 'center' }}>
+                                                        <Image source={{ uri: this.state.emiratesIdFront.uri }}
+                                                            style={{
+                                                                height: 200,
+                                                                width: 300,
+                                                                alignSelf: 'center',
+                                                                // borderWidth: 3,
+                                                                borderColor: "#102D4F",
+                                                                borderStyle: "solid",
+                                                                borderRadius: 4,
+                                                                overflow: 'hidden'
+                                                            }} />
+                                                        <Image source={{ uri: this.state.emiratesIdBack.uri }}
+                                                            style={{
+                                                                height: 200,
+                                                                width: 300,
+                                                                alignSelf: 'center',
+                                                                // borderWidth: 3,
+                                                                borderColor: "#102D4F",
+                                                                borderStyle: "solid",
+                                                                borderRadius: 4,
+                                                                overflow: 'hidden',
+                                                                marginTop: 20
+                                                            }} />
 
-                                                    
-                                                    <View style={{ ...styles.cardBodyRow, marginTop: 3 }}>
-                                                                <View style={styles.cardBodyColumnLeft}>
-                                                                    <Text style={styles.cardBodyText}>Full Name :</Text>
-                                                                </View>
-                                                                <View style={{ ...styles.cardBodyColumnRight, width: "60%" }}>
-                                                                    <Text style={styles.cardBodyText1}>{this.state.fullName}</Text>
-                                                                </View>
-                                                                <TouchableOpacity
-                                                                    style={{ ...styles.buttonStyle, width: "10%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF", marginTop: 0 }}
-                                                                    onPress={() => {
-                                                                        this.setState({
-                                                                            newName: this.state.fullName,
-                                                                            newIdNumber: this.state.emiratesIdNumber,
-                                                                            editName: true
-                                                                        })
-                                                                    }}
-                                                                >
-                                                                    <View style={{ ...styles.paymentDueRow2 }}
-                                                                    >
-                                                                        <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Edit</Text>
-                                                                    </View>
-
-                                                                </TouchableOpacity>
+                                                        <View style={styles.cardBodyRow}>
+                                                            <View style={styles.cardBodyColumnLeft}>
+                                                                <Text style={styles.cardBodyText}>Emirates ID Number :</Text>
                                                             </View>
-                                                        
-                                                        
+                                                            <View style={styles.cardBodyColumnRight}>
+                                                                <Text style={styles.cardBodyText1}>{this.state.emiratesIdNumber}</Text>
+                                                            </View>
+                                                        </View>
 
 
-                                                    <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
-                                                        <TouchableOpacity
-                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF", marginTop: 10 }}
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    emiratesIdNumber: "",
-                                                                    fullName: "",
-                                                                    emiratesIdFront: null,
-                                                                    emiratesIdBack: null,
-                                                                })
-                                                            }}
-                                                        >
-                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                        <View style={{ ...styles.cardBodyRow, marginTop: 3 }}>
+                                                            <View style={styles.cardBodyColumnLeft}>
+                                                                <Text style={styles.cardBodyText}>Full Name :</Text>
+                                                            </View>
+                                                            <View style={{ ...styles.cardBodyColumnRight, width: "60%" }}>
+                                                                <Text style={styles.cardBodyText1}>{this.state.fullName}</Text>
+                                                            </View>
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, width: "10%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF", marginTop: 0 }}
+                                                                onPress={() => {
+                                                                    this.setState({
+                                                                        newName: this.state.fullName,
+                                                                        newIdNumber: this.state.emiratesIdNumber,
+                                                                        editName: true
+                                                                    })
+                                                                }}
                                                             >
-                                                                {/* <Image
+                                                                <View style={{ ...styles.paymentDueRow2 }}
+                                                                >
+                                                                    <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Edit</Text>
+                                                                </View>
+
+                                                            </TouchableOpacity>
+                                                        </View>
+
+
+
+
+                                                        <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF", marginTop: 10 }}
+                                                                onPress={() => {
+                                                                    this.setState({
+                                                                        emiratesIdNumber: "",
+                                                                        fullName: "",
+                                                                        emiratesIdFront: null,
+                                                                        emiratesIdBack: null,
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <View style={{ ...styles.paymentDueRow2 }}
+                                                                >
+                                                                    {/* <Image
                                                             source={require('../../../assets/images/backBlue.png')}
                                                             style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
                                                         /> */}
-                                                                <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Re-Scan</Text>
-                                                            </View>
+                                                                    <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Re-Scan</Text>
+                                                                </View>
 
-                                                        </TouchableOpacity>
-                                                        <TouchableOpacity
-                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end',marginTop: 10 }}
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    updateEidCalled: true
-                                                                }, async () => {
-                                                                    let attachments = []
-                                                                    if (this.state.emiratesIdFront != null) {
-                                                                        attachments.push({ name: "emiratesidfront.jpg", value: this.state.emiratesIdFront.base64 });
-                                                                    }
-                                                                    if (this.state.emiratesIdBack != null) {
-                                                                        attachments.push({ name: "emiratesidback.jpg", value: this.state.emiratesIdBack.base64 });
-                                                                    }
-                                                                    let reqBody = {
-                                                                        "USER_ID": await AsyncStorage.getItem("sergas_customer_mobile_number"),
-                                                                        "PARTY_NAME": this.state.fullName,
-                                                                        "EID": this.state.emiratesIdNumber,
-                                                                        "FILE_ATTACHMENTS": attachments
-                                                                    }
-                                                                    this.props.updateEid(reqBody)
-                                                                })
-                                                            }}
-                                                        >
-                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end', marginTop: 10 }}
+                                                                onPress={() => {
+                                                                    this.setState({
+                                                                        updateEidCalled: true
+                                                                    }, async () => {
+                                                                        let attachments = []
+                                                                        if (this.state.emiratesIdFront != null) {
+                                                                            attachments.push({ name: "emiratesidfront.jpg", value: this.state.emiratesIdFront.base64 });
+                                                                        }
+                                                                        if (this.state.emiratesIdBack != null) {
+                                                                            attachments.push({ name: "emiratesidback.jpg", value: this.state.emiratesIdBack.base64 });
+                                                                        }
+                                                                        let reqBody = {
+                                                                            "USER_ID": await AsyncStorage.getItem("sergas_customer_mobile_number"),
+                                                                            "PARTY_NAME": this.state.fullName,
+                                                                            "EID": this.state.emiratesIdNumber,
+                                                                            "FILE_ATTACHMENTS": attachments
+                                                                        }
+                                                                        this.props.updateEid(reqBody)
+                                                                    })
+                                                                }}
                                                             >
-                                                                {
-                                                                    this.state.updateEidCalled ?
-                                                                        <ActivityIndicator size={'small'} color={"#FFFFFF"} />
-                                                                        :
-                                                                        <Text style={styles.buttonLabelStyle}>Save</Text>
-                                                                }
+                                                                <View style={{ ...styles.paymentDueRow2 }}
+                                                                >
+                                                                    {
+                                                                        this.state.updateEidCalled ?
+                                                                            <ActivityIndicator size={'small'} color={"#FFFFFF"} />
+                                                                            :
+                                                                            <Text style={styles.buttonLabelStyle}>Save</Text>
+                                                                    }
 
-                                                                {/* <Image
+                                                                    {/* <Image
                                                             source={require('../../../assets/images/clickWhite.png')}
                                                             style={styles.clickImage}
                                                         /> */}
-                                                            </View>
-                                                            {/* <Text
+                                                                </View>
+                                                                {/* <Text
                                                 style={styles.buttonLabelStyle}>Next</Text> */}
 
-                                                        </TouchableOpacity>
+                                                            </TouchableOpacity>
+                                                        </View>
                                                     </View>
-                                                </View>
-                                                : null
+                                                    : null
 
+                                }
+
+                            </ScrollView>
+                            {
+                                this.state.showModal ?
+                                    <Modal
+                                        close={this.state.readingResult !== "EID updated successfully"}
+                                        onClose={() => this.setState({ showModal: false })}
+                                        visible={this.state.showModal}
+                                        // button1={true}
+                                        // button2={true}
+                                        onButton1={() => {
+                                            this.setState({ showPaidModal: false })
+                                        }}
+                                        onButton2={() => {
+                                            this.setState({ showPaidModal: false })
+                                            this.makePayment()
+                                        }}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            button1Text: "Close",
+                                            button2Text: "Pay",
+                                            uri: this.state.helpImageUrl,
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "EID updated successfully" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>{this.state.readingResult == "EID updated successfully" ? "Thank You" : "Technical Error"} </Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={styles.modalMessageText}>{this.state.readingResult}</Text>
+                                                </View>
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            showModal: false
+                                                        })
+                                                        this.state.readingResult !== "EID updated successfully" ? null : this.props.route.params.fromOtp ? this.props.navigation.navigate("HomeBase") : this.props.navigation.goBack()
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>{this.state.readingResult !== "EID updated successfully" ? "Try Again" : "Done"}</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+
+                            {
+                                this.state.editName ?
+                                    // true ?
+                                    <Modal
+                                        close={false}
+                                        onClose={() => this.setState({ editName: false })}
+                                        visible={this.state.editName}
+                                        // visible={true}
+                                        onButton1={() => {
+                                            this.setState({ editName: false })
+                                        }}
+                                        onButton2={() => {
+                                            if ((/^[a-zA-Z\s\.]+$/.test(this.state.newName)) && (/^[0-9]{15}$/.test(this.state.newIdNumber))) {
+                                                this.setState({
+                                                    fullName: this.state.newName,
+                                                    editName: false,
+                                                    emiratesIdNumber: this.state.newIdNumber
+                                                })
+                                            } else {
+
+                                                // this.toastIt("Should contain only characters,dot or space.", false)
+                                            }
+                                        }}
+                                        button1={true}
+                                        button2={true}
+                                        data={{
+                                            button1Text: "Cancel",
+                                            button2Text: "Done",
+                                            title: "Edit your details",
+                                            view: <View style={{ width: "100%", marginTop: -10 }}>
+                                                {/* <View style={styles.cardBodyColumnLeft}> */}
+                                                <Text style={{ ...styles.cardBodyText, fontSize: 14 }}>Full Name</Text>
+                                                {/* </View> */}
+                                                <TextInput
+                                                    Value={this.state.newName}
+                                                    OnChange={(value) => {
+                                                        this.setState({ newName: value })
+                                                    }}
+                                                    Style={{ borderColor: "#848484" }}
+                                                />
+                                                {
+                                                    !/^[a-zA-Z\s\.]+$/.test(this.state.newName) ?
+                                                        <Text style={{ fontSize: 12, color: "red" }}>
+                                                            Should contain only characters,dot or space.
+                                                        </Text> : null
+                                                }
+                                                {/* <View style={{...styles.cardBodyColumnLeft, marginTop: 10, }}> */}
+                                                <Text style={{ ...styles.cardBodyText, fontSize: 14, marginTop: 10 }}>Emirates ID Number</Text>
+                                                {/* </View> */}
+                                                <TextInput
+                                                    Value={this.state.newIdNumber}
+                                                    OnChange={(value) => {
+                                                        this.setState({ newIdNumber: value })
+                                                    }}
+                                                    Style={{ borderColor: "#848484" }}
+                                                    keyboardType={"numeric"}
+                                                />
+                                                {
+                                                    !/^[0-9]{15}$/.test(this.state.newIdNumber) ?
+                                                        <Text style={{ fontSize: 12, color: "red" }}>
+                                                            Should contain only numbers. Must be 15 digits.
+                                                        </Text> : null
+                                                }
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
                             }
 
 
-
-
-
-                        </ScrollView>
-                        {
-                            this.state.showModal ?
-                                <Modal
-                                    close={this.state.readingResult !== "EID updated successfully"}
-                                    onClose={() => this.setState({ showModal: false })}
-                                    visible={this.state.showModal}
-                                    // button1={true}
-                                    // button2={true}
-                                    onButton1={() => {
-                                        this.setState({ showPaidModal: false })
-                                    }}
-                                    onButton2={() => {
-                                        this.setState({ showPaidModal: false })
-                                        this.makePayment()
-                                    }}
-                                    data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Pay",
-                                        uri: this.state.helpImageUrl,
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={this.state.readingResult == "EID updated successfully" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                            // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
-                                            />
-
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>{this.state.readingResult == "EID updated successfully" ? "Thank You" : "Technical Error"} </Text>
-                                            </View>
-
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={styles.modalMessageText}>{this.state.readingResult}</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        showModal: false
-                                                    })
-                                                    this.state.readingResult !== "EID updated successfully" ? null : this.props.route.params.fromOtp ? this.props.navigation.navigate("HomeBase") : this.props.navigation.goBack()
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>{this.state.readingResult !== "EID updated successfully" ? "Try Again" : "Done"}</Text>
-                                            </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-
-                        {
-                            this.state.editName ?
-                                // true ?
-                                <Modal
-                                    close={false}
-                                    onClose={() => this.setState({ editName: false })}
-                                    visible={this.state.editName}
-                                    // visible={true}
-                                    onButton1={() => {
-                                        this.setState({ editName: false })
-                                    }}
-                                    onButton2={() => {
-                                        if ((/^[a-zA-Z\s\.]+$/.test(this.state.newName)) && (/^[0-9]{15}$/.test(this.state.newIdNumber))) {
-                                            this.setState({
-                                                fullName: this.state.newName,
-                                                editName: false,
-                                                emiratesIdNumber: this.state.newIdNumber
-                                            })
-                                        } else {
-                                        
-                                            // this.toastIt("Should contain only characters,dot or space.", false)
-                                        }
-                                    }}
-                                    button1={true}
-                                    button2={true}
-                                    data={{
-                                        button1Text: "Cancel",
-                                        button2Text: "Done",
-                                        title: "Edit your details",
-                                        view: <View style={{ width: "100%", marginTop: -10 }}>
-                                            {/* <View style={styles.cardBodyColumnLeft}> */}
-                                                                    <Text style={{...styles.cardBodyText,fontSize: 14}}>Full Name</Text>
-                                            {/* </View> */}
-                                            <TextInput
-                                                Value={this.state.newName}
-                                                OnChange={(value) => {
-                                                    this.setState({ newName: value })
-                                                }}
-                                                Style={{ borderColor: "#848484" }}
-                                            />
-                                            {
-                                                !/^[a-zA-Z\s\.]+$/.test(this.state.newName) ?
-                                                <Text style={{fontSize: 12, color: "red"}}>
-                                                    Should contain only characters,dot or space.
-                                                </Text> : null
-                                            }
-                                            {/* <View style={{...styles.cardBodyColumnLeft, marginTop: 10, }}> */}
-                                                <Text style={{...styles.cardBodyText,fontSize: 14, marginTop: 10}}>Emirates ID Number</Text>
-                                            {/* </View> */}
-                                            <TextInput
-                                                Value={this.state.newIdNumber}
-                                                OnChange={(value) => {
-                                                    this.setState({ newIdNumber: value })
-                                                }}
-                                                Style={{ borderColor: "#848484" }}
-                                                keyboardType={"numeric"}
-                                            />
-                                            {
-                                                !/^[0-9]{15}$/.test(this.state.newIdNumber) ?
-                                                <Text style={{fontSize: 12, color: "red"}}>
-                                                    Should contain only numbers. Must be 15 digits.
-                                                </Text> : null
-                                            }
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-
-                        
-                    </KeyboardAwareScrollView>
-                    {this.state.showToast ? (
+                        </KeyboardAwareScrollView>
+                        {this.state.showToast ? (
                             <Toast message={this.state.toastMessage} isImageShow={false} />
                         ) : null}
-                </InfoContainer>
-            </SafeAreaView>
-            </ImageBackground>
+                    </InfoContainer>
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
 

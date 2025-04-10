@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './OtpScreenStyles'
 
 import React, { Component } from 'react'
@@ -22,6 +22,7 @@ import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import DeviceInfo from 'react-native-device-info';
 import { postLoginDeviceLog } from '../../utils/uaePassService';
+import { LogoIcon, OTPIcon, XIcon } from '../../../assets/icons'
 
 class OtpScreen extends Component {
   constructor(props) {
@@ -195,23 +196,11 @@ class OtpScreen extends Component {
   }
 
   render() {
+    
     return (
-      // <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-      //   <ButtonLogoView
-      //           // hideBackButton={true}
-      //               onPress={() => {
-      //                   this.props.navigation.goBack()
-      //               }}
-      //               // yourRequests={true}
-      //               navigation={this.props.navigation}
-      //           ></ButtonLogoView>
-      //   <ImageBackground source={Images.TransparentBackground} style={{ height: Dimensions.HP_100, width: Dimensions.WP_100 }} resizeMode={'cover'}>
-      //     {/* <CustomText style={{ color: Colors.DarkBlue, fontFamily: Fonts.Medium, marginTop: 20,marginRight: 30, alignSelf: 'flex-end' }} onPress={() => {
-      //                           this.props.navigation.navigate("SpotlightList")
-      //                       }}>Go to your requests</CustomText> */}
-
+      
       //     <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Dimensions.HP_90, }}>
-      <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
+      <SafeAreaView style={{ backgroundColor: '#F7FAFC', height: "100%", flex: 1 }} >
       <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
           <View style={{ flexDirection: "row", }}>
               <View style={styles.headerCol1}>
@@ -222,21 +211,22 @@ class OtpScreen extends Component {
                           this.props.navigation.goBack()
                       }
                   }}>
-                      <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
+                      {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
+                      <XIcon />
                   </TouchableOpacity>
                   {/* <Text style={styles.welcomeLabel} >
                       New Connection request
                   </Text> */}
               </View>
           </View>
-          <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
+          <View style={{ ...Mainstyles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
 
           </View>
       </View>
 
       {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
       <View style={{
-          height: "100%", backgroundColor: "#FFFFFF", overflow: 'hidden',
+          height: "100%",  overflow: 'hidden',
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           width: '100%'
@@ -253,16 +243,19 @@ class OtpScreen extends Component {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollView}>
             <View style={styles.imageView}>
-              <Image
+              {/* <Image
                 source={require("../../../assets/images/otp_lock.png")}
-                style={styles.goodieeLogoImage} />
+                style={styles.goodieeLogoImage} /> */}
+                <OTPIcon />
             </View>
+            
             <View style={styles.cardView} >
             <View style={{...styles.cardHeader,marginVertical: 0}}>
-                    <Text style={styles.cardHeaderText}>Enter Verification Code</Text>
+                    <Text style={styles.cardHeaderText}>Almost there!</Text>
                   </View>
                   <View style={{...styles.cardHeader,marginTop: 0}}>
-                    <Text style={styles.inputLabelStyle}>We have sent to your Number</Text>
+                    <Text style={styles.inputLabelStyle}>Check your messages inbox and input
+                    the verification code to verify your account.</Text>
                   </View>
               {/* <View style={styles.cardHeader}>
                 <Text style={styles.cardHeaderText}>{t("login.enterOtp")}</Text>
@@ -272,60 +265,10 @@ class OtpScreen extends Component {
                   <Text style={styles.inputLabelStyle}>{t("login.mobileNumber")}</Text>
                 </View> */}
                 <View>
-                  {/* <TextInput
-                  Style={{
-                    marginBottom: 0
-                }}
-                  keyboardType={"numeric"}
-                  value={this.state.otp}
-                  onChangeText={val => this.handleOtpField(val)}
-                  /> */}
-                  <OtpInputs
-                                handleChange={(code) => 
-                                    {
-                                            this.setState({
-                                            otp: code
-                                        })
-                                    }
-                            }
-                                numberOfInputs={4}
-                                otp = {true}
-                                inputContainerStyles={{
-                                    borderRadius: 4,
-                                    borderWidth: 1,
-                                    borderColor: "#E2E2E2",
-                                    borderStyle: "solid",
-                                    color: "#828E92",
-                                    fontFamily: "Tajawal-Regular",
-                                    fontSize: 10,
-                                    textAlign: "right",
-                                    height: 40,
-                                    width: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                }}
-                                inputStyles={{
-                                  fontFamily: "Tajawal-Regular",
-                                  fontSize: 28,
-                                  borderRadius: 4,
-                                  borderWidth: 1,
-                                  borderColor: "black",
-                                  borderStyle: "solid",
-                                  color: "black",
-                                  fontFamily: "Tajawal-Bold",
-                                  fontSize: 20,
-                                  // textAlign: "center",
-                                  height: 40,
-                                  width: 40,
-                                  textAlign: 'center',
-                                  alignItems: "center",
-                                  justifyContent: 'center',
-                                  alignContent: 'center',
-                                  textAlignVertical: "center",
-                                  padding: 0
-                              }}
-                            />
+                  <OtpInputs handleChange={(code) => { this.setState({ otp: code }) } } numberOfInputs={4} otp = {true} 
+                  inputContainerStyles={{borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
+                  inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
+                    />
                 </View>
                 {/* <View style={styles.resendOtpViewStyle}>
                 <TouchableOpacity
@@ -337,14 +280,17 @@ class OtpScreen extends Component {
                 </View> */}
               </View>
               <View style={styles.buttonView}>
-                <TouchableOpacity
-                  onPress={this.handleSubmit}
-                  style={styles.buttonStyle}
-                >
-                  <Text
-                    style={styles.buttonLabelStyle}>{t("login.submit")}</Text>
+                <TouchableOpacity onPress={this.handleSubmit} style={styles.buttonStyle} >
+                  <Text style={styles.buttonLabelStyle}>Continue</Text>
                 </TouchableOpacity>
               </View>
+
+              <View style={styles.buttonViewR}>
+                <TouchableOpacity onPress={this.handleSubmit} style={styles.buttonStyleR} >
+                  <Text style={styles.buttonLabelStyleR}>Resend Code</Text>
+                </TouchableOpacity>
+              </View>
+
             </View>
             <View style={styles.registerButtonStyle}>
                   {/* <TouchableOpacity

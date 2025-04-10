@@ -10,8 +10,18 @@
     alignItems: "center",
     marginVertical: Platform.OS === 'ios' ? null : 10,
     minHeight: Platform.OS === 'ios' ? null : 60,
+    zIndex: 2,
+  },
+
+  headerSubView: {
+    flexDirection: "row",
+    // paddingHorizontal: 15,
+    alignItems: "center",
+    marginVertical: Platform.OS === 'ios' ? null : 10,
+    minHeight: Platform.OS === 'ios' ? null : 60,
     zIndex: 2
   },
+  
  headerLeft: {
     flexDirection: "row",
     alignItems: "center",
@@ -35,6 +45,7 @@ nameRow: {
 
 banner: {
   paddingHorizontal: 20,
+  marginBottom:20
 },
 bannerText: {
   fontSize: 16,
@@ -48,12 +59,19 @@ welcomeLabel: {
     color: "#FFFFFF"
   },
 
-
+  containerView: {
+    flexGrow: 1,
+    paddingBottom: 80,
+    paddingHorizontal: 20,
+    // justifyContent: "flex-start",
+    // alignItems: 'center',
+    // marginRight:15, marginLeft:15
+  },
 
   bodyview:{
     backgroundColor: "#FFFFFF",padding: 5,borderRadius: 12,width: '90%',
     shadowColor: "#000",shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,
+    shadowOffset: { width: 0, height: 1 },shadowRadius: 4,elevation: 3,
     margin:12,
     position: 'absolute',
    
@@ -153,7 +171,87 @@ paymentDueRow1: {
     height: 14,
     resizeMode: 'contain',
   
-  }
+  },
+
+  accountsLabelView: {
+    width: "95%",
+    marginBottom: 10
+  },
+  accountsLabel: {
+      fontFamily: "Tajawal-Bold",
+      fontSize: 18,
+      color: "#102D4F"
+  },
+  buttonStyle: {
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
+    // width: "95%",
+    height: 40,
+    backgroundColor: '#102C4E',
+    fontSize:14,
+    fontWeight:"bold",
+    // elevation: 5,  // Android
+  },
+  buttonLabelStyle: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontFamily: "Tajawal-Medium"
+  },
+
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // left and right align
+    alignItems: 'center',
+    // paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#F9FBFD', // match your background
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#102C4E', // navy blue
+    // fontFamily: 'OwnersText-Bold', // replace with Inter or system font if needed
+  },
+  badge: {
+    backgroundColor: '#F29C1F', // orange
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  amount: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 14,
+    // fontFamily: 'OwnersText-Bold', // optional
+  },
+
+
+
+  headerCol1: {
+    // width: "100%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  headerCol2:{
+    width: "25%",
+    alignItems: "flex-end"
+  },
+  preferrenceHeader: {
+    // marginRight:30,
+    fontFamily: "Tajawal-Regular",
+    fontSize: 16,
+    fontWeight:"600",
+    // color: "#102C4E",
+  },
+  preferrenceLabel: {
+    fontFamily: "Tajawal-Regular",
+    fontSize: 10,
+    color: "#102C4ECC",
+  },
   //Enayat
 
   

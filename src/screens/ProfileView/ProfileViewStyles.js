@@ -61,15 +61,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
     // overflow: "scroll"
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,
@@ -385,6 +377,93 @@ cardBodyText1: {
       borderWidth: 1, 
       borderColor: '#ccc', 
   },
+
+
+
+  //Enayat
+
+
+
+
+  container: {
+    flex: 1,
+    backgroundColor: '#f6fafd',
+    padding: 20,
+    paddingTop: 40,
+    width:"95%"
+  },
+  profileImageWrapper: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    borderWidth: 4,
+    borderColor: '#ffffff',
+    backgroundColor: '#ccc',
+  },
+  editIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 120,
+    backgroundColor: '#0a1f44',
+    borderRadius: 20,
+    padding: 6,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#1a2b4c',
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    height: 54,
+    marginBottom: 20,
+    // remove border and shadow completely
+    borderWidth: 0,
+    shadowColor: 'transparent',
+    elevation: 0,
+
+    shadowColor: '#000',
+shadowOffset: { width: 0, height: 1 },
+shadowOpacity: 0.05,
+shadowRadius: 2,
+elevation: 1,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#2d2d2d',
+    paddingVertical: 0,
+  },
+  icon: {
+    marginRight: 10,
+    color: '#8e8e8e',
+  },
+  
+  
+  saveButton: {
+    backgroundColor: '#0a1f44',
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
 })
 
 export default styles

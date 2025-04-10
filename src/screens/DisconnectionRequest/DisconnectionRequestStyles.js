@@ -22,24 +22,24 @@ const styles = StyleSheet.create({
     height: 200,
     // marginTop: -125,
   },
-  headerView: {
-    flexDirection: "row",
-    paddingHorizontal: 15,
-    alignItems: "center",
-    marginVertical: Platform.OS === 'ios' ? null : 10,
-    minHeight: Platform.OS === 'ios' ? null : 60,
-    zIndex: 2
-  },
-  headerCol1: {
-    width: "95%",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-  },
-  headerCol2:{
-    width: "25%",
-    alignItems: "flex-end"
-  },
+  // headerView: {
+  //   flexDirection: "row",
+  //   // paddingHorizontal: 15,
+  //   alignItems: "center",
+  //   marginVertical: Platform.OS === 'ios' ? null : 10,
+  //   minHeight: Platform.OS === 'ios' ? null : 60,
+  //   zIndex: 2
+  // },
+  // headerCol1: {
+  //   // width: "100%",
+  //   alignItems: "center",
+  //   flexDirection: "row",
+  //   justifyContent: "flex-start",
+  // },
+  // headerCol2:{
+  //   width: "25%",
+  //   alignItems: "flex-end"
+  // },
   amountView: {
     width: "95%",
     height: 48,
@@ -76,30 +76,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#FFFFFF"
   },
-  preferrenceLabel: {
-    fontFamily: "Tajawal-Regular",
-    fontSize: 16,
-    color: "#8E9093"
-  },
-  scrollView: {
-    // flex: 1,
-    // display: "flex",
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    alignItems: 'center',
-    paddingBottom: 80
-    // height: "100%",
-    // overflow: "scroll"
-  },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+  
+ 
+  
   userNameLabel: {
     fontFamily: "Tajawal-Bold",
     fontSize: 16,

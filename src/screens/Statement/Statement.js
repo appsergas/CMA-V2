@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './StatementStyles'
 
 import React, { Component } from 'react'
@@ -319,7 +319,7 @@ class Statement extends Component {
                             </Text>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
+                    <View style={{ ...Mainstyles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
 
                     </View>
                 </View>
@@ -356,7 +356,7 @@ class Statement extends Component {
                         {this.state.statement.length ?
                         <>
                         <View style={{width: "95%"}}>
-                            <Text style={styles.accountsLabel} >
+                            <Text style={Mainstyles.accountsLabel} >
                                 Your Invoice History
                             </Text>
                             <View style={{...styles.cardView,...{ flexDirection: "row",minHeight: 0, width: "100%" }}}>
@@ -417,11 +417,11 @@ class Statement extends Component {
                                 yAxisInterval={100}
                                 
                             />
-                            {/* <Text style={styles.accountsLabel}>Invoice History</Text> */}
+                            {/* <Text style={Mainstyles.accountsLabel}>Invoice History</Text> */}
                         {/* </View> */}
                         </> : this.state.apiCallFlags.statementApiCalled ? <ActivityIndicator size={'small'} color={'#102D4F'}/> :
                                                 <View style={{width: "95%", alignItems: "center"}}>
-                                                <Text style={styles.accountsLabel} >
+                                                <Text style={Mainstyles.accountsLabel} >
                                                     No Invoice Found
                                                 </Text></View>
                     }

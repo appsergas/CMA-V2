@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0e7f4ff",
     // flex: 1,
     // display: "flex",
-    
+
   },
   imageView: {
     width: "100%",
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
   },
-  headerCol2:{
+  headerCol2: {
     width: "25%",
     alignItems: "flex-end"
   },
@@ -52,24 +52,23 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   scrollView: {
-    // flex: 1,
-    // display: "flex",
+    // // flex: 1,
+    // // display: "flex",
+    // flexGrow: 1,
+    // justifyContent: "flex-start",
+    // alignItems: 'center',
+    // paddingBottom: 80
+    // // height: "100%",
+    // // overflow: "scroll"
     flexGrow: 1,
     justifyContent: "flex-start",
     alignItems: 'center',
-    paddingBottom: 80
-    // height: "100%",
-    // overflow: "scroll"
+    paddingBottom: 80,
+    marginRight:15, marginLeft:15
+    // margin:20
+
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+ 
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,
@@ -78,10 +77,10 @@ const styles = StyleSheet.create({
   cardView: {
     width: "95%",
     minHeight: 100,
-    borderRadius: 4,
+    borderRadius: 12,
     borderStyle: "solid",
-        borderColor: "#ABB2AC",
-        borderWidth: 0.4,
+    borderColor: "#ABB2AC",
+    borderWidth: 0.4,
     //     shadowColor: 'rgba(0, 0, 0, 0.5)',
     //     shadowOffset: { height: 2, width: 2 }, // IOS
     //     shadowOpacity: 0.5, // IOS
@@ -89,13 +88,15 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',
     // elevation: 15,  // Android,
     paddingVertical: 10,
-    marginBottom: 8
+    marginBottom: 8,
+    borderWidth: 1, 
+    borderColor: "#0057A21A"
   },
-  icon:  {
+  icon: {
     height: 40,
     width: 40,
     resizeMode: "stretch"
-},
+  },
   paymentDueRow1: {
     paddingHorizontal: 15,
     flexDirection: "row"
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   optionIconViewCol2: {
-      justifyContent: "center",
+    justifyContent: "center",
     // backgroundColor: "red"
   },
   cardHeader: {
@@ -140,10 +141,10 @@ const styles = StyleSheet.create({
     // marginTop: -125,
   },
   profileLabelView: {
-      flexDirection: "column",
-      marginHorizontal: 10,
+    flexDirection: "column",
+    marginHorizontal: 10,
     //   height: "100%",
-      justifyContent: "center",
+    justifyContent: "center",
   },
   cardHeaderText: {
     fontFamily: "Tajawal-Regular",
@@ -151,9 +152,9 @@ const styles = StyleSheet.create({
     color: "rgba(110, 149, 213, 1)",
   },
   accountNumberText: {
-      fontFamily: "Tajawal-Medium",
-      fontSize: 12,
-      color: "#102D4F"
+    fontFamily: "Tajawal-Medium",
+    fontSize: 12,
+    color: "#102D4F"
   },
   noteText: {
     fontFamily: "Tajawal-Bold",
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   imageClearText: {
     fontFamily: "Tajawal-Medium",
     fontSize: 14,
-    color: "#ABB2AC"
+    color: "#102C4E99"
   },
   frontBackText: {
     fontFamily: "Tajawal-Regular",
@@ -177,21 +178,21 @@ const styles = StyleSheet.create({
     borderRadius: 4
   },
   amountText: {
-      color: "rgba(110, 149, 213, 1)",
-      fontFamily: "Tajawal-Bold",
-      fontSize: 24,
+    color: "rgba(110, 149, 213, 1)",
+    fontFamily: "Tajawal-Bold",
+    fontSize: 24,
   },
   aedText: {
-      color: "rgba(110, 149, 213, 1)",
-      fontFamily: "Tajawal-Bold",
-      fontSize: 12,
-      marginLeft: 1
+    color: "rgba(110, 149, 213, 1)",
+    fontFamily: "Tajawal-Bold",
+    fontSize: 12,
+    marginLeft: 1
   },
   amountView: {
-      flexDirection: "row",
-      alignItems: 'flex-end',
-      marginTop: 5,
-      width: "50%"
+    flexDirection: "row",
+    alignItems: 'flex-end',
+    marginTop: 5,
+    width: "50%"
   },
   payBillView: {
     flexDirection: "row",
@@ -199,13 +200,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 5,
     width: "50%"
-},
-payBillText: {
+  },
+  payBillText: {
     color: "#5F8AC7",
     fontFamily: "Tajawal-Regular",
     fontSize: 14,
     fontWeight: "600"
-},
+  },
   cardBodyView: {
     paddingHorizontal: 15,
     marginBottom: 10
@@ -226,31 +227,7 @@ payBillText: {
     paddingHorizontal: 15,
     marginVertical: 25
   },
-  buttonStyle: {
-    // backgroundColor: "rgb(79, 194, 212)",
-    // borderColor: "rgba(110, 149, 213, 0.2)",
-    // borderStyle: "solid",
-    // borderWidth: 1,
-    borderRadius: 4,
-    // flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 0,
-    // alignSelf: "flex-end",
-    width: "95%",
-    height: 40,
-    // shadowColor: 'rgba(0,0,0, .4)',
-    // shadowOffset: { height: 2, width: 2 }, // IOS
-    // shadowOpacity: 1, // IOS
-    // shadowRadius: 1, //IOS
-    backgroundColor: '#102D4F',
-    // elevation: 5,  // Android
-  },
-  buttonLabelStyle: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Tajawal-Medium"
-  },
+ 
   registerButtonViewStyle: {
     width: "95%",
   },

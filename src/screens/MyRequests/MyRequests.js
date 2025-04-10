@@ -16,7 +16,9 @@ import TextInput from '../../controls/TextInput'
 import Toast from '../../controls/Toast'
 import DatePicker from 'react-native-date-picker'
 import HomeMainCard from '../../components/HomeMainCard';
-import { ArrowLeftIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon } from '../../../assets/icons'
 
 import {
     paymentGatewayTokenApiUrl,
@@ -535,49 +537,28 @@ class MyRequests extends Component {
 
     render() {
         return (
-
-            <ImageBackground
-                source={require('../../assets/images/coverheader.png')}
-                style={{ flex: 1, width: '100%', height: '100%' }}
-                resizeMode="cover">
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
                 <SafeAreaView style={{ height: "100%", flex: 1 }} >
-                    {/* header */}
                     <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
                         <View style={Mainstyles.headerLeft}>
                             <TouchableOpacity
                                 style={Mainstyles.backbutton}
                                 onPress={() => this.props.navigation.goBack()} >
-                                <ArrowLeftIcon />
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
                             <View style={Mainstyles.textContainer}>
                                 <View style={Mainstyles.nameRow}>
                                     <Text style={Mainstyles.welcomeLabel} >
-                                    My Requests
+                                        My Requests
                                     </Text>
                                 </View>
-
                             </View>
                         </View>
                     </View>
 
-                    {/* <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} > */}
-                    {/* <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_20 : Dimensions.HP_10 }}>
-                     <View style={{ flexDirection: "row", }}>
-                         <View style={styles.headerCol1}>
-                             <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                 <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
-                          </TouchableOpacity>
-                           <Text style={styles.welcomeLabel} >
-                                 My Requests
-                             </Text>
-                         </View>
-                     </View>
-                     <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
+                    {/*  <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}> */}
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
 
-                     </View>
-                 </View> */}
-
-                    <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}>
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
@@ -589,9 +570,9 @@ class MyRequests extends Component {
                             <ScrollView
                                 ref={(ref) => (this.scrollView = ref)}
                                 showsVerticalScrollIndicator={false}
-                                contentContainerStyle={styles.scrollView}>
+                                contentContainerStyle={Mainstyles.containerView}>
 
-                                <View style={{ width: "95%" }}>
+                                <View style={{}}>
 
 
                                     {this.state.requests.length ? <><View style={{ ...styles.cardView, ...{ flexDirection: "row", minHeight: 0, width: "100%" } }}>
@@ -602,8 +583,8 @@ class MyRequests extends Component {
                                             <Text style={styles.colHeadeingText}>Date</Text>
                                         </View>
                                         {/* <View style={{ width: "22.5%", justifyContent: "center" }}>
-                                    <Text style={styles.colHeadeingText}>Tenancy C. No.</Text>
-                                </View> */}
+                                                    <Text style={styles.colHeadeingText}>Tenancy C. No.</Text>
+                                                </View> */}
                                         <View style={{ width: "32%", justifyContent: "center", overflow: 'scroll' }}>
                                             <Text style={styles.colHeadeingText}>Type</Text>
                                         </View>
@@ -662,10 +643,20 @@ class MyRequests extends Component {
                                                 </View>
                                             </TouchableOpacity>
                                         </>
-                                    })}</> : this.state.apiCallFlags.getRequestsCalled ? <ActivityIndicator size={"small"} color={"black"} /> : <View style={{ width: "95%", alignItems: "center" }}>
-                                        <Text style={styles.accountsLabel} >
-                                            No Requests Found
-                                        </Text></View>}
+                                    })}</> : this.state.apiCallFlags.getRequestsCalled ? <ActivityIndicator size={"small"} color={"black"} /> :
+                                        <View style={{ alignItems: "center" }}>
+                                            {/* <Text style={Mainstyles.accountsLabel}>No Requests Found</Text> */}
+                                            <Image source={require('../../../assets/images/request.png')} />
+                                            <Text style={styles.RequestLabelHead}>You don’t have any requests yet!</Text>
+                                            <Text style={styles.RequestLabel}>Check back later to see your requests here.</Text>
+                                            <TouchableOpacity
+                                                style={{ ...styles.buttonStyle, width: "100%" }}
+                                                onPress={() => this.props.navigation.goBack()} >
+                                                <Text
+                                                    style={styles.RequestButton}>Back to Home</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    }
                                 </View>
                                 {/* {this.state.howTo.map(data => {
                             return <TouchableOpacity 
@@ -1048,7 +1039,7 @@ class MyRequests extends Component {
                         </KeyboardAwareScrollView>
                     </InfoContainer>
                 </SafeAreaView>
-            </ImageBackground>
+            </LinearGradient>
         )
     }
 

@@ -16,5 +16,18 @@ export { default as CustomerCareIcon } from "./CustomerCareIcon";
 export { default as FeedBackIcon } from "./FeedBackIcon";
 export { default as SafetyTipsIcon } from "./SafetyTipsIcon";
 export { default as ArrowLeftIcon } from "./ArrowLeftIcon";
+export { default as ArrowRightIcon } from "./ArrowRightIcon";
 export { default as NavIcon } from "./NavIcon";
+export { default as IdentificationIcon } from "./IdentificationIcon";
+export { default as InfoSquareIcon } from "./InfoSquareIcon";
+export { default as MoreCircleIcon } from "./MoreCircleIcon";
+export { default as LogOutIcon } from "./LogOutIcon";
+export { default as TypeCursorIcon } from "./TypeCursorIcon";
+export { default as ScanIcon } from "./ScanIcon";
+export { default as LogoIcon } from "./LogoIcon";
+export { default as OTPIcon } from "./OTPIcon";
+export { default as XIcon } from "./XIcon";
+export { default as ArrowIcon } from "./ArrowIcon";
+export { default as CameraIcon } from "./CameraIcon";
+export { default as CircleRadioIcon } from "./CircleRadioIcon";
 

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0e7f4ff",
     // flex: 1,
     // display: "flex",
-    
+
   },
   imageView: {
     width: "100%",
@@ -52,46 +52,28 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   scrollView: {
-    flex: 1,
-    display: "flex",
+    // flex: 1,
+    // display: "flex",
+    // flexGrow: 1,
+    // justifyContent: "center",
+    // alignContent: "center",
+    // alignItems: 'center',
+    // paddingBottom: 80,
+    // // overflow: "scroll"
+
     flexGrow: 1,
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: 'center',
+    justifyContent: "flex-start",
+    // alignItems: 'center',
     paddingBottom: 80,
-    // overflow: "scroll"
+    margin:20
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 18,
-      color: "#102D4F"
-  },
+
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,
     color: "rgba(110, 149, 213, 1)"
   },
-  cardView: {
-    width: "95%",
-    // minHeight: 100,
-    borderRadius: 4,
-    borderStyle: "solid",
-        borderColor: "#ABB2AC",
-        borderWidth: 0.4,
-    //     shadowColor: 'rgba(0, 0, 0, 0.5)',
-    //     shadowOffset: { height: 2, width: 2 }, // IOS
-    //     shadowOpacity: 0.5, // IOS
-    //     shadowRadius: 1, //IOS
-    // backgroundColor: '#fff',
-    // elevation: 15,  // Android,
-    // paddingVertical: 10,
-    marginBottom: 8,
-    justifyContent: "center", alignItems: "center"
-  },
+
   icon:  {
     height: 40,
     width: 40,
@@ -123,7 +105,7 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   addImageViewCol: {
-    width: "33%",
+    width: "50%",
     alignItems: "center"
   },
   cardHeader: {
@@ -172,8 +154,8 @@ const styles = StyleSheet.create({
     color: "rgba(134, 120, 120, 1)"
   },
   addImage: {
-    height: 80,
-    width: 110,
+    height: 97,
+    width: 174,
     resizeMode: "cover",
     borderRadius: 4
   },
@@ -237,14 +219,14 @@ payBillText: {
     // borderColor: "rgba(110, 149, 213, 0.2)",
     // borderStyle: "solid",
     // borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 12,
     // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: 0,
-    marginTop: 60,
+    marginTop: 10,
     // alignSelf: "flex-end",
-    width: "95%",
+    width: "100%",
     height: 40,
     // shadowColor: 'rgba(0,0,0, .4)',
     // shadowOffset: { height: 2, width: 2 }, // IOS
@@ -256,7 +238,8 @@ payBillText: {
   buttonLabelStyle: {
     color: "#FFFFFF",
     fontSize: 14,
-    fontFamily: "Tajawal-Medium"
+    fontFamily: "Tajawal-Medium",
+    fontWeight:"bold"
   },
   registerButtonViewStyle: {
     width: "95%",
@@ -336,7 +319,96 @@ cardBodyText1: {
     resizeMode: 'stretch',
     marginRight: 6
 
-  }
+  },
+
+  // bodyview:{
+  //   backgroundColor: "#FFFFFF",padding: 5,borderRadius: 12,width: '90%',
+  //   shadowColor: "#000",shadowOpacity: 0.1,
+  //   shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,
+  //   margin:12,
+  // },
+
+
+
+  bodyview: {
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 24,
+    width: '100%',
+    alignSelf: 'center',
+    marginVertical: 8,
+    position: 'relative', // Important for absolute positioning
+  },
+
+  labelText: {
+    fontSize: 16,
+    fontFamily: 'Tajawal-Bold',
+    color: '#102D4F',
+    marginBottom: 8,
+  },
+
+  valueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  verifiedIcon: {
+ 
+  },
+
+  accountNumberText: {
+    fontSize: 16,
+    color: '#102D4F',
+    fontFamily: 'Tajawal-Bold',
+    marginLeft:10,
+  },
+
+  editButton: {
+    position: 'absolute',
+    right: 20,
+    top: '50%',
+    // transform: [{ translateY: -20 }],
+    backgroundColor: '#102D4F',
+    paddingHorizontal: 28,
+    paddingVertical: 8,
+    paddingTop:12,
+    borderRadius: 100,
+  },
+
+  editText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontFamily: 'Tajawal-Bold',
+  },
+
+  imgRow: {
+    flexDirection: 'row',
+    marginBottom:20,
+    justifyContent: "center",
+  },
+  
+  Labellink: {
+    borderRadius: 4,
+    padding: 0,
+    width: "95%",
+    margin: 12,
+    textAlign: "right",
+},
+
+LabelContainer: {
+    flexDirection: 'row',        // Align icon and text in a row
+    justifyContent: 'flex-end',  // Align items to the right
+    alignItems: 'center',        // Vertically center the items
+},
+
+Labeltxt: {
+    color: "#102C4E",
+    fontSize: 14,
+    fontFamily: "Tajawal-Medium",
+    fontWeight: "bold",
+    textAlign: "right",          // Align text to the right
+}
 })
 
 export default styles

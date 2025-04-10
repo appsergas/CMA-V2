@@ -61,51 +61,13 @@ const styles = StyleSheet.create({
     // height: "100%",
     // overflow: "scroll"
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 15
-  },
-  accountsLabel: {
-      fontFamily: "Tajawal-Bold",
-      fontSize: 16,
-      color: "#394B62"
-  },
+ 
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,
     color: "rgba(110, 149, 213, 1)"
   },
-  cardView: {
-    // width: "95%",
-    // // minHeight: 100,
-    // borderRadius: 4,
-    // borderStyle: "solid",
-    //     borderColor: "#ABB2AC",
-    //     borderWidth: 0.4,
-    // //     shadowColor: 'rgba(0, 0, 0, 0.5)',
-    // //     shadowOffset: { height: 2, width: 2 }, // IOS
-    // //     shadowOpacity: 0.5, // IOS
-    // //     shadowRadius: 1, //IOS
-    // // backgroundColor: '#fff',
-    // // elevation: 15,  // Android,
-    // // paddingVertical: 10,
-    // marginBottom: 8,
-    // justifyContent: "center", alignItems: "center"
 
-
-    // backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    marginVertical: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    width: "100%",
-    alignSelf: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 2,
-  },
   icon:  {
     height: 40,
     width: 40,
@@ -126,12 +88,7 @@ const styles = StyleSheet.create({
     // alignItems: "flex-start",
     // width: "50%"
   },
-  optionIconViewCol2: {
-      justifyContent: "center",
-    //   width: "50%",
-    //   alignItems: "flex-end"
-    // // backgroundColor: "red"
-  },
+
   optionIconViewCol11: {
     paddingHorizontal: 15,
     justifyContent: "center",
@@ -166,12 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "rgba(110, 149, 213, 1)",
   },
-  accountNumberText: {
-      fontFamily: "Tajawal-Medium",
-      fontSize: 15,
-      color: "#102D4F",
-      fontWeight: "600",
-  },
+
   amountText: {
       color: "rgba(110, 149, 213, 1)",
       fontFamily: "Tajawal-Bold",
@@ -366,23 +318,10 @@ payBillText: {
       color: "#102D4F",
       opacity:0.6,
       marginTop: 2,
+      textDecorationLine: "underline",
   },
   verifiedIcon: {
     marginTop: 2,
-  },
-  
-
-  rowItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 50,
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 15,
-  },
-  rowLeft: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   
   divider: {
@@ -392,29 +331,123 @@ payBillText: {
     alignSelf: "center",
     marginVertical: 2,
   },
-  logoutRow: {
+
+  cardView: {
+    borderRadius: 16,
+    marginVertical: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    width: "100%",
+    alignSelf: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  rowItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    padding: 15,
-    marginTop: 20,
-    borderRadius: 12,
+    // height: 50,
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 5,
+    paddingVertical: 5,
   },
-  
-  logoutText: {
-    color: "#E53935",
-    fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 10,
+  rowLeft: {
+    flexDirection: "row",
+    alignItems: "center", 
   },
-  footerText: {
-    fontSize: 12,
-    color: "#A0A0A0",
-    textAlign: "center",
-    marginBottom: 90,
+  accountNumberText: {
+    paddingLeft:20,
+      fontFamily: "Tajawal-Medium",
+      fontSize: 16,
+      color: "#102D4F",
+      fontWeight: "600",
+  },
+  optionIconViewCol2: {
+    justifyContent: "center",
+    alignItems: "center",
+},
+logoutRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: "#FFFFFF",
+  padding: 15,
+  marginTop: 15,
+  borderRadius: 12,
+  paddingLeft:25,
+},
 
-    
-  },
+logoutText: {
+  color: "#E53935",
+  fontWeight: "bold",
+  fontSize: 16,
+  marginLeft: 10,
+},
+footerText: {
+  fontSize: 12,
+  color: "#A0A0A0",
+  textAlign: "center",
+  marginBottom: 80,
+},
+
+
+
+logoutTitle: {
+  color: '#D93025', // red
+  fontSize: 18,
+  fontWeight: '700',
+  marginBottom: 10,
+  textAlign: 'center',
+},
+
+logoutMessage: {
+  color: '#102D4F', // navy
+  fontSize: 16,
+  fontWeight: '600',
+  textAlign: 'center',
+  marginBottom: 20,
+},
+
+logoutButtonContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  paddingHorizontal: 0,
+},
+
+cancelButton: {
+  flex: 1,
+  backgroundColor: '#102D4F', // navy
+  paddingVertical: 12,
+  borderRadius: 12,
+  marginRight: 10,
+  alignItems: 'center',
+},
+
+cancelButtonText: {
+  color: '#FFFFFF',
+  fontSize: 16,
+  fontWeight: '700',
+},
+
+logoutButton: {
+  flex: 1,
+  backgroundColor: '#FFFFFF',
+  paddingVertical: 12,
+  borderRadius: 12,
+  borderWidth: 1,
+  borderColor: '#102D4F',
+  alignItems: 'center',
+},
+
+logoutButtonText: {
+  color: '#102D4F',
+  fontSize: 16,
+  fontWeight: '700',
+}
+
 })
 
 export default styles

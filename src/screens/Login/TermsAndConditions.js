@@ -1,4 +1,4 @@
-export const TermsAndConditions = `Version 1.0
+export const TermsAndConditions = `**Version 1.0**
 Last Updated December 13, 2015. The following 'Terms of use' is a combination of both policies: 'Terms & Conditions' (section 1) and the 'privacy Policy' (section 2).
 
 Section 1: Terms & Conditions

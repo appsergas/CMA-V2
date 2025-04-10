@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './RaiseComplaintStyles'
 
 import React, { Component } from 'react'
@@ -24,6 +24,9 @@ import InfoContainer from '../../components/molecules/InfoContainer';
 import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
 
 class RaiseComplaint extends Component {
     constructor(props) {
@@ -197,312 +200,324 @@ class RaiseComplaint extends Component {
     render() {
         const { apiCallFlags } = this.state
         return (
-            <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-                <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                            <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                {/* <ArrowIcon direction={"left"} size={20} color="#FFFFFF" /> */}
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
-                            <Text style={styles.welcomeLabel} >
-                                Customer Care
-                            </Text>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Customer Care
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
-
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            We’re here to help! Contact us for any questions or support you need.
+                        </Text>
                     </View>
-                </View>
 
-                {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
-                <View style={{
-                    height: Platform.OS == 'ios' ? "90%" : "100%", backgroundColor: "#FFFFFF", overflow: 'hidden',
-                    borderTopLeftRadius: 24,
-                    borderTopRightRadius: 24,
-                    width: '100%'
-                }} >
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
+                    {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
+                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            style={{ flex: 1 }}
+                            enabled
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
+                        >
+                            <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={Mainstyles.containerView}>
 
-                            <View style={{ ...styles.accountsLabelView, marginTop: 30 }}>
-                            <Text style={{...styles.accountLabelMedium, marginBottom: 20}}>If your inquiry is related to gas emergencies, Please call 600565657 immediately.</Text>
-                                <Text style={styles.accountsLabel} >
-                                    {t("home.selectAccount")}
-                                </Text>
-                            </View>
-                        <HomeMainCard
-                            contracts={this.props.contracts}
-                            from="raiseComplaint"
-                            usageCharges={1234}
-                            userName="User NameX"
-                            accountNumber="YYYY XXXX YYYY XXXX"
-                            currentIndex={this.carouselCurrentItem}
-                        />
+                                <View style={styles.noticeContainer}>
+                                    <Text style={styles.noticeText}>
+                                        IF YOUR INQUIRY IS RELATED TO GAS EMERGENCIES,{"\n"}
+                                        PLEASE CALL “<Text style={styles.phone}>600565657</Text>” IMMEDIATELY.
+                                    </Text>
+                                </View>
 
-                        {/* <View style={styles.cardView}> */}
-                        <View style={styles.inputGroupStyle}>
-                            <View>
-                                <Text style={styles.accountsLabel}>Submit Your Inquiry</Text>
-                            </View>
-                            <View>
-                                <TextInput
-                                Placeholder="Write more details"
-                                Style={{ height: 150, width: "100%",fontSize: 14, textAlignVertical: 'top', fontFamily: "Tajawal-Medium"}} 
-                                    value={this.state.complaintDescription}
-                                    onChangeText={val => this.setState({ complaintDescription: val })}
-                                    multiline={true}
-                                >
+                                <View style={{ ...Mainstyles.accountsLabelView, marginTop: 20 }}>
+                                    <Text style={Mainstyles.accountsLabel} >
+                                        {t("home.selectAccount")}
+                                    </Text>
+                                </View>
+                                <HomeMainCard
+                                    contracts={this.props.contracts}
+                                    from="raiseComplaint"
+                                    usageCharges={1234}
+                                    userName="User NameX"
+                                    accountNumber="YYYY XXXX YYYY XXXX"
+                                    currentIndex={this.carouselCurrentItem}
+                                />
 
-                                </TextInput>
-                            </View>
-                        </View>
-                        <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 40, width: "95%" } }}>
-                            <Text style={styles.accountsLabel}>{t("support.attachImages")}</Text>
-                            <View style={styles.addImageView}>
-                                <View style={{...styles.addImageViewCol, flexDirection: "row"}}>
-                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
+                                {/* <View style={styles.cardView}> */}
+                                    <View style={{ ...Mainstyles.accountsLabelView }}>
+                                        <Text style={Mainstyles.accountsLabel} >
+                                            Submit Your Inquiry
+                                        </Text>
+                                    </View>
+
+                                    <View>
+                                        <TextInput
+                                            Placeholder="Write more details"
+                                            Style={{ height: 100, width: "100%", fontSize: 14, textAlignVertical: 'top', fontFamily: "Tajawal-Medium" }}
+                                            value={this.state.complaintDescription}
+                                            onChangeText={val => this.setState({ complaintDescription: val })}
+                                            multiline={true}
+                                        >
+
+                                        </TextInput>
+                                    </View>
+                               
+                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                    <Text style={Mainstyles.accountsLabel}>{t("support.attachImages")}</Text>
+                                    <View style={styles.addImageView}>
+                                        <View style={{ ...styles.addImageViewCol, flexDirection: "row" }}>
+                                            {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
                                         (media) => {
                                             if (!!media && media.assets) {
                                                 this.setState({ image1: media })
                                             }
                                         }
                                     )}> */}
-                                    <TouchableOpacity onPress={() => {
-                                        if (this.state.image1 == null) {
-                                            // this.handleAttachImages("capture", "emiratesId")
-                                            this.setState({
-                                                showPickerModal: true,
-                                                currentImageType: "image1"
-                                            })
-                                        } else {
-                                            this.setState({
-                                                showImageModal: true,
-                                                currentImageUri: this.state.image1.assets[0].uri,
-                                                currentImageType: "image1"
-                                            })
-                                        }
-                                    }}>
-                                        {this.state.image1 != null ?
-                                            <Image style={styles.addImage} source={{ uri: this.state.image1.assets[0].uri }} />
-                                            : <Image style={{...styles.addImage,resizeMode: "contain"}} source={require("../../../assets/images/camera2.png")} />
-                                        }
-                                    </TouchableOpacity>
-                                    {
-                                        this.state.image1 == null ?
-                                    <View style={{ ...styles.addImageView, ...{ width: "75%", marginTop: 0 } }}>
-                                        {/* <Text style={styles.noteText}>{t("home.note")}</Text> */}
-                                        <Text style={styles.imageClearText}>Upload your images</Text>
-                                    </View> : null
-                                    }
-                                </View>
-                                {
-                                    this.state.image1 ? 
-                                <View style={styles.addImageViewCol}>
-                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
+                                            <TouchableOpacity onPress={() => {
+                                                if (this.state.image1 == null) {
+                                                    // this.handleAttachImages("capture", "emiratesId")
+                                                    this.setState({
+                                                        showPickerModal: true,
+                                                        currentImageType: "image1"
+                                                    })
+                                                } else {
+                                                    this.setState({
+                                                        showImageModal: true,
+                                                        currentImageUri: this.state.image1.assets[0].uri,
+                                                        currentImageType: "image1"
+                                                    })
+                                                }
+                                            }}>
+                                                {this.state.image1 != null ?
+                                                    <Image style={styles.addImage} source={{ uri: this.state.image1.assets[0].uri }} />
+                                                    : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/camera2.png")} />
+                                                }
+                                            </TouchableOpacity>
+                                            {
+                                                this.state.image1 == null ?
+                                                    <View style={{ ...styles.addImageView, ...{ width: "75%", marginTop: 0 } }}>
+                                                        {/* <Text style={styles.noteText}>{t("home.note")}</Text> */}
+                                                        <Text style={styles.imageClearText}>Upload your images</Text>
+                                                    </View> : null
+                                            }
+                                        </View>
+                                        {
+                                            this.state.image1 ?
+                                                <View style={styles.addImageViewCol}>
+                                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
                                         (media) => {
                                             if (!!media && media.assets) {
                                                 this.setState({ image2: media })
                                             }
                                         }
                                     )}> */}
-                                    <TouchableOpacity onPress={() => {
-                                        if (this.state.image2 == null) {
-                                            // this.handleAttachImages("capture", "emiratesId")
-                                            this.setState({
-                                                showPickerModal: true,
-                                                currentImageType: "image2"
-                                            })
-                                        } else {
-                                            this.setState({
-                                                showImageModal: true,
-                                                currentImageUri: this.state.image2.assets[0].uri,
-                                                currentImageType: "image2"
-                                            })
+                                                    <TouchableOpacity onPress={() => {
+                                                        if (this.state.image2 == null) {
+                                                            // this.handleAttachImages("capture", "emiratesId")
+                                                            this.setState({
+                                                                showPickerModal: true,
+                                                                currentImageType: "image2"
+                                                            })
+                                                        } else {
+                                                            this.setState({
+                                                                showImageModal: true,
+                                                                currentImageUri: this.state.image2.assets[0].uri,
+                                                                currentImageType: "image2"
+                                                            })
+                                                        }
+                                                    }}>
+                                                        {this.state.image2 != null ?
+                                                            <Image style={styles.addImage} source={{ uri: this.state.image2.assets[0].uri }} />
+                                                            : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/attachment.png")} />
+                                                        }
+                                                    </TouchableOpacity>
+                                                </View> : null
                                         }
-                                    }}>
-                                        {this.state.image2 != null ?
-                                            <Image style={styles.addImage} source={{ uri: this.state.image2.assets[0].uri }} />
-                                            : <Image style={{...styles.addImage,resizeMode: "contain"}} source={require("../../../assets/images/attachment.png")} />
-                                        }
-                                    </TouchableOpacity>
-                                </View> : null
-                                }
-                                {
-                                    this.state.image2 ?
-                                <View style={styles.addImageViewCol}>
-                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
+                                        {
+                                            this.state.image2 ?
+                                                <View style={styles.addImageViewCol}>
+                                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
                                         (media) => {
                                             if (!!media && media.assets) {
                                                 this.setState({ image3: media })
                                             }
                                         }
                                     )}> */}
-                                    <TouchableOpacity onPress={() => {
-                                        if (this.state.image3 == null) {
-                                            // this.handleAttachImages("capture", "emiratesId")
-                                            this.setState({
-                                                showPickerModal: true,
-                                                currentImageType: "image3"
-                                            })
-                                        } else {
-                                            this.setState({
-                                                showImageModal: true,
-                                                currentImageUri: this.state.image3.assets[0].uri,
-                                                currentImageType: "image3"
-                                            })
+                                                    <TouchableOpacity onPress={() => {
+                                                        if (this.state.image3 == null) {
+                                                            // this.handleAttachImages("capture", "emiratesId")
+                                                            this.setState({
+                                                                showPickerModal: true,
+                                                                currentImageType: "image3"
+                                                            })
+                                                        } else {
+                                                            this.setState({
+                                                                showImageModal: true,
+                                                                currentImageUri: this.state.image3.assets[0].uri,
+                                                                currentImageType: "image3"
+                                                            })
+                                                        }
+                                                    }}>
+                                                        {this.state.image3 != null ?
+                                                            <Image style={styles.addImage} source={{ uri: this.state.image3.assets[0].uri }} />
+                                                            : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/attachment.png")} />
+                                                        }
+                                                    </TouchableOpacity>
+                                                </View> : null
                                         }
-                                    }}>
-                                        {this.state.image3 != null ?
-                                            <Image style={styles.addImage} source={{ uri: this.state.image3.assets[0].uri }} />
-                                            : <Image style={{...styles.addImage,resizeMode: "contain"}} source={require("../../../assets/images/attachment.png")} />
-                                        }
-                                    </TouchableOpacity>
-                                </View> : null
-                                }
-                            </View>
-                        </View>
-                        {/* </View> */}
+                                    </View>
+                                </View>
+                                {/* </View> */}
 
-                        <TouchableOpacity
-                            style={styles.buttonStyle}
-                            onPress={this.handleSubmit}
-                            disabled={apiCallFlags.postComplaintApiCalled}
-                        >
-                            {
-                                (apiCallFlags.postComplaintApiCalled) ?
-                                    <ActivityIndicator size='small' color='white' /> :
-                                    <Text
-                                        style={styles.buttonLabelStyle}>{t("support.submit")}</Text>
-                            }
-                        </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={Mainstyles.buttonStyle}
+                                    onPress={this.handleSubmit}
+                                    disabled={apiCallFlags.postComplaintApiCalled}
+                                >
+                                    {
+                                        (apiCallFlags.postComplaintApiCalled) ?
+                                            <ActivityIndicator size='small' color='white' /> :
+                                            <Text
+                                                style={Mainstyles.buttonLabelStyle}>{t("support.submit")}</Text>
+                                    }
+                                </TouchableOpacity>
 
-                    </ScrollView>
-                    {this.state.showToast ? (
-                        <Toast message={this.state.toastMessage} isImageShow={false} />
-                    ) : null}
+                            </ScrollView>
+                            {this.state.showToast ? (
+                                <Toast message={this.state.toastMessage} isImageShow={false} />
+                            ) : null}
 
-                    {this.state.showPickerModal ? (
-                        <Modal
-                        onClose = {() => this.setState({showPickerModal: false})}
-                            visible={this.state.showPickerModal}
-                            button1={true}
-                            onButton1={() => {
-                                this.setState({ showPickerModal: false })
-                                setTimeout(() => {
-                                    this.handleAttachImages("capture", this.state.currentImageType)
-                                }, 1000)
-                            }}
-                            button2={true}
-                            onButton2={() => {
-                                this.setState({ showPickerModal: false })
-                                setTimeout(() => {
-                                    this.handleAttachImages("", this.state.currentImageType)
-                                }, 1000)
-                            }}
-                            data={{
-                                title: "Test",
-                                message: "Test",
-                                button1Text: "Camera",
-                                button2Text: "Gallery",
-                                uri: null
-                            }}
-                            titleText={{ alignItems: 'center' }}
-                        />
-                    ) : null}
-                                            {
-                            this.state.showModal ?
+                            {this.state.showPickerModal ? (
                                 <Modal
-                                    onClose={() => this.setState({ showModal: false })}
-                                    visible={this.state.showModal}
-                                    // button1={true}
-                                    // button2={true}
+                                    onClose={() => this.setState({ showPickerModal: false })}
+                                    visible={this.state.showPickerModal}
+                                    button1={true}
                                     onButton1={() => {
-                                        this.setState({ showPaidModal: false })
+                                        this.setState({ showPickerModal: false })
+                                        setTimeout(() => {
+                                            this.handleAttachImages("capture", this.state.currentImageType)
+                                        }, 1000)
                                     }}
+                                    button2={true}
                                     onButton2={() => {
-                                        this.setState({ showPaidModal: false })
-                                        this.makePayment()
+                                        this.setState({ showPickerModal: false })
+                                        setTimeout(() => {
+                                            this.handleAttachImages("", this.state.currentImageType)
+                                        }, 1000)
                                     }}
                                     data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Pay",
-                                        uri: this.state.helpImageUrl,
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                    <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "We will get back to you shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                    // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
-                                                    />
-
-                                                    <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <Text style={styles.inputLabelStyle}>{this.state.readingResult == "We will get back to you shortly." ? "Thank You" : "Technical Error"} </Text>
-                                                    </View>
-
-                                                    <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                        <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
-                                                    </View>
-                                                    {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                                    <TouchableOpacity
-                                                        style={{ ...styles.buttonStyle, width: "100%" }}
-                                                        onPress={() => {
-                                                            this.setState({
-                                                                showModal: false
-                                                            })
-                                                            this.state.readingResult !== "We will get back to you shortly." ? null : this.props.navigation.goBack()
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            style={styles.buttonLabelStyle}>{this.state.readingResult !== "We will get back to you shortly." ? "Try Again" : "Done"}</Text>
-                                                    </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
+                                        title: "Test",
+                                        message: "Test",
+                                        button1Text: "Camera",
+                                        button2Text: "Gallery",
+                                        uri: null
                                     }}
                                     titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                    {this.state.showImageModal ? (
-                        <Modal
-                        onClose = {() => this.setState({showImageModal: false})}
-                            visible={this.state.showImageModal}
-                            button1={true}
-                            onButton1={() => {
-                                this.setState({
-                                    showPickerModal: true,
-                                    currentImageType: this.state.currentImageType
-                                })
-                                this.setState({ showImageModal: false })
-                            }}
-                            button2={true}
-                            onButton2={() => this.setState({ showImageModal: false })}
-                            data={{
-                                title: "Test",
-                                message: "Test",
-                                button1Text: "Retake",
-                                button2Text: "Cancel",
-                                uri: {uri: this.state.currentImageUri}
-                            }}
-                            titleText={{ alignItems: 'center' }}
-                        />
-                    ) : null}
-                </KeyboardAwareScrollView>
-                </View>
-                {/* </InfoContainer> */}
-            </SafeAreaView>
+                                />
+                            ) : null}
+                            {
+                                this.state.showModal ?
+                                    <Modal
+                                        onClose={() => this.setState({ showModal: false })}
+                                        visible={this.state.showModal}
+                                        // button1={true}
+                                        // button2={true}
+                                        onButton1={() => {
+                                            this.setState({ showPaidModal: false })
+                                        }}
+                                        onButton2={() => {
+                                            this.setState({ showPaidModal: false })
+                                            this.makePayment()
+                                        }}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            button1Text: "Close",
+                                            button2Text: "Pay",
+                                            uri: this.state.helpImageUrl,
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "We will get back to you shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>{this.state.readingResult == "We will get back to you shortly." ? "Thank You" : "Technical Error"} </Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
+                                                </View>
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            showModal: false
+                                                        })
+                                                        this.state.readingResult !== "We will get back to you shortly." ? null : this.props.navigation.goBack()
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>{this.state.readingResult !== "We will get back to you shortly." ? "Try Again" : "Done"}</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {this.state.showImageModal ? (
+                                <Modal
+                                    onClose={() => this.setState({ showImageModal: false })}
+                                    visible={this.state.showImageModal}
+                                    button1={true}
+                                    onButton1={() => {
+                                        this.setState({
+                                            showPickerModal: true,
+                                            currentImageType: this.state.currentImageType
+                                        })
+                                        this.setState({ showImageModal: false })
+                                    }}
+                                    button2={true}
+                                    onButton2={() => this.setState({ showImageModal: false })}
+                                    data={{
+                                        title: "Test",
+                                        message: "Test",
+                                        button1Text: "Retake",
+                                        button2Text: "Cancel",
+                                        uri: { uri: this.state.currentImageUri }
+                                    }}
+                                    titleText={{ alignItems: 'center' }}
+                                />
+                            ) : null}
+                        </KeyboardAwareScrollView>
+                    </InfoContainer>
+                    {/* </InfoContainer> */}
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
 
