@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './DisconnectionRequestStyles'
 
 import React, { Component } from 'react'
@@ -51,6 +51,9 @@ import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import { API_PATH } from '../../services/api/data/data/api-utils';
 import DeviceInfo from 'react-native-device-info';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
 
 class DisconnectionRequest extends Component {
     constructor(props) {
@@ -336,16 +339,16 @@ class DisconnectionRequest extends Component {
     }
 
     getTraceId = async () => {
-        var pattern =  "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
+        var pattern = "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
         var date = new Date().getTime();
-        
-        var uuid = pattern.replace(/[xy]/g, function(c) {
-            var r = (date + Math.random()*16)%16 | 0;
-            date = Math.floor(date/16);
-            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+
+        var uuid = pattern.replace(/[xy]/g, function (c) {
+            var r = (date + Math.random() * 16) % 16 | 0;
+            date = Math.floor(date / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
-        return uuid.toString()  
-      }
+        return uuid.toString()
+    }
 
     makePayment = async (type) => {
         this.setState({ makePaymentClicked: true }, async () => {
@@ -414,7 +417,7 @@ class DisconnectionRequest extends Component {
                         "ContractId": currentGasContract.CONTRACT_NO + " for Preferred DISCONNECTION",
                         "CustomerName": currentGasContract.PARTY_NAME
                     },
-                    "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g,'').substring(0, 7).toUpperCase()}-MP`
+                    "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g, '').substring(0, 7).toUpperCase()}-MP`
                 }
 
                 axios.post(orderApiUrl + outLetReference + "/orders", createOrderReq, { headers: createOrderHeader })
@@ -447,7 +450,7 @@ class DisconnectionRequest extends Component {
 
                                                 if (getOrderDetailsRes &&
                                                     (getOrderDetailsRes._embedded.length != 0) &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state=="CAPTURED" &&
+                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
                                                     getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
                                                     if (type == "samsungpay") {
                                                         paidCardDetails = {
@@ -635,7 +638,7 @@ class DisconnectionRequest extends Component {
 
                                                 if (getOrderDetailsRes &&
                                                     (getOrderDetailsRes._embedded.length != 0) &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state=="CAPTURED" &&
+                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
                                                     getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
 
                                                     paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
@@ -652,7 +655,7 @@ class DisconnectionRequest extends Component {
                                                         "PARTY_NAME": this.props.contracts[this.state.activeItemIndex].PARTYNAME,
                                                         "EID": this.props.contracts[this.state.activeItemIndex].EID
                                                     }
-            
+
                                                     let updatePaymentReqBody = {
                                                         "COMPANY": currentGasContract.COMPANY,
                                                         "CONTRACT_NO": currentGasContract.CONTRACT_NO,
@@ -668,8 +671,8 @@ class DisconnectionRequest extends Component {
                                                         "USER_ID": currentGasContract.USER_ID,
                                                         "DEVICE_ID": "12345"
                                                     }
-            
-            
+
+
                                                     let reqBody = {
                                                         "COMPANY": currentGasContract.COMPANY,
                                                         "CONTRACT_NO": currentGasContract.CONTRACT_NO,
@@ -683,7 +686,7 @@ class DisconnectionRequest extends Component {
                                                         "CHARGE_DESCP": "URGENT DISCONNECTION FEE",
                                                         "YEARCODE": currentDate.getFullYear()
                                                     }
-            
+
                                                     this.setState({
                                                         // apiCallFlags: { ...this.state.apiCallFlags, ...{ createCollectionInvoiceCalled: true } },
                                                         updatePaymentReqBody: updatePaymentReqBody,
@@ -746,7 +749,7 @@ class DisconnectionRequest extends Component {
                                             })
 
 
-                                      
+
                                     } else {
                                         this.props.updatePaymentLog({
                                             "OrderId": createOrderRes.reference,
@@ -844,351 +847,307 @@ class DisconnectionRequest extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-                <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                            <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                {/* <ArrowIcon direction={"left"} size={20} color="#FFFFFF" /> */}
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
-                            <Text style={styles.welcomeLabel} >
-                                Disconnection Request
-                            </Text>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Disconnection Request
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
-
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            Request to disconnect your gas service quickly.
+                        </Text>
                     </View>
-                </View>
-
-                <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}>
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
+                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            style={{ flex: 1 }}
+                            enabled
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
+                        >
+                            <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={Mainstyles.containerView}>
 
 
-                            <View style={{ ...styles.accountsLabelView, marginTop: 30 }}>
-                                <Text style={styles.accountsLabel} >
-                                    {t("home.selectAccount")}
-                                </Text>
-                            </View>
-                            <HomeMainCard
-                                contracts={this.props.contracts}
-                                from="raiseComplaint"
-                                usageCharges={1234}
-                                userName="User NameX"
-                                accountNumber="YYYY XXXX YYYY XXXX"
-                                currentIndex={this.carouselCurrentItem}
-                            />
-
-                            {
-                                this.state.checkDisconnectionRequestCalled ?
-                                    <ActivityIndicator size={'small'} color={"#102D4F"} /> :
-                                    <>
-                                        <View style={{ ...styles.accountsLabelView }}>
-                                            <Text style={styles.accountsLabel} >
-                                                Preferred Date For Disconnection
-                                            </Text>
-                                        </View>
-
-                                        <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: true }) }} style={{ ...styles.headerView, marginBottom: 0, minHeight: 40 }}>
-                                            <View style={{ flexDirection: "row", }}>
-                                                <View style={styles.headerCol1}>
-                                                    <TouchableOpacity style={this.state.paidDisconnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 0.4 }}
-                                                        onPress={() => { this.setState({ paidDisconnection: true }) }}>
-                                                        {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: true }) }}>
-                                                        <Text style={styles.preferrenceLabel} >
-                                                            Immediate Disconnection
-                                                        </Text>
-                                                        <Text style={{ ...styles.preferrenceLabel, fontSize: 12 }} >
-                                                            Additional charges apply for Immediate Disconnection + Associated Fees : 105 AED
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: false }) }} style={{ ...styles.headerView, marginTop: 0, marginBottom: 20 }}>
-                                            <View style={{ flexDirection: "row", }}>
-                                                <View style={styles.headerCol1}>
-                                                    <TouchableOpacity style={this.state.paidDisconnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1 } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" }}
-                                                        onPress={() => { this.setState({ paidDisconnection: false }) }}>
-                                                        {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                                                    </TouchableOpacity>
-                                                    <Text style={styles.preferrenceLabel} >
-                                                        Regular Disconnection
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity>
-
-                                        {/* <View style={styles.registerButtonStyle}> */}
-                                        {/* <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("RegisterUser")}
-                  style={styles.registerButtonStyle}
-                > */}
-                                        {/* <View style={styles.notCustomerView}>
-                                <Text
-                                    style={styles.notCustomerText}>For immediate disconnection</Text>
-                            </View>
-                            <View style={styles.registerHereView}>
-                                <TouchableOpacity
-                                    style={styles.payBillView}
-                                    onPress={() => this.setState({ showPaidModal: true })}
-                                // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
-                                >
-                                    <Text style={styles.registerHereText}>
-                                        Click here
+                                <View style={{ ...Mainstyles.accountsLabelView, marginTop: 30 }}>
+                                    <Text style={Mainstyles.accountsLabel} >
+                                        {t("home.selectAccount")}
                                     </Text>
-                                    <Image
-                                        source={require('../../../assets/images/click.png')}
-                                        style={styles.clickImage}
-                                    />
-                                </TouchableOpacity>
-                            </View> */}
+                                </View>
+                                <HomeMainCard
+                                    contracts={this.props.contracts}
+                                    from="raiseComplaint"
+                                    usageCharges={1234}
+                                    userName="User NameX"
+                                    accountNumber="YYYY XXXX YYYY XXXX"
+                                    currentIndex={this.carouselCurrentItem}
+                                />
 
-
-                                        {/* </TouchableOpacity> */}
-                                        {/* </View> */}
-
-                                        <TouchableOpacity
-                                            style={styles.buttonStyle}
-                                            // onPress={this.handleSubmit}
-                                            onPress={() => {
-                                                if (this.state.restrictDisconnection) {
-                                                    this.setState({
-                                                        restrictDisconnectionModal: true
-                                                    })
-                                                } else if (this.state.requestRaised) {
-                                                    this.setState({
-                                                        showModal: true
-                                                    })
-                                                } else {
-                                                    if (this.state.paidDisconnection) {
-                                                        this.setState({ showPaidModal: true })
-                                                    } else {
-                                                        this.handleSubmit()
-                                                    }
-                                                }
-                                            }}
-                                        >
-                                            {
-                                                (this.state.apiCallFlags.requestDisconnectionApiCalled || this.state.apiCallFlags.updatePaymentApiCalled || this.state.makePaymentClicked) ?
-                                                    <ActivityIndicator size='small' color='white' /> :
-                                                    <Text
-                                                        style={styles.buttonLabelStyle}>{t("home.submit")}</Text>
-                                            }
-                                        </TouchableOpacity>
-                                    </>
-                            }
-
-
-                        </ScrollView>
-                        {this.state.showToast ? (
-                            <Toast message={this.state.toastMessage} isImageShow={false} />
-                        ) : null}
-                        {
-                            this.state.showModal ?
-                                <Modal
-                                    close={false}
-                                    onClose={() => this.setState({ showModal: false })}
-                                    visible={this.state.showModal}
-                                    data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Pay",
-                                        uri: this.state.helpImageUrl,
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                            // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
-                                            />
-
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>{this.state.readingResult == "Request successful for Disconnection" ? "Thank You" : "Technical Error"} </Text>
+                                {
+                                    this.state.checkDisconnectionRequestCalled ?
+                                        <ActivityIndicator size={'small'} color={"#102D4F"} /> :
+                                        <>
+                                            <View style={{ ...Mainstyles.accountsLabelView }}>
+                                                <Text style={Mainstyles.accountsLabel} >
+                                                    Preferred Date For Disconnection
+                                                </Text>
                                             </View>
 
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+                                            <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: true }) }} style={{ ...styles.headerView, marginBottom: 0, minHeight: 40 }}>
+                                                <View style={{ flexDirection: "row", }}>
+                                                    <View style={Mainstyles.headerCol1}>
+                                                        <TouchableOpacity
+                                                            // style={this.state.paidDisconnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 0.4 }}
+                                                            onPress={() => { this.setState({ paidDisconnection: true }) }}>
+                                                            <CircleRadioIcon width={24} height={24} fill={this.state.paidDisconnection ? '#0057A2' : '#D3D3D3'} />
+                                                        </TouchableOpacity>
 
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        showModal: false
-                                                    }, () => {
-                                                        (this.state.readingResult == "Request successful for Disconnection") ? this.props.navigation.goBack() : null
-                                                    })
-
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>{(this.state.readingResult == "Request successful for Disconnection") || (this.state.readingResult == "Request submitted already, Could not request again.") ? "Done" : "Try Again"}</Text>
+                                                        <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: true }) }} style={{ marginLeft: 10 }}>
+                                                            <Text style={{...Mainstyles.preferrenceHeader, color:this.state.paidDisconnection ? '#102C4E' : '#102C4EB3'}} >
+                                                                Immediate Disconnection
+                                                            </Text>
+                                                            <Text style={{ ...Mainstyles.preferrenceLabel}} >
+                                                                Additional charges apply for Immediate Disconnection + Associated Fees : 105 AED
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
                                             </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.showPaidModal ?
-                                <Modal
-                                    onClose={() => this.setState({ showPaidModal: false })}
-                                    visible={this.state.showPaidModal}
-                                    data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        uri: this.state.helpImageUrl,
-                                        view: <View style={{ width: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                                            {/* <View style={{ ...styles.cardView, marginBottom: 0 }}> */}
-                                            {/* <View style={styles.inputGroupStyle}> */}
-                                            <View>
-                                                <Text style={styles.inputLabelStyle}>{t("myLinks.preferredDateAndTime")}</Text>
-                                            </View>
-                                            <View>
-                                                <DatePicker
-                                                    mode="date"
-                                                    minimumDate={new Date().getHours() > 10 ? new Date(new Date().getTime() + (1 * 86400000)) : new Date()}
-                                                    minuteInterval={30}
-                                                    date={this.state.date}
-                                                    onDateChange={(date) => {
-                                                        this.setState({
-                                                            date: date
-                                                        })
-                                                    }}
-                                                />
-                                            </View>
-
-
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "80%", marginBottom: 20, marginTop: 5 }}
-                                                onPress={() => {
-                                                    this.setState({ showPaidModal: false })
-                                                    this.makePayment("")
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>Pay 105 AED now</Text>
-                                            </TouchableOpacity>
-
-                                            {
-                                                this.state.applePaySupported || this.state.samsungPaySupported ?
-
-                                                    <TouchableOpacity
-                                                        style={{ ...styles.buttonStyle, width: "80%" }}
-                                                        onPress={() => {
-                                                            this.setState({
-                                                                showPaidModal: false,
-                                                                payMode: this.state.applePaySupported ? "applepay" : "samsungpay"
-                                                            })
-                                                            this.makePayment(this.state.applePaySupported ? "applepay" : "samsungpay")
-                                                        }}
-                                                    >
-                                                        {
-                                                            this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain" }} /> :
-                                                                <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain" }} />
-                                                        }
-                                                    </TouchableOpacity>
-                                                    : null
-                                            }
-                                            {/* </View> */}
-                                            {/* <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                    <Text style={styles.accountNumberText}>{t("myLinks.disconnectionNote")}</Text>
-                                                </View> */}
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-                                            {/* <View style={styles.paymentDueRow1}>
-                                                    <Text
-                                                        style={styles.notCustomerText}>For regular disconnection</Text>
-                                                </View> */}
-                                            {/* <View style={styles.notCustomerView}>
-                                                    <TouchableOpacity
-                                                        style={styles.payBillView}
-                                                        onPress={this.handleSubmit}
-                                                    // onPress={() => this.setState({ showPaidModal: true })}
-                                                    // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
-                                                    >
-                                                        <Text style={styles.registerHereText}>
-                                                            Click here
+                                            <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: false }) }} style={{ ...Mainstyles.headerSubView, marginTop: 10, marginBottom: 20 }}>
+                                                <View style={{ flexDirection: "row", }}>
+                                                    <View style={Mainstyles.headerCol1}>
+                                                        <TouchableOpacity
+                                                            // style={this.state.paidDisconnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1 } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" }}
+                                                            onPress={() => { this.setState({ paidDisconnection: false }) }}>
+                                                            <CircleRadioIcon width={24} height={24} fill={this.state.paidDisconnection ? '#D3D3D3' : '#0057A2'} />
+                                                        </TouchableOpacity>
+                                                        {/* D3D3D3 */}
+                                                        <Text style={{ ...Mainstyles.preferrenceHeader, color:this.state.paidDisconnection ? '#102C4EB3' : '#102C4E', marginLeft: 10 }} >
+                                                            Regular Disconnection
                                                         </Text>
-                                                        <Image
-                                                            source={require('../../../assets/images/click.png')}
-                                                            style={styles.clickImage}
-                                                        />
-                                                    </TouchableOpacity>
-                                                </View> */}
-                                            {/* </View> */}
-
-                                            {/* </View> */}
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.restrictDisconnectionModal ?
-                                <Modal
-                                    onClose={() => {
-                                        this.setState({ restrictDisconnectionModal: false })
-                                    }}
-                                    visible={this.state.restrictDisconnectionModal}
-                                    data={{
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={require("../../../assets/images/readingSuccess.png")}
-                                            />
-
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>Almost there</Text>
-                                            </View>
-
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={{ ...styles.accountNumberText, fontSize: 14, lineHeight: 20 }}>You are our special customer 😀. Let us assist you at your doorstep 🧑‍🔧.</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        restrictDisconnectionModal: false
-                                                    })
-                                                    Linking.openURL(`tel:600565657`)
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>Call us</Text>
+                                                    </View>
+                                                </View>
                                             </TouchableOpacity>
 
-                                            {/* </View> */}
 
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                    </KeyboardAwareScrollView>
-                </InfoContainer>
-            </SafeAreaView>
+                                            <TouchableOpacity
+                                                style={Mainstyles.buttonStyle}
+                                                // onPress={this.handleSubmit}
+                                                onPress={() => {
+                                                    if (this.state.restrictDisconnection) {
+                                                        this.setState({
+                                                            restrictDisconnectionModal: true
+                                                        })
+                                                    } else if (this.state.requestRaised) {
+                                                        this.setState({
+                                                            showModal: true
+                                                        })
+                                                    } else {
+                                                        if (this.state.paidDisconnection) {
+                                                            this.setState({ showPaidModal: true })
+                                                        } else {
+                                                            this.handleSubmit()
+                                                        }
+                                                    }
+                                                }}
+                                            >
+                                                {
+                                                    (this.state.apiCallFlags.requestDisconnectionApiCalled || this.state.apiCallFlags.updatePaymentApiCalled || this.state.makePaymentClicked) ?
+                                                        <ActivityIndicator size='small' color='white' /> :
+                                                        <Text
+                                                            style={Mainstyles.buttonLabelStyle}>{t("home.submit")}</Text>
+                                                }
+                                            </TouchableOpacity>
+                                        </>
+                                }
+
+
+                            </ScrollView>
+                            {this.state.showToast ? (
+                                <Toast message={this.state.toastMessage} isImageShow={false} />
+                            ) : null}
+                            {
+                                this.state.showModal ?
+                                    <Modal
+                                        close={false}
+                                        onClose={() => this.setState({ showModal: false })}
+                                        visible={this.state.showModal}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            button1Text: "Close",
+                                            button2Text: "Pay",
+                                            uri: this.state.helpImageUrl,
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>{this.state.readingResult == "Request successful for Disconnection" ? "Thank You" : "Technical Error"} </Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
+                                                </View>
+
+
+                                                <TouchableOpacity
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            showModal: false
+                                                        }, () => {
+                                                            (this.state.readingResult == "Request successful for Disconnection") ? this.props.navigation.goBack() : null
+                                                        })
+
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={Mainstyles.buttonLabelStyle}>{(this.state.readingResult == "Request successful for Disconnection") || (this.state.readingResult == "Request submitted already, Could not request again.") ? "Done" : "Try Again"}</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.showPaidModal ?
+                                    <Modal
+                                        onClose={() => this.setState({ showPaidModal: false })}
+                                        visible={this.state.showPaidModal}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            uri: this.state.helpImageUrl,
+                                            view: <View style={{ width: "100%", justifyContent: 'center', alignItems: 'center' }}>
+                                                {/* <View style={{ ...styles.cardView, marginBottom: 0 }}> */}
+                                                {/* <View style={styles.inputGroupStyle}> */}
+                                                <View>
+                                                    <Text style={styles.inputLabelStyle}>{t("myLinks.preferredDateAndTime")}</Text>
+                                                </View>
+                                                <View>
+                                                    <DatePicker
+                                                        mode="date"
+                                                        minimumDate={new Date().getHours() > 10 ? new Date(new Date().getTime() + (1 * 86400000)) : new Date()}
+                                                        minuteInterval={30}
+                                                        date={this.state.date}
+                                                        onDateChange={(date) => {
+                                                            this.setState({
+                                                                date: date
+                                                            })
+                                                        }}
+                                                    />
+                                                </View>
+
+
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "80%", marginBottom: 20, marginTop: 5 }}
+                                                    onPress={() => {
+                                                        this.setState({ showPaidModal: false })
+                                                        this.makePayment("")
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>Pay 105 AED now</Text>
+                                                </TouchableOpacity>
+
+                                                {
+                                                    this.state.applePaySupported || this.state.samsungPaySupported ?
+
+                                                        <TouchableOpacity
+                                                            style={{ ...styles.buttonStyle, width: "80%" }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    showPaidModal: false,
+                                                                    payMode: this.state.applePaySupported ? "applepay" : "samsungpay"
+                                                                })
+                                                                this.makePayment(this.state.applePaySupported ? "applepay" : "samsungpay")
+                                                            }}
+                                                        >
+                                                            {
+                                                                this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain" }} /> :
+                                                                    <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain" }} />
+                                                            }
+                                                        </TouchableOpacity>
+                                                        : null
+                                                }
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.restrictDisconnectionModal ?
+                                    <Modal
+                                        onClose={() => {
+                                            this.setState({ restrictDisconnectionModal: false })
+                                        }}
+                                        visible={this.state.restrictDisconnectionModal}
+                                        data={{
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={require("../../../assets/images/readingSuccess.png")}
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>Almost there</Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={{ ...styles.accountNumberText, fontSize: 14, lineHeight: 20 }}>You are our special customer 😀. Let us assist you at your doorstep 🧑‍🔧.</Text>
+                                                </View>
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            restrictDisconnectionModal: false
+                                                        })
+                                                        Linking.openURL(`tel:600565657`)
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>Call us</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                        </KeyboardAwareScrollView>
+                    </InfoContainer>
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
 

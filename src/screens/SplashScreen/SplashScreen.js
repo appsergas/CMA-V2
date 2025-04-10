@@ -82,7 +82,9 @@ class SplashScreen extends Component {
         const userLog = await CheckLoginByMobile(mobileNumber);
         if (!userLog || !userLog.device_id) {
           await AsyncStorage.clear();
-          this.props.navigation.navigate('Login');
+           //this.props.navigation.navigate('Login');
+          this.props.navigation.navigate('Walkthrough');
+
         } else {
           this.props.navigation.navigate('HomeBase');
         }
@@ -90,7 +92,9 @@ class SplashScreen extends Component {
       }, 4000)
     } else {
       setTimeout(() => {
-        this.props.navigation.navigate('Login')
+         //this.props.navigation.navigate('Login')
+         this.props.navigation.navigate('Walkthrough');
+
       }, 4000)
     }
   }
@@ -125,7 +129,8 @@ class SplashScreen extends Component {
         ], () => {
             // Update the contracts and navigate to Login screen
             this.props.updateContracts([]);
-            this.props.navigation.navigate('Login');
+            // this.props.navigation.navigate('Login');
+            this.props.navigation.navigate('Walkthrough');
         });
         } else {
           this.props.navigation.navigate('HomeBase');
@@ -215,47 +220,7 @@ class SplashScreen extends Component {
   }
 
   render() {
-    // return (
-    //   <View
-    //     style={styles.viewView}>
-    //       <Image
-    //                 source={require('../../../assets/images/splashHeader.png')}
-    //                 style={{
-    //                   // height: 192.35,
-    //                   width: "75%",
-    //                   position: 'absolute',
-    //                   alignSelf: 'flex-start',
-    //                   top: 0,
-    //                   zIndex: -1,
-    //                   resizeMode: 'stretch'
-    //                 }}
-    //                 />
-    //     <Image
-    //       source={require("../../../assets/images/sergas_logo.png")}
-    //       style={styles.goodieeLogoImage} />
-    //       <ImageBackground
-    //                     source={require("../../../assets/images/loading.gif")}
-    //                     style={{ width: 60, height: 60, position: 'absolute',
-    //                     alignSelf: 'flex-end',
-    //                     bottom: 0,
-    //                     zIndex: -1,
-    //                     resizeMode: 'stretch',paddingRight: 20}}
-    //                   />
-    //     <Image
-    //                 source={require('../../../assets/images/splashFooter.png')}
-    //                 style={{
-    //                   // height: 192.35,
-    //                   width: "100%",
-    //                   position: 'absolute',
-    //                   alignSelf: 'flex-end',
-    //                   bottom: 0,
-    //                   zIndex: -1,
-    //                   resizeMode: 'stretch'
-    //                 }}
-    //                 />
-                    
-    //   </View>
-    // )
+ 
 
     return (
       <>

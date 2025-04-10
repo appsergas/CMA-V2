@@ -1,8 +1,8 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './HelpAndSupportStyles'
 
 import React, { Component } from 'react'
-import { View, Text, Image, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Image, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, LayoutAnimation, ActivityIndicator, ImageBackground, UIManager } from 'react-native'
 import { setI18nConfig, translationGetters, t } from '../../services/translate/i18n'
 import * as RNLocalize from 'react-native-localize';
 import TextInputControl from '../../controls/TextInput'
@@ -19,7 +19,14 @@ import InfoContainer from '../../components/molecules/InfoContainer';
 import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon } from '../../../assets/icons'
 
+
+if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental?.(true);
+}
 
 
 class HelpAndSupport extends Component {
@@ -40,68 +47,15 @@ class HelpAndSupport extends Component {
             }
         })
         this.state = {
-            howTo: [
-                // {
-                //     QUESTION: "What to do if there is Gas smell in your flat?",
-                //     ANSWER: "GasSmellInFlat.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "What to do if Gas System is Not Working?",
-                //     ANSWER: "GasSystemNotWorking.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "What to do if Gas Supply Stops Suddenly?",
-                //     ANSWER: "GasSupplyStopsSuddenly.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "What to do if Gas Detector Alarm Rings?",
-                //     ANSWER: "GasDetectorAlarmRings.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "What to do if there is Noise From Solenoid Valve?",
-                //     ANSWER: "NoiseFromSolenoidValve.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "What to do if there is Fire In Your Cooker?",
-                //     ANSWER: "FireInYourCooker.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "Keep your Gas Meter Cabinet Empty - Safe Usage of Central Gas System",
-                //     ANSWER: "KeepYourGasMeterCabinetEmpty.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "Keep Your Garbage Bin Away from Detector - Safe Usage of Central Gas System",
-                //     ANSWER: "KeepYourGarbageBinAway.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "Do Not Spray Near Detector - Safe Usage of Central Gas System",
-                //     ANSWER: "DoNotSprayNearTheGasDetector.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "Do not Obstruct Gas Detector - Safe Usage of Central Gas System",
-                //     ANSWER: "DoNotObstructGasDetector.mp4",
-                //     vidLink: "Flat No. 1"
-                // },
-                // {
-                //     QUESTION: "Avoid Damage to the Hose Pipe - Safe Usage of Central Gas System",
-                //     ANSWER: "AvoidDamageToTheHosePipe.mp4",
-                //     vidLink: "Flat No. 1"
-                // }
-            ],
+            howTo: [],
             showToast: false,
             toastMessage: "",
             apiCallFlags: {
                 getHelpDocsCalled: true
-            }
+            },
+            activeTab: 'FAQ',
+            expandedIndex: null,
+            tabs: ['FAQ', 'Contact'],
         }
         this.scrollView = React.createRef()
     }
@@ -164,110 +118,200 @@ class HelpAndSupport extends Component {
         }, 5000);
     }
 
-    render() {
+    handleToggle = (index) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.setState((prevState) => ({
+            expandedIndex: prevState.expandedIndex === index ? null : index,
+        }));
+    };
+
+    handleContactToggle = (label) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.setState((prevState) => ({
+            expandedContactIndex: prevState.expandedContactIndex === label ? null : label,
+        }));
+    };
+
+    renderAccordionItem = (item, index) => {
+        const isExpanded = this.state.expandedIndex === index;
         return (
+            <View key={index} style={styles.accordionItem}>
+                <TouchableOpacity onPress={() => this.handleToggle(index)} style={styles.accordionHeader}>
+                    <Text style={styles.accordionTitle}>{item.title}</Text>
+                    <ArrowIcon direction={isExpanded ? "up" : "down"} size={20} color="#102D4F" />
+                </TouchableOpacity>
 
-
-            <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-                <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_20 : Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                                <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                    <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
-                                </TouchableOpacity>
-                                <Text style={styles.welcomeLabel} >
-                                    Help and Support
+                {isExpanded && (
+                    <View style={styles.accordionContent}>
+                        {item.content.length > 0 ? (
+                            item.content.map((line, i) => (
+                                <Text key={i} style={styles.accordionText}>
+                                    {`${i + 1}. ${line}`}
                                 </Text>
+                            ))
+                        ) : (
+                            <Text style={styles.accordionText}>Coming soon...</Text>
+                        )}
+                    </View>
+                )}
+            </View>
+        );
+    };
+
+    renderContactItem = (label, details = [], showDivider = false) => {
+        const isExpanded = this.state.expandedContactIndex === label;
+
+        const icons = {
+            'Customer Care': '🎧',
+            'WhatsApp': '💬',
+            'Website': '🌐',
+            'Facebook': '📘',
+            'Twitter': '🐦',
+            'Instagram': '📸',
+        };
+
+        return (
+            <View style={styles.contactItemWrapper} key={label}>
+                <TouchableOpacity
+                    style={styles.contactCard}
+                    onPress={() => this.handleContactToggle(label)}
+                    activeOpacity={0.8}
+                >
+                    <View style={styles.contactRow}>
+                        <Text style={styles.contactIcon}>{icons[label] || '🔗'}</Text>
+                        <Text style={styles.contactLabel}>{label}</Text>
+                        {/* <Text style={styles.contactArrow}>{isExpanded ? '▲' : '▼'}</Text> */}
+                        <ArrowIcon direction={isExpanded ? "up" : "down"} size={20} color="#102D4F" />
+                    </View>
+                    {isExpanded && details.length > 0 && (
+                        <>
+                            {showDivider && <View style={styles.divider} />}
+                            <View style={styles.contactDetails}>
+                                {details.map((line, i) => (
+                                    <Text key={i} style={styles.contactDetailLine}>
+                                        ● {line}
+                                    </Text>
+                                ))}
+                            </View>
+                        </>
+                    )}
+                </TouchableOpacity>
+            </View>
+        );
+    };
+
+    render() {
+        const { activeTab, tabs } = this.state;
+
+        const faqData = [
+            {
+                title: 'PROPER GAS METER CABINET USAGE.',
+                content: [
+                    'Ensure proper ventilation to avoid gas buildup.',
+                    'Do not store flammable materials inside.',
+                    'Keep the cabinet clean and inspect it regularly.',
+                    'Make sure it’s easily accessible for technicians.',
+                    'Protect it from water and moisture.',
+                    'Report any damage or leaks immediately.',
+                ],
+            },
+            { title: 'KEEP AWAY THE GAS DETECTOR.', content: [] },
+            { title: 'DO NOT SPILL WATER ON GAS!', content: [] },
+            { title: 'GAS SMELL TIPS.', content: [] },
+        ];
+
+        return (
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
+                            </TouchableOpacity>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Help and Support
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
-
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            Need assistance? contact our support team, or access FAQs to get help quickly.
+                        </Text>
                     </View>
-                </View>
 
-                <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}>
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
+                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            style={{ flex: 1 }}
+                            enabled
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
+                        >
+                            {/* <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={styles.scrollView}> */}
 
-                            {/* <View style={{ ...styles.accountsLabelView }}>
-                <Text style={styles.accountsLabel} >
-                    My Account
-                </Text>
-            </View> */}
-                            <View style={{ ...styles.cardView, marginTop: 60 }}>
 
-                                            <TouchableOpacity
-                                                style={{ height: 50, flexDirection: 'row', width: "90%" }}
-                                                onPress={() => this.props.navigation.navigate("raiseComplaint")}
-                                            >
-                                                {/* <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>{data.QUESTIONSTION}</Text>
-                                    </View> */}
-                                                <View style={styles.optionIconViewCol1}>
-                                                    <Text style={styles.accountNumberText}>Customer Care</Text>
-                                                </View>
-                                                <View style={styles.optionIconViewCol2}>
-                                                    <Image
-                                                        source={require('../../../assets/images/ClickNew.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                            </TouchableOpacity>
-                                                <View style={{ width: "90%", height: 0, borderTopWidth: 0.4, borderStyle: "solid", borderColor: "#ABB2AC", alignSelf: 'center' }} />
-                                                <TouchableOpacity
-                                                style={{ height: 50, flexDirection: 'row', width: "90%" }}
-                                                onPress={() => this.props.navigation.navigate("feedback")}
-                                            >
-                                                {/* <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>{data.QUESTIONSTION}</Text>
-                                    </View> */}
-                                                <View style={styles.optionIconViewCol1}>
-                                                    <Text style={styles.accountNumberText}>Feedback</Text>
-                                                </View>
-                                                <View style={styles.optionIconViewCol2}>
-                                                    <Image
-                                                        source={require('../../../assets/images/ClickNew.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                            </TouchableOpacity>
-                                            <View style={{ width: "90%", height: 0, borderTopWidth: 0.4, borderStyle: "solid", borderColor: "#ABB2AC", alignSelf: 'center' }} />
-                                                <TouchableOpacity
-                                                style={{ height: 50, flexDirection: 'row', width: "90%" }}
-                                                onPress={() => this.props.navigation.navigate("HelpMain")}
-                                            >
-                                                {/* <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>{data.QUESTIONSTION}</Text>
-                                    </View> */}
-                                                <View style={styles.optionIconViewCol1}>
-                                                    <Text style={styles.accountNumberText}>Safety Tips</Text>
-                                                </View>
-                                                <View style={styles.optionIconViewCol2}>
-                                                    <Image
-                                                        source={require('../../../assets/images/ClickNew.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                            </TouchableOpacity>
-                                                
 
+                            {/* Tabs */}
+                            <View style={styles.tabContainer}>
+                                {tabs.map((tab) => (
+                                    <TouchableOpacity
+                                        key={tab}
+                                        onPress={() => this.setState({ activeTab: tab })}
+                                        style={[
+                                            styles.tab,
+                                            activeTab === tab ? styles.activeTab : styles.inactiveTab,
+                                        ]}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.tabText,
+                                                activeTab === tab
+                                                    ? styles.activeTabText
+                                                    : styles.inactiveTabText,
+                                            ]}
+                                        >
+                                            {tab}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
                             </View>
+                            {/* Tab Content */}
+                            {activeTab === 'FAQ' && (
+                                <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+                                    {faqData.map(this.renderAccordionItem)}
+                                </ScrollView>
+                            )}
+
+                            {activeTab === 'Contact' && (
+                                <View>
+                                    {this.renderContactItem('Customer Care')}
+                                    {this.renderContactItem('WhatsApp', ['(+971) 0000-0103'], true)}
+                                    {this.renderContactItem('Website')}
+                                    {this.renderContactItem('Facebook')}
+                                    {this.renderContactItem('Twitter')}
+                                    {this.renderContactItem('Instagram')}
+                                </View>
+                            )}
 
 
-                        </ScrollView>
-                    </KeyboardAwareScrollView>
-                </InfoContainer>
-            </SafeAreaView>
+
+
+
+                            {/* </ScrollView> */}
+                        </KeyboardAwareScrollView>
+                    </InfoContainer>
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
 

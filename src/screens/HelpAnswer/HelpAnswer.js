@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './HelpAnswerStyles'
 
 import React, { Component } from 'react'
@@ -101,7 +101,7 @@ class HelpAnswer extends Component {
                                 </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
+                    <View style={{ ...Mainstyles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
 
                     </View>
                 </View>

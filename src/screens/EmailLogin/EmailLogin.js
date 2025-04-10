@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './EmailLoginStyles'
 
 import React, { Component } from 'react'

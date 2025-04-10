@@ -20,6 +20,7 @@ import { useRoute } from '@react-navigation/native';
 import OcrTest from '../screens/OcrTest/OcrTest'
 import ECPLOption from '../screens/ECPLOption/ECPLOption'
 import ECPLinking from '../screens/ECPLinking/ECPLinking'
+import Walkthrough from '../screens/WalkThrough/Walkthrough'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -54,17 +55,19 @@ function MainTabs() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: { fontFamily: "Tajawal-Medium", fontSize: 14 },
-        tabBarIconStyle: { marginTop: 15 },
+        tabBarIconStyle: { marginTop: 10 },
         tabBarInactiveTintColor: "#FFFFFF",
         tabBarActiveTintColor: "#FEBA12",
         tabBarStyle: {
           backgroundColor: "#102D4F",
           paddingBottom: 5,
-          height: 64,
+          // height: 64,
+          height: 84,
           position: "absolute",
           left: 0,
           right: 0,
-          bottom: Platform.OS === "ios" ? 15 : 0,
+          paddingBottom: Platform.OS === "ios" ? 15 : 0,
+          // bottom: Platform.OS === "ios" ? 15 : 0,
           borderColor: "rgba(0, 0, 0, 1)",
         },
         unmountOnBlur: true,
@@ -87,7 +90,7 @@ function MainTabs() {
         name="Services"
         component={SupportNavigationStack}
         options={{
-          tabBarIcon: ({ color }) => <SupportIcon color={color} />,
+          tabBarIcon: ({ focused, color }) => <SupportIcon fill={focused ? color : "none"} color={color}/>,
           tabBarLabel: ({ focused, color }) => (
             <View style={{ alignItems: "center" }}>
               <Text style={{ color, fontSize: 14, fontFamily: "Tajawal-Medium" }}>Services</Text>
@@ -100,7 +103,7 @@ function MainTabs() {
         name="Payment"
         component={PaymentNavigationStack}
         options={{
-          tabBarIcon: ({ color }) => <PaymentIcon color={color} />,
+          tabBarIcon: ({ focused, color }) => <PaymentIcon color={focused ? "#102D4F" : "#E6E6E6"} fill={focused ? color : "none"} />,
           tabBarLabel: ({ focused, color }) => (
             <View style={{ alignItems: "center" }}>
               <Text style={{ color, fontSize: 14, fontFamily: "Tajawal-Medium" }}>Payment</Text>
@@ -113,7 +116,7 @@ function MainTabs() {
         name="Settings"
         component={MyLinksNavigationStack}
         options={{
-          tabBarIcon: ({ color }) => <MyLinksIcon color={color} />,
+          tabBarIcon: ({ focused, color }) => <MyLinksIcon color={focused ? "#102D4F" : "#E6E6E6"} fill={focused ? color : "none"} />,
           tabBarLabel: ({ focused, color }) => (
             <View style={{ alignItems: "center" }}>
               <Text style={{ color, fontSize: 14, fontFamily: "Tajawal-Medium" }}>Settings</Text>
@@ -133,6 +136,11 @@ const MainNavigation = () => {
       <Stack.Screen
           name="Splash"
           component={SplashScreen}
+          options={{ title: '' }}
+        />
+         <Stack.Screen
+          name="Walkthrough"
+          component={Walkthrough}
           options={{ title: '' }}
         />
       <Stack.Screen
@@ -186,7 +194,7 @@ const dotStyle = {
   height: 6,
   borderRadius: 3,
   backgroundColor: "#FEBA12",
-  marginTop: 2,
+  marginTop: 1,
 };
 
 export default MainNavigation

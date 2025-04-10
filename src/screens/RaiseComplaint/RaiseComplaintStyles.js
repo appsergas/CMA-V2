@@ -87,15 +87,7 @@ const styles = StyleSheet.create({
     // height: "100%",
     // overflow: "scroll"
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-    fontFamily: "Tajawal-Bold",
-    fontSize: 16,
-    color: "#102D4F"
-    },
+
   userNameLabel: {
     fontFamily: "Tajawal-Bold",
     fontSize: 16,
@@ -324,7 +316,34 @@ payBillText: {
     resizeMode: 'stretch',
     marginLeft: 6
 
-  }
+  },
+
+
+
+
+
+
+  noticeContainer: {
+    backgroundColor: '#FF4747', // red background
+    borderRadius: 12,
+    paddingVertical: 12,
+    marginTop:20,
+    // margin: 16,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  noticeText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 12,
+    textTransform: 'uppercase',
+    lineHeight: 20,
+    // fontFamily: 'OwnersText-Bold', 
+  },
+  phone: {
+    fontWeight: 'bold',
+  },
 })
 
 export default styles

@@ -31,7 +31,9 @@ import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import CheckBox from 'react-native-check-box';
-import { ArrowLeftIcon, PaymentIcon, StatementIcon, MakePaymentIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { ArrowIcon } from '../../../assets/icons'
 
 import {
     paymentGatewayTokenApiUrl,
@@ -387,7 +389,7 @@ class RequestNewConnection extends Component {
                         pickerBuildingData: buildingList,
                         apartmentCode: ""
                     }, () => {
-                        this.setState({showBuildingSearch: true})
+                        this.setState({ showBuildingSearch: true })
                     })
                 } else {
                     this.toastIt("No data found for entered Plot No.", false)
@@ -507,7 +509,7 @@ class RequestNewConnection extends Component {
                     try {
                         if (Platform.OS == 'android') {
                             // const manufacturer = await DeviceInfo.getManufacturer();
-    
+
                             // if (manufacturer === 'samsung') {
                             //     samsungPayVisible = true;
                             // }
@@ -716,16 +718,16 @@ class RequestNewConnection extends Component {
         }
     }
     getTraceId = async () => {
-        var pattern =  "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
+        var pattern = "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
         var date = new Date().getTime();
-        
-        var uuid = pattern.replace(/[xy]/g, function(c) {
-            var r = (date + Math.random()*16)%16 | 0;
-            date = Math.floor(date/16);
-            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+
+        var uuid = pattern.replace(/[xy]/g, function (c) {
+            var r = (date + Math.random() * 16) % 16 | 0;
+            date = Math.floor(date / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
-        return uuid.toString()  
-      }
+        return uuid.toString()
+    }
     makePayment = async (type) => {
         let outLetReference = "", apiKey = "", tokenApiUrl = "", orderApiUrl = ""
 
@@ -788,7 +790,7 @@ class RequestNewConnection extends Component {
                     "ContractId": "NEW CONNECTION - EID: " + this.state.existingDetails.EID + " Mobile: " + this.state.mobileNumber,
                     "CustomerName": this.state.fullName != "" ? this.state.fullName : this.state.existingDetails.PARTY_NAME
                 },
-                "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g,'').substring(0, 7).toUpperCase()}-MP`
+                "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g, '').substring(0, 7).toUpperCase()}-MP`
             }
 
             axios.post(orderApiUrl + outLetReference + "/orders", createOrderReq, { headers: createOrderHeader })
@@ -827,7 +829,7 @@ class RequestNewConnection extends Component {
 
                                             if (getOrderDetailsRes &&
                                                 (getOrderDetailsRes._embedded.length != 0) &&
-                                                getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state=="CAPTURED" &&
+                                                getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
                                                 getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
                                                 if (type == "samsungpay") {
                                                     paidCardDetails = {
@@ -991,7 +993,7 @@ class RequestNewConnection extends Component {
 
                                             if (getOrderDetailsRes &&
                                                 (getOrderDetailsRes._embedded.length != 0) &&
-                                                getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state=="CAPTURED" &&
+                                                getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
                                                 getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
 
                                                 paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
@@ -1166,7 +1168,7 @@ class RequestNewConnection extends Component {
         this.setState({
             makepaymentcalled: false,
             apiCallFlags: { ...this.state.apiCallFlags, ...{ requestConnectionApiCalled: true } }
-        },  () => {
+        }, () => {
             this.props.requestNewConnection(reqBody)
         })
     }
@@ -1233,454 +1235,426 @@ class RequestNewConnection extends Component {
     render() {
         const { emiratesIdFront, tenancyContractFront, buildingCode, noQR, apiCallFlags } = this.state;
         return (
-            <ImageBackground
-            source={require('../../assets/images/coverheader.png')}
-            style={{ flex: 1, width: '100%', height: '100%' }}
-            resizeMode="cover">
-            <SafeAreaView style={{ height: "100%", flex: 1 }} >
-                {/* header */}
-                <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                    <View style={Mainstyles.headerLeft}>
-                        <TouchableOpacity
-                            style={Mainstyles.backbutton}
-                            onPress={() => this.props.navigation.goBack()} >
-                            <ArrowLeftIcon />
-                        </TouchableOpacity>
-                        <View style={Mainstyles.textContainer}>
-                            <View style={Mainstyles.nameRow}>
-                                <Text style={Mainstyles.welcomeLabel} >
-                                New Connection request
-                                </Text>
-                            </View>
-
-                        </View>
-                    </View>
-                </View>
-
-            {/* <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} > */}
-                {/* <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                            <TouchableOpacity style={{ marginRight: 5 }} onPress={() => {
-                                if (this.state.step > 1) {
-                                    this.setState({ step: this.state.step - 1 })
-                                } else {
-                                    this.props.navigation.goBack()
-                                }
-                            }}>
-                                <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
-                            <Text style={styles.welcomeLabel} >
-                                New Connection request
-                            </Text>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        New Connection request
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
-
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            Submit your details to request a new gas connection.
+                        </Text>
                     </View>
-                </View> */}
 
-                {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
-                <View style={{
-                    height: Platform.OS == 'ios' ? "90%" : "100%", backgroundColor: "#FFFFFF", overflow: 'hidden',
-                    borderTopLeftRadius: 24,
-                    borderTopRightRadius: 24,
-                    width: '100%'
-                }} >
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_2 }}
+                            style={{ flex: 1 }}
+                            enabled
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
+                        >
+                            <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={styles.scrollView}>
 
-                            <View style={{ flexDirection: "row", width: "95%", justifyContent: 'space-between', marginTop: 40, marginBottom: 40, height: 24 }}>
+                                <View style={{...Mainstyles.bodyview, paddingHorizontal:20, }}>
+                                    <View style={{ flexDirection: "row", justifyContent: 'space-between', marginTop: 20, marginBottom: 40 }}>
 
-                                <Image source={require("../../../assets/images/Rectangle.png")} style={{ resizeMode: 'stretch', position: 'absolute', alignSelf: 'center', width: "100%" }} />
+                                        <Image source={require("../../../assets/images/Rectangle.png")} style={{ resizeMode: 'stretch', position: 'absolute', alignSelf: 'center', width: "100%" }} />
 
-                                <View style={this.state.step == 1 ? styles.tabIconActive : styles.tabIconInactive}>
-                                    <Text style={this.state.step == 1 ? styles.tabNumberActive : styles.tabNumberInactive}>
-                                        1
-                                    </Text>
-                                </View>
-                                <View style={this.state.step == 2 ? styles.tabIconActive : styles.tabIconInactive}>
-                                    <Text style={this.state.step == 2 ? styles.tabNumberActive : styles.tabNumberInactive}>
-                                        2
-                                    </Text>
-                                </View>
-                                <View style={this.state.step == 3 ? styles.tabIconActive : styles.tabIconInactive}>
-                                    <Text style={this.state.step == 3 ? styles.tabNumberActive : styles.tabNumberInactive}>
-                                        3
-                                    </Text>
-                                </View>
-                                <View style={this.state.step == 4 ? styles.tabIconActive : styles.tabIconInactive}>
-                                    <Text style={this.state.step == 4 ? styles.tabNumberActive : styles.tabNumberInactive}>
-                                        4
-                                    </Text>
-                                </View>
-
-                            </View>
-
-                            {this.state.step == 1 ?
-                                <>
-
-                                    {
-                                        this.state.existingDetails && (this.state.existingDetails.PARTY_NAME == "") ?
-                                            <View style={styles.inputGroupStyle}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={styles.inputLabelStyle}>Full Name</Text>
-                                                </View>
-                                                <View>
-                                                    <TextInput
-                                                        Value={this.state.fullName}
-                                                        OnChange={(value) => {
-                                                            this.setState({ fullName: value })
-                                                        }}
-                                                        Style={{ borderColor: "#848484" }}
-                                                    />
-                                                </View>
-                                            </View> : null
-                                    }
-
-                                    <View style={styles.inputGroupStyle}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text style={styles.inputLabelStyle}>{t("home.emirate")}</Text>
+                                        <View style={this.state.step == 1 ? styles.tabIconActive : styles.tabIconInactive}>
+                                            <Text style={this.state.step == 1 ? styles.tabNumberActive : styles.tabNumberInactive}>
+                                                1
+                                            </Text>
                                         </View>
-                                        <View>
-                                            <Picker
-                                                placeholder="Select Emirate"
-                                                selectedValue={this.state.emirate}
-                                                onValueChange={(itemValue, key) => {
-                                                    this.setState({
-                                                        emirate: itemValue == null ? "" : itemValue,
-                                                        companyCode: key >= 1 ? key - 1 : 0,
-                                                        getBnoAnoCalled: true
-                                                    }, () => {
-                                                        this.props.getBnoAno({
-                                                            "TYPE": "METER_BRAND",
-                                                            "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                            "B_CODE": "A",
-                                                            "A_CODE": "A"
-                                                        })
-                                                    })
-                                                    if ((this.state.meterNo !== "") && (this.state.meterBrand != "")) {
-                                                        this.setState({
-                                                            getMeterDetailsCalled: true
-                                                        }, () => {
-                                                            let req = {
-                                                                "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                                "QUERY": this.state.meterNo,
-                                                                "REMARKS": this.state.meterBrand
-                                                            }
-                                                            this.props.getMeterDetails(req)
-                                                        })
-                                                    }
-                                                }}
-                                                items={this.state.pickerCompanyData}
-                                                mode="dropdown"
-                                            />
+                                        <View style={this.state.step == 2 ? styles.tabIconActive : styles.tabIconInactive}>
+                                            <Text style={this.state.step == 2 ? styles.tabNumberActive : styles.tabNumberInactive}>
+                                                2
+                                            </Text>
                                         </View>
+                                        <View style={this.state.step == 3 ? styles.tabIconActive : styles.tabIconInactive}>
+                                            <Text style={this.state.step == 3 ? styles.tabNumberActive : styles.tabNumberInactive}>
+                                                3
+                                            </Text>
+                                        </View>
+                                        <View style={this.state.step == 4 ? styles.tabIconActive : styles.tabIconInactive}>
+                                            <Text style={this.state.step == 4 ? styles.tabNumberActive : styles.tabNumberInactive}>
+                                                4
+                                            </Text>
+                                        </View>
+
                                     </View>
 
-                                    {
-                                        this.state.existingDetails && !this.state.existingDetails.EMAIL.match(validRegex) ?
-                                            <View style={styles.inputGroupStyle}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={styles.inputLabelStyle}>Email</Text>
-                                                </View>
-                                                <View>
-                                                    <TextInput
-                                                        Value={this.state.email}
-                                                        OnChange={(value) => {
-                                                            this.setState({ email: value })
-                                                        }}
-                                                        Style={{ borderColor: "#848484" }}
-                                                    />
-                                                </View>
-                                            </View> : null
-                                    }
+                                    {this.state.step == 1 ?
+                                        <>
 
-                                    {this.state.openQrScanner
-                                        ? <QRCodeScanner
-                                            // cameraContainerStyle={{height: 100, width: 100}}
-                                            containerStyle={{
-                                                flex: 1,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}
-                                            // topViewStyle={{flex: 0}}
-                                            // bottomViewStyle={{flex: 0}}
-                                            onRead={this.onQrRead}
-                                            cameraStyle={{
-                                                height: 300,
-                                                width: 300,
-                                                alignSelf: 'center',
-                                                borderWidth: 3,
-                                                borderColor: "#102D4F",
-                                                borderStyle: "solid",
-                                                borderRadius: 4,
-                                                overflow: 'hidden'
-                                                // height: 100,
-                                            }}
-                                            // containerStyle={{ marginVertical: 80 }}
-                                            flashMode={RNCamera.Constants.FlashMode.auto}
-                                        />
-                                        : 
-                                        // (!noQR && (buildingCode == "")) ? 
-                                        // <View style={{ ...styles.cardView, ...{ marginBottom: 0 } }} >
-                                        //     <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
-                                        //         {/* <View style={{ alignSelf: 'flex-start' }}>
-                                        //     <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
-                                        // </View> */}
-                                        //         <TouchableOpacity
-                                        //             style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row' } }}
-                                        //             onPress={() => {
-                                        //                 if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                        //                     this.toastIt("Select Emirate to scan the QR Code", false)
-                                        //                 } else {
-                                        //                     this.setState({ buildingCode: "", apartmentCode: "", openQrScanner: true })
-                                        //                 }
-                                        //             }}
-                                        //         >
-                                        //             <Image
-                                        //                 source={require('../../../assets/images/qr.png')}
-                                        //                 style={{ ...styles.clickImage, marginRight: 5 }}
-                                        //             />
-                                        //             <Text
-                                        //                 style={styles.buttonLabelStyle}>Scan QR Code in Your Meter</Text>
-                                        //         </TouchableOpacity>
-                                        //     </View>
-                                        //     <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
-                                        //         {/* <View style={{ alignSelf: 'flex-start' }}>
-                                        //     <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
-                                        // </View> */}
-                                        //         <TouchableOpacity
-                                        //             style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
-                                        //             onPress={() => {
-                                        //                 if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                        //                     this.toastIt("Select Emirate", false)
-                                        //                 } else {
-                                        //                     this.setState({ noQR: true })
-                                        //                 }
-                                        //             }}
-                                        //         >
-                                        //             <Image
-                                        //                 source={require('../../../assets/images/noQr.png')}
-                                        //                 style={{ ...styles.clickImage, marginRight: 5 }}
-                                        //             />
-                                        //             <Text
-                                        //                 style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have QR Code</Text>
-                                        //         </TouchableOpacity>
-                                        //     </View>
-                                        // </View> : 
-                                        null
-                                    }
-
-                                    {
-                                        // (this.state.noQR && (buildingCode == "")) || (this.state.meterNo != "") ?
-                                        !this.state.noQR ?
-                                        <View style={{ ...styles.cardView, ...{ marginBottom: 0 } }} >
-                                            <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
-                                                {/* <View style={{ alignSelf: 'flex-start' }}>
-                                            <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
-                                        </View> */}
-                                                <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row' } }}
-                                                    onPress={() => {
-                                                        if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                                            this.toastIt("Select Emirate to scan the QR Code", false)
-                                                        } else {
-                                                            this.setState({ buildingCode: "", apartmentCode: "", openQrScanner: true })
-                                                        }
-                                                    }}
-                                                >
-                                                    <Image
-                                                        source={require('../../../assets/images/qr.png')}
-                                                        style={{ ...styles.clickImage, marginRight: 5 }}
-                                                    />
-                                                    <Text
-                                                        style={styles.buttonLabelStyle}>Scan QR Code in Your Meter</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                            <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
-                                                {/* <View style={{ alignSelf: 'flex-start' }}>
-                                            <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
-                                        </View> */}
-                                                <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
-                                                    onPress={() => {
-                                                        if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                                            this.toastIt("Select Emirate", false)
-                                                        } else {
-                                                            this.setState({ noQR: true })
-                                                        }
-                                                    }}
-                                                >
-                                                    <Image
-                                                        source={require('../../../assets/images/noQr.png')}
-                                                        style={{ ...styles.clickImage, marginRight: 5 }}
-                                                    />
-                                                    <Text
-                                                        style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have QR Code</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                        :
-                                        this.state.noQR && this.state.noMeterNo ?
-
-                                                <View style={styles.inputGroupStyle}>
-                                                    <View style={{ flexDirection: 'row' }}>
-                                                        <Text style={styles.inputLabelStyle}>Meter Serial Number</Text>
-                                                    </View>
-                                                    <View>
-                                                        <TextInput
-                                                            // editable={this.state.noQR}
-                                                            Value={this.state.meterNo}
-                                                            OnChange={(value) => {
-                                                                this.setState({ meterNo: value })
-                                                            }}
-                                                            OnBlur={() => {
-                                                                if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                                                    this.toastIt("Select Emirate to search Building code and Apartment code", false)
-                                                                } else {
-                                                                    if (this.state.meterBrand != "") {
-                                                                        this.setState({
-                                                                            getMeterDetailsCalled: true
-                                                                        }, () => {
-                                                                            let req = {
-                                                                                "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                                                "QUERY": this.state.meterNo,
-                                                                                "REMARKS": this.state.meterBrand
-                                                                            }
-                                                                            this.props.getMeterDetails(req)
-                                                                        })
-                                                                    }
-                                                                }
-                                                            }}
-                                                            Style={{ borderColor: "#848484" }}
-                                                        />
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row' }}>
-                                                        <Text style={this.state.noQR ? styles.inputLabelStyle : { ...styles.inputLabelStyle, color: "#ABB2AC" }}>Select Meter Brand</Text>
-                                                    </View>
-                                                    <View>
-                                                        <TextInput
-                                                            onFocus={() => {
-                                                                this.setState({
-                                                                    showMeterBrandList: true,
-                                                                })
-                                                            }}
-                                                            Value={this.state.meterBrand}
-                                                            OnChange={(value) => {
-                                                                this.setState({
-                                                                    showMeterBrandList: true
-                                                                })
-                                                            }}
-                                                            Style={{ borderColor: "#848484" }}
-                                                        />
-                                                    </View>
-                                                    <TouchableOpacity
-                                                        style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
-
-                                                        onPress={() => this.setState({ noMeterNo: false, noQR: false, buildingCode: "", apartmentCode: "", meterNo: "", meterBrand: "" })}
-                                                    >
-                                                        {/* <Image
-                                                source={require('../../../assets/images/noQr.png')}
-                                                style={{ ...styles.clickImage, marginRight: 5 }}
-                                            /> */}
-                                                        <Text
-                                                            style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have Meter Serial Number</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                : <View style={styles.inputGroupStyle}>
-                                                    <View style={{ flexDirection: 'row' }}>
-                                                        <Text style={styles.inputLabelStyle}>Plot Number</Text>
-                                                    </View>
-                                                    <View style={{ flexDirection: "row", display: "flex", alignItems: 'center' }}>
-                                                        <View style={(this.state.emirate == "DUBAI") || (this.state.emirate == "ABUDHABI")|| (this.state.emirate == "FUJAIRAH") ? { width: "90%", marginRight: 5 } : { width: "100%" }}>
+                                            {
+                                                this.state.existingDetails && (this.state.existingDetails.PARTY_NAME == "") ?
+                                                    <View style={styles.inputGroupStyle}>
+                                                        <View style={{ flexDirection: 'row' }}>
+                                                            <Text style={styles.inputLabelStyle}>Full Name</Text>
+                                                        </View>
+                                                        <View>
                                                             <TextInput
-                                                                // editable={this.state.noQR}
-                                                                Value={this.state.plotNo}
+                                                                Value={this.state.fullName}
                                                                 OnChange={(value) => {
-                                                                    this.setState({ plotNo: value })
-                                                                }}
-                                                                OnBlur={() => {
-                                                                    if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                                                        this.toastIt("Select Emirate to search Building code and Apartment code", false)
-                                                                    } else if ((this.state.plotNo == "") || (this.state.plotNo == null)) {
-                                                                        this.toastIt("Enter Plot No. to search Building code and Apartment code", false)
-                                                                    } else {
-                                                                        this.setState({
-                                                                            getBuildingFromPlotNoCalled: true
-                                                                        }, () => {
-                                                                            let req = {
-                                                                                "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                                                "QUERY": this.state.plotNo
-                                                                            }
-                                                                            this.props.getBuildingFromPlotNo(req)
-                                                                        })
-                                                                    }
+                                                                    this.setState({ fullName: value })
                                                                 }}
                                                                 Style={{ borderColor: "#848484" }}
                                                             />
                                                         </View>
-                                                        {
-                                                            (this.state.emirate === "DUBAI" || this.state.emirate === "ABUDHABI" || this.state.emirate === "FUJAIRAH") ? (
-                                                                <View style={{ width: "10%", alignItems: 'center', justifyContent: 'center' }}>
-                                                                    <TouchableOpacity
-                                                                        onPress={() => {
-                                                                            const helpImageUrl =
-                                                                                this.state.emirate === "DUBAI" ? require("../../../assets/images/dubai_plot_no.jpg") :
-                                                                                    this.state.emirate === "ABUDHABI" ? require("../../../assets/images/abudhabi_plot_no.jpg") :
-                                                                                        require("../../../assets/images/fujairah_tenancy_no.jpg");
+                                                    </View> : null
+                                            }
 
-                                                                            this.setState({
-                                                                                showHelpModal: true,
-                                                                                helpImageUrl: helpImageUrl
-                                                                            });
-                                                                        }}
-                                                                    >
-                                                                        <Image
-                                                                            style={{ width: 22, height: 22, resizeMode: "stretch" }}
-                                                                            source={require("../../../assets/images/icon-feather-help-circle-2.png")}
-                                                                        />
-                                                                    </TouchableOpacity>
-                                                                </View>
-                                                            ) : null
-                                                        }
+                                            <View style={styles.inputGroupStyle}>
+                                                {/* <View style={{ flexDirection: 'row' }}>
+                                                    <Text style={styles.inputLabelStyle}>{t("home.emirate")}</Text>
+                                                </View> */}
+                                                <View>
+                                                    <Picker
+                                                        placeholder="Select Emirate"
+                                                        selectedValue={this.state.emirate}
+                                                        onValueChange={(itemValue, key) => {
+                                                            this.setState({
+                                                                emirate: itemValue == null ? "" : itemValue,
+                                                                companyCode: key >= 1 ? key - 1 : 0,
+                                                                getBnoAnoCalled: true
+                                                            }, () => {
+                                                                this.props.getBnoAno({
+                                                                    "TYPE": "METER_BRAND",
+                                                                    "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                    "B_CODE": "A",
+                                                                    "A_CODE": "A"
+                                                                })
+                                                            })
+                                                            if ((this.state.meterNo !== "") && (this.state.meterBrand != "")) {
+                                                                this.setState({
+                                                                    getMeterDetailsCalled: true
+                                                                }, () => {
+                                                                    let req = {
+                                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                        "QUERY": this.state.meterNo,
+                                                                        "REMARKS": this.state.meterBrand
+                                                                    }
+                                                                    this.props.getMeterDetails(req)
+                                                                })
+                                                            }
+                                                        }}
+                                                        items={this.state.pickerCompanyData}
+                                                        mode="dropdown"
+                                                    />
+                                                </View>
+                                            </View>
 
+                                            {
+                                                this.state.existingDetails && !this.state.existingDetails.EMAIL.match(validRegex) ?
+                                                    <View style={styles.inputGroupStyle}>
+                                                        <View style={{ flexDirection: 'row' }}>
+                                                            <Text style={styles.inputLabelStyle}>Email</Text>
+                                                        </View>
+                                                        <View>
+                                                            <TextInput
+                                                                Value={this.state.email}
+                                                                OnChange={(value) => {
+                                                                    this.setState({ email: value })
+                                                                }}
+                                                                Style={{ borderColor: "#848484" }}
+                                                            />
+                                                        </View>
+                                                    </View> : null
+                                            }
+
+                                            {this.state.openQrScanner
+                                                ? <QRCodeScanner
+                                                    // cameraContainerStyle={{height: 100, width: 100}}
+                                                    containerStyle={{
+                                                        flex: 1,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                    // topViewStyle={{flex: 0}}
+                                                    // bottomViewStyle={{flex: 0}}
+                                                    onRead={this.onQrRead}
+                                                    cameraStyle={{
+                                                        height: 300,
+                                                        width: 300,
+                                                        alignSelf: 'center',
+                                                        borderWidth: 3,
+                                                        borderColor: "#102D4F",
+                                                        borderStyle: "solid",
+                                                        borderRadius: 4,
+                                                        overflow: 'hidden'
+                                                        // height: 100,
+                                                    }}
+                                                    // containerStyle={{ marginVertical: 80 }}
+                                                    flashMode={RNCamera.Constants.FlashMode.auto}
+                                                />
+                                                :
+                                                // (!noQR && (buildingCode == "")) ? 
+                                                // <View style={{ ...styles.cardView, ...{ marginBottom: 0 } }} >
+                                                //     <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
+                                                //         {/* <View style={{ alignSelf: 'flex-start' }}>
+                                                //     <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
+                                                // </View> */}
+                                                //         <TouchableOpacity
+                                                //             style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row' } }}
+                                                //             onPress={() => {
+                                                //                 if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                //                     this.toastIt("Select Emirate to scan the QR Code", false)
+                                                //                 } else {
+                                                //                     this.setState({ buildingCode: "", apartmentCode: "", openQrScanner: true })
+                                                //                 }
+                                                //             }}
+                                                //         >
+                                                //             <Image
+                                                //                 source={require('../../../assets/images/qr.png')}
+                                                //                 style={{ ...styles.clickImage, marginRight: 5 }}
+                                                //             />
+                                                //             <Text
+                                                //                 style={styles.buttonLabelStyle}>Scan QR Code in Your Meter</Text>
+                                                //         </TouchableOpacity>
+                                                //     </View>
+                                                //     <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
+                                                //         {/* <View style={{ alignSelf: 'flex-start' }}>
+                                                //     <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
+                                                // </View> */}
+                                                //         <TouchableOpacity
+                                                //             style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
+                                                //             onPress={() => {
+                                                //                 if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                //                     this.toastIt("Select Emirate", false)
+                                                //                 } else {
+                                                //                     this.setState({ noQR: true })
+                                                //                 }
+                                                //             }}
+                                                //         >
+                                                //             <Image
+                                                //                 source={require('../../../assets/images/noQr.png')}
+                                                //                 style={{ ...styles.clickImage, marginRight: 5 }}
+                                                //             />
+                                                //             <Text
+                                                //                 style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have QR Code</Text>
+                                                //         </TouchableOpacity>
+                                                //     </View>
+                                                // </View> : 
+                                                null
+                                            }
+
+                                            {
+                                                // (this.state.noQR && (buildingCode == "")) || (this.state.meterNo != "") ?
+                                                !this.state.noQR ?
+                                                    <View style={{ ...styles.cardView, ...{ marginBottom: 0 } }} >
+                                                        <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
+                                                            {/* <View style={{ alignSelf: 'flex-start' }}>
+                                            <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
+                                        </View> */}
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row' } }}
+                                                                onPress={() => {
+                                                                    if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                        this.toastIt("Select Emirate to scan the QR Code", false)
+                                                                    } else {
+                                                                        this.setState({ buildingCode: "", apartmentCode: "", openQrScanner: true })
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    source={require('../../../assets/images/qr.png')}
+                                                                    style={{ ...styles.clickImage, marginRight: 5 }}
+                                                                />
+                                                                <Text
+                                                                    style={styles.buttonLabelStyle}>Scan QR Code in Your Meter</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        <View style={{ ...styles.inputGroupStyle, ...{ alignItems: 'center', marginBottom: 0 } }}>
+                                                            {/* <View style={{ alignSelf: 'flex-start' }}>
+                                            <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
+                                        </View> */}
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 10 } }}
+                                                                onPress={() => {
+                                                                    if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                        this.toastIt("Select Emirate", false)
+                                                                    } else {
+                                                                        this.setState({ noQR: true })
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    source={require('../../../assets/images/noQr.png')}
+                                                                    style={{ ...styles.clickImage, marginRight: 5 }}
+                                                                />
+                                                                <Text
+                                                                    style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have QR Code</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
                                                     </View>
-                                                    <TouchableOpacity
-                                                        style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
-                                                        onPress={() => this.setState({ noMeterNo: true, buildingCode: "", apartmentCode: "", pickerBuildingData: [], plotNo: "" })}
-                                                    >
-                                                        {/* <Image
+                                                    :
+                                                    this.state.noQR && this.state.noMeterNo ?
+
+                                                        <View style={styles.inputGroupStyle}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <Text style={styles.inputLabelStyle}>Meter Serial Number</Text>
+                                                            </View>
+                                                            <View>
+                                                                <TextInput
+                                                                    // editable={this.state.noQR}
+                                                                    Value={this.state.meterNo}
+                                                                    OnChange={(value) => {
+                                                                        this.setState({ meterNo: value })
+                                                                    }}
+                                                                    OnBlur={() => {
+                                                                        if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                            this.toastIt("Select Emirate to search Building code and Apartment code", false)
+                                                                        } else {
+                                                                            if (this.state.meterBrand != "") {
+                                                                                this.setState({
+                                                                                    getMeterDetailsCalled: true
+                                                                                }, () => {
+                                                                                    let req = {
+                                                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                                        "QUERY": this.state.meterNo,
+                                                                                        "REMARKS": this.state.meterBrand
+                                                                                    }
+                                                                                    this.props.getMeterDetails(req)
+                                                                                })
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                    Style={{ borderColor: "#848484" }}
+                                                                />
+                                                            </View>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <Text style={this.state.noQR ? styles.inputLabelStyle : { ...styles.inputLabelStyle, color: "#ABB2AC" }}>Select Meter Brand</Text>
+                                                            </View>
+                                                            <View>
+                                                                <TextInput
+                                                                    onFocus={() => {
+                                                                        this.setState({
+                                                                            showMeterBrandList: true,
+                                                                        })
+                                                                    }}
+                                                                    Value={this.state.meterBrand}
+                                                                    OnChange={(value) => {
+                                                                        this.setState({
+                                                                            showMeterBrandList: true
+                                                                        })
+                                                                    }}
+                                                                    Style={{ borderColor: "#848484" }}
+                                                                />
+                                                            </View>
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
+
+                                                                onPress={() => this.setState({ noMeterNo: false, noQR: false, buildingCode: "", apartmentCode: "", meterNo: "", meterBrand: "" })}
+                                                            >
+                                                                {/* <Image
                                                 source={require('../../../assets/images/noQr.png')}
                                                 style={{ ...styles.clickImage, marginRight: 5 }}
                                             /> */}
-                                                        <Text
-                                                            style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have Plot Number</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            // : null
-                                    }
+                                                                <Text
+                                                                    style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have Meter Serial Number</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        : <View style={styles.inputGroupStyle}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <Text style={styles.inputLabelStyle}>Plot Number</Text>
+                                                            </View>
+                                                            <View style={{ flexDirection: "row", display: "flex", alignItems: 'center' }}>
+                                                                <View style={(this.state.emirate == "DUBAI") || (this.state.emirate == "ABUDHABI") || (this.state.emirate == "FUJAIRAH") ? { width: "90%", marginRight: 5 } : { width: "100%" }}>
+                                                                    <TextInput
+                                                                        // editable={this.state.noQR}
+                                                                        Value={this.state.plotNo}
+                                                                        OnChange={(value) => {
+                                                                            this.setState({ plotNo: value })
+                                                                        }}
+                                                                        OnBlur={() => {
+                                                                            if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                                this.toastIt("Select Emirate to search Building code and Apartment code", false)
+                                                                            } else if ((this.state.plotNo == "") || (this.state.plotNo == null)) {
+                                                                                this.toastIt("Enter Plot No. to search Building code and Apartment code", false)
+                                                                            } else {
+                                                                                this.setState({
+                                                                                    getBuildingFromPlotNoCalled: true
+                                                                                }, () => {
+                                                                                    let req = {
+                                                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                                        "QUERY": this.state.plotNo
+                                                                                    }
+                                                                                    this.props.getBuildingFromPlotNo(req)
+                                                                                })
+                                                                            }
+                                                                        }}
+                                                                        Style={{ borderColor: "#848484" }}
+                                                                    />
+                                                                </View>
+                                                                {
+                                                                    (this.state.emirate === "DUBAI" || this.state.emirate === "ABUDHABI" || this.state.emirate === "FUJAIRAH") ? (
+                                                                        <View style={{ width: "10%", alignItems: 'center', justifyContent: 'center' }}>
+                                                                            <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    const helpImageUrl =
+                                                                                        this.state.emirate === "DUBAI" ? require("../../../assets/images/dubai_plot_no.jpg") :
+                                                                                            this.state.emirate === "ABUDHABI" ? require("../../../assets/images/abudhabi_plot_no.jpg") :
+                                                                                                require("../../../assets/images/fujairah_tenancy_no.jpg");
 
-                                    <View style={(this.state.pickerBuildingData.length != 0) || (this.state.buildingCode != "") ? styles.inputGroupStyle : {...styles.inputGroupStyle,display: "none"}}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text style={!this.state.noMeterNo ? styles.inputLabelStyle : { ...styles.inputLabelStyle, color: "#ABB2AC" }}>Building Code</Text>
-                                            {/* <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Building Code</Text> */}
-                                            {
-                                                this.state.getMeterDetailsCalled || this.state.getBuildingFromPlotNoCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : null
+                                                                                    this.setState({
+                                                                                        showHelpModal: true,
+                                                                                        helpImageUrl: helpImageUrl
+                                                                                    });
+                                                                                }}
+                                                                            >
+                                                                                <Image
+                                                                                    style={{ width: 22, height: 22, resizeMode: "stretch" }}
+                                                                                    source={require("../../../assets/images/icon-feather-help-circle-2.png")}
+                                                                                />
+                                                                            </TouchableOpacity>
+                                                                        </View>
+                                                                    ) : null
+                                                                }
+
+                                                            </View>
+                                                            <TouchableOpacity
+                                                                style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
+                                                                onPress={() => this.setState({ noMeterNo: true, buildingCode: "", apartmentCode: "", pickerBuildingData: [], plotNo: "" })}
+                                                            >
+                                                                {/* <Image
+                                                source={require('../../../assets/images/noQr.png')}
+                                                style={{ ...styles.clickImage, marginRight: 5 }}
+                                            /> */}
+                                                                <Text
+                                                                    style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have Plot Number</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                // : null
                                             }
-                                        </View>
-                                        <View>
-                                            {/* <TextInput
+
+                                            <View style={(this.state.pickerBuildingData.length != 0) || (this.state.buildingCode != "") ? styles.inputGroupStyle : { ...styles.inputGroupStyle, display: "none" }}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <Text style={!this.state.noMeterNo ? styles.inputLabelStyle : { ...styles.inputLabelStyle, color: "#ABB2AC" }}>Building Code</Text>
+                                                    {/* <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Building Code</Text> */}
+                                                    {
+                                                        this.state.getMeterDetailsCalled || this.state.getBuildingFromPlotNoCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : null
+                                                    }
+                                                </View>
+                                                <View>
+                                                    {/* <TextInput
                                                 editable={false}
                                                 Value={this.state.buildingCode}
                                                 OnChange={(value) => {
@@ -1688,116 +1662,116 @@ class RequestNewConnection extends Component {
                                                 }}
                                                 Style={{ borderColor: "#848484" }}
                                             /> */}
-                                            <TextInput
-                                                editable={this.state.noQR && (this.state.pickerBuildingData.length != 0)}
-                                                onFocus={() => {
-                                                    this.setState({
-                                                        showBuildingSearch: true
-                                                    })
+                                                    <TextInput
+                                                        editable={this.state.noQR && (this.state.pickerBuildingData.length != 0)}
+                                                        onFocus={() => {
+                                                            this.setState({
+                                                                showBuildingSearch: true
+                                                            })
+                                                        }}
+                                                        Value={this.state.buildingCode}
+                                                        OnChange={(value) => {
+                                                            this.setState({
+                                                                showBuildingSearch: true
+                                                            })
+                                                        }}
+                                                        Style={{ borderColor: "#848484" }}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <View style={this.state.buildingCode != "" ? styles.inputGroupStyle : { ...styles.inputGroupStyle, display: "none" }}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <Text style={!this.state.noMeterNo && (this.state.buildingCode != "") ? styles.inputLabelStyle : { ...styles.inputLabelStyle, color: "#ABB2AC" }}>Apartment Number</Text>
+                                                    {/* <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Apartment Number</Text> */}
+                                                    {
+                                                        this.state.getMeterDetailsCalled || this.state.getBuildingFromPlotNoCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : null
+                                                    }
+
+                                                </View>
+                                                <View>
+                                                    <TextInput
+                                                        editable={this.state.noQR && (this.state.meterNo == "") && (this.state.buildingCode != "")}
+                                                        onFocus={() => {
+                                                            this.setState({
+                                                                showApartmentSearch: true,
+                                                                getVacantApartmentsCalled: true
+                                                            }, () => this.props.getVacantApartments({
+                                                                "TYPE": "APARTMENT_CODE",
+                                                                "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                "B_CODE": this.state.buildingCode,
+                                                                "A_CODE": ""
+                                                            }))
+                                                        }}
+                                                        Value={this.state.apartmentCode}
+                                                        OnChange={(value) => {
+                                                            this.setState({
+                                                                showApartmentSearch: true,
+                                                                getVacantApartmentsCalled: true
+                                                            }, () => this.props.getVacantApartments({
+                                                                "TYPE": "APARTMENT_CODE",
+                                                                "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                "B_CODE": this.state.buildingCode,
+                                                                "A_CODE": ""
+                                                            }))
+                                                        }}
+                                                        Style={{ borderColor: "#848484" }}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <TouchableOpacity
+                                                style={{ ...Mainstyles.buttonStyle, marginTop: 20}}
+                                                onPress={() => {
+
+                                                    if ((this.state.emirate.trim() == "") ||
+                                                        ((this.state.email.trim() == "") && (this.state.existingDetails.EMAIL == "")) ||
+                                                        (this.state.buildingCode.trim() == "") ||
+                                                        (this.state.apartmentCode.trim() == "") ||
+                                                        ((this.state.fullName.trim() == "") && (this.state.existingDetails.PARTY_NAME == ""))
+                                                    ) {
+
+                                                        this.toastIt("Enter All Details", false)
+                                                    } else if ((this.state.apartmentCode.trim() == "0") || (this.state.apartmentCode.trim() == 0)) {
+                                                        this.toastIt("Error in Apartment Number, Please re-select.", false)
+                                                    } else {
+
+                                                        if (this.state.email.trim().match(validRegex) || this.state.existingDetails.EMAIL.match(validRegex)) {
+
+                                                            this.setState({
+                                                                getFeeDetailsCalled: true
+                                                            }, () => {
+                                                                this.props.getFeeDetails({
+                                                                    company: this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                    bcode: this.state.buildingCode,
+                                                                    acode: this.state.apartmentCode
+                                                                })
+                                                            })
+                                                        } else {
+                                                            this.toastIt("Enter valid email address", false)
+                                                        }
+                                                    }
                                                 }}
-                                                Value={this.state.buildingCode}
-                                                OnChange={(value) => {
-                                                    this.setState({
-                                                        showBuildingSearch: true
-                                                    })
-                                                }}
-                                                Style={{ borderColor: "#848484" }}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <View style={this.state.buildingCode != "" ? styles.inputGroupStyle : {...styles.inputGroupStyle,display: "none"} }>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text style={!this.state.noMeterNo && (this.state.buildingCode != "") ? styles.inputLabelStyle : { ...styles.inputLabelStyle, color: "#ABB2AC" }}>Apartment Number</Text>
-                                            {/* <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Apartment Number</Text> */}
-                                            {
-                                                this.state.getMeterDetailsCalled || this.state.getBuildingFromPlotNoCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : null
-                                            }
-
-                                        </View>
-                                        <View>
-                                            <TextInput
-                                                editable={this.state.noQR && (this.state.meterNo == "") && (this.state.buildingCode != "")}
-                                                onFocus={() => {
-                                                    this.setState({
-                                                        showApartmentSearch: true,
-                                                        getVacantApartmentsCalled: true
-                                                    }, () => this.props.getVacantApartments({
-                                                        "TYPE": "APARTMENT_CODE",
-                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                        "B_CODE": this.state.buildingCode,
-                                                        "A_CODE": ""
-                                                    }))
-                                                }}
-                                                Value={this.state.apartmentCode}
-                                                OnChange={(value) => {
-                                                    this.setState({
-                                                        showApartmentSearch: true,
-                                                        getVacantApartmentsCalled: true
-                                                    }, () => this.props.getVacantApartments({
-                                                        "TYPE": "APARTMENT_CODE",
-                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                        "B_CODE": this.state.buildingCode,
-                                                        "A_CODE": ""
-                                                    }))
-                                                }}
-                                                Style={{ borderColor: "#848484" }}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <TouchableOpacity
-                                        style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end', marginRight: "2.5%" }}
-                                        onPress={() => {
-
-                                            if ((this.state.emirate.trim() == "") ||
-                                                ((this.state.email.trim() == "") && (this.state.existingDetails.EMAIL == "")) ||
-                                                (this.state.buildingCode.trim() == "") ||
-                                                (this.state.apartmentCode.trim() == "") ||
-                                                ((this.state.fullName.trim() == "") && (this.state.existingDetails.PARTY_NAME == ""))
-                                            ) {
-
-                                                this.toastIt("Enter All Details", false)
-                                            } else if ((this.state.apartmentCode.trim() == "0") || (this.state.apartmentCode.trim() == 0)) {
-                                                this.toastIt("Error in Apartment Number, Please re-select.", false)
-                                            } else {
-
-                                                if (this.state.email.trim().match(validRegex) || this.state.existingDetails.EMAIL.match(validRegex)) {
-
-                                                    this.setState({
-                                                        getFeeDetailsCalled: true
-                                                    }, () => {
-                                                        this.props.getFeeDetails({
-                                                            company: this.state.pickerCompanyData[this.state.companyCode].id,
-                                                            bcode: this.state.buildingCode,
-                                                            acode: this.state.apartmentCode
-                                                        })
-                                                    })
-                                                } else {
-                                                    this.toastIt("Enter valid email address", false)
-                                                }
-                                            }
-                                        }}
-                                        disabled={this.state.getFeeDetailsCalled}
-                                    >
-                                        {
-                                            (this.state.getFeeDetailsCalled) ?
-                                                <ActivityIndicator size='small' color='white' /> :
-                                                <>
-                                                    <View style={{ ...styles.paymentDueRow2 }}
-                                                    >
-                                                        <Text style={styles.buttonLabelStyle}>Next</Text>
-                                                        <Image
-                                                            source={require('../../../assets/images/click.png')}
-                                                            style={styles.clickImage}
-                                                        />
-                                                    </View>
-                                                    {/* <Text
+                                                disabled={this.state.getFeeDetailsCalled}
+                                            >
+                                                {
+                                                    (this.state.getFeeDetailsCalled) ?
+                                                        <ActivityIndicator size='small' color='white' /> :
+                                                        <>
+                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            >
+                                                                <Text style={Mainstyles.buttonLabelStyle}>Next</Text>
+                                                                {/* <Image
+                                                                    source={require('../../../assets/images/click.png')}
+                                                                    style={styles.clickImage}
+                                                                /> */}
+                                                            </View>
+                                                            {/* <Text
                                             style={styles.buttonLabelStyle}>Next</Text> */}
-                                                </>
-                                        }
-                                    </TouchableOpacity>
-                                    {/* <TouchableOpacity
+                                                        </>
+                                                }
+                                            </TouchableOpacity>
+                                            {/* <TouchableOpacity
                                                         style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
                                                         onPress={() => this.setState({ noMeterNo: false, noQR: false ,openQrScanner:false})}
                                                     >
@@ -1805,579 +1779,579 @@ class RequestNewConnection extends Component {
                                                         <Text
                                                             style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have QR Code Existing Now</Text>
                                                     </TouchableOpacity> */}
-                                </> :
-                                this.state.step == 2 ?
-                                    <>
-                                        <View style={styles.inputGroupStyle}>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Text style={styles.inputLabelStyle}>Tenancy Contract / Ejari / Title deed / Initial sales agreement</Text>
-                                            </View>
-                                            <View>
-                                                <View style={{ alignItems: 'center', marginVertical: 15 }}>
-                                                    <TouchableOpacity onPress={() => {
-                                                        if (this.state.tenancyContractFront == null) {
-                                                            // this.handleAttachImages("capture", "tenancyContract")
-                                                            this.setState({
-                                                                showPickerModal: true,
-                                                                currentImageType: "tenancyContract"
-                                                            })
-                                                        } else {
-                                                            this.setState({
-                                                                showImageModal: true,
-                                                                currentImageUri: this.state.tenancyContractFront.assets[0].uri,
-                                                                currentImageType: "tenancyContract"
-                                                            })
-                                                        }
-                                                    }}>
-                                                        {this.state.tenancyContractFront != null ?
-                                                            <Image style={{ ...styles.addImage, borderRadius: 4 }} source={{ uri: this.state.tenancyContractFront.assets[0].uri }} />
-                                                            : <Image style={{ ...styles.addImage, resizeMode: 'contain' }} source={require("../../../assets/images/camera2.png")} />
-                                                        }
-                                                    </TouchableOpacity>
-                                                    <Text style={styles.frontBackText}>Attach image here</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        step: 1
-                                                    })
-                                                }}
-                                                disabled={apiCallFlags.requestConnectionApiCalled}
-                                            >
-                                                <View style={{ ...styles.paymentDueRow2 }}
-                                                >
-                                                    <Image
-                                                        source={require('../../../assets/images/backBlue.png')}
-                                                        style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
-                                                    />
-                                                    <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
-                                                </View>
-                                                {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
-
-                                            </TouchableOpacity>
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
-                                                onPress={() => {
-                                                    if (tenancyContractFront == null) {
-                                                        this.toastIt("Add tenancy contract image")
-                                                    } else {
-                                                        this.setState({
-                                                            step: 3
-                                                        })
-                                                    }
-                                                }}
-                                                disabled={apiCallFlags.requestConnectionApiCalled}
-                                            >
-                                                <View style={{ ...styles.paymentDueRow2 }}
-                                                >
-                                                    <Text style={styles.buttonLabelStyle}>Next</Text>
-                                                    <Image
-                                                        source={require('../../../assets/images/clickWhite.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                                {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
-
-                                            </TouchableOpacity>
-                                        </View>
-                                    </> :
-                                    this.state.step == 3 ?
-                                        <>
-                                            <View style={{ ...styles.accountsLabelView }}>
-                                                <Text style={styles.accountsLabel} >
-                                                    Choose your preference
-                                                </Text>
-                                            </View>
-
-                                            <View style={{ ...styles.headerView, marginBottom: 0, minHeight: 40 }}>
-                                                <View style={{ flexDirection: "row", }}>
-                                                    <View style={styles.headerCol1}>
-                                                        <TouchableOpacity style={this.state.paidConnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1 } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" }}
-                                                            onPress={() => { this.setState({ paidConnection: false }) }}>
-                                                            {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                                                        </TouchableOpacity>
-                                                        <Text style={styles.preferrenceLabel} >
-                                                            Regular Connection
-                                                        </Text>
+                                        </> :
+                                        this.state.step == 2 ?
+                                            <>
+                                                <View style={styles.inputGroupStyle}>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={styles.inputLabelStyle}>Tenancy Contract / Ejari / Title deed / Initial sales agreement</Text>
+                                                    </View>
+                                                    <View>
+                                                        <View style={{ alignItems: 'center', marginVertical: 15 }}>
+                                                            <TouchableOpacity onPress={() => {
+                                                                if (this.state.tenancyContractFront == null) {
+                                                                    // this.handleAttachImages("capture", "tenancyContract")
+                                                                    this.setState({
+                                                                        showPickerModal: true,
+                                                                        currentImageType: "tenancyContract"
+                                                                    })
+                                                                } else {
+                                                                    this.setState({
+                                                                        showImageModal: true,
+                                                                        currentImageUri: this.state.tenancyContractFront.assets[0].uri,
+                                                                        currentImageType: "tenancyContract"
+                                                                    })
+                                                                }
+                                                            }}>
+                                                                {this.state.tenancyContractFront != null ?
+                                                                    <Image style={{ ...styles.addImage, borderRadius: 4 }} source={{ uri: this.state.tenancyContractFront.assets[0].uri }} />
+                                                                    : <Image style={{ ...styles.addImage, resizeMode: 'contain' }} source={require("../../../assets/images/camera2.png")} />
+                                                                }
+                                                            </TouchableOpacity>
+                                                            <Text style={styles.frontBackText}>Attach image here</Text>
+                                                        </View>
                                                     </View>
                                                 </View>
-                                            </View>
+                                                <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
+                                                    <TouchableOpacity
+                                                        style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                step: 1
+                                                            })
+                                                        }}
+                                                        disabled={apiCallFlags.requestConnectionApiCalled}
+                                                    >
+                                                        <View style={{ ...styles.paymentDueRow2 }}
+                                                        >
+                                                            <Image
+                                                                source={require('../../../assets/images/backBlue.png')}
+                                                                style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
+                                                            />
+                                                            <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
+                                                        </View>
+                                                        {/* <Text
+                                            style={styles.buttonLabelStyle}>Next</Text> */}
 
-                                            {
-                                                !this.state.feeDetails.excludedPrefferedConnection ? <View style={{ ...styles.headerView, marginTop: 0, marginBottom: 20 }}>
-                                                    <View style={{ flexDirection: "row", }}>
-                                                        <View style={styles.headerCol1}>
-                                                            <TouchableOpacity style={this.state.paidConnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 0.4 }}
-                                                                onPress={() => { this.setState({ paidConnection: true }) }}>
-                                                                {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                                                            </TouchableOpacity>
-                                                            <View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
+                                                        onPress={() => {
+                                                            if (tenancyContractFront == null) {
+                                                                this.toastIt("Add tenancy contract image")
+                                                            } else {
+                                                                this.setState({
+                                                                    step: 3
+                                                                })
+                                                            }
+                                                        }}
+                                                        disabled={apiCallFlags.requestConnectionApiCalled}
+                                                    >
+                                                        <View style={{ ...styles.paymentDueRow2 }}
+                                                        >
+                                                            <Text style={styles.buttonLabelStyle}>Next</Text>
+                                                            <Image
+                                                                source={require('../../../assets/images/clickWhite.png')}
+                                                                style={styles.clickImage}
+                                                            />
+                                                        </View>
+                                                        {/* <Text
+                                            style={styles.buttonLabelStyle}>Next</Text> */}
+
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </> :
+                                            this.state.step == 3 ?
+                                                <>
+                                                    <View style={{ ...Mainstyles.accountsLabelView }}>
+                                                        <Text style={Mainstyles.accountsLabel} >
+                                                            Choose your preference
+                                                        </Text>
+                                                    </View>
+
+                                                    <View style={{ ...styles.headerView, marginBottom: 0, minHeight: 40 }}>
+                                                        <View style={{ flexDirection: "row", }}>
+                                                            <View style={styles.headerCol1}>
+                                                                <TouchableOpacity style={this.state.paidConnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1 } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" }}
+                                                                    onPress={() => { this.setState({ paidConnection: false }) }}>
+                                                                    {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
+                                                                </TouchableOpacity>
                                                                 <Text style={styles.preferrenceLabel} >
-                                                                    Preferred Date for Connection
-                                                                </Text>
-                                                                <Text style={{ ...styles.preferrenceLabel, fontSize: 10 }} >
-                                                                    Additional charges apply for Immediate Connection + Associated Fees : 105 AED
+                                                                    Regular Connection
                                                                 </Text>
                                                             </View>
                                                         </View>
                                                     </View>
-                                                </View> : null
-                                            }
+
+                                                    {
+                                                        !this.state.feeDetails.excludedPrefferedConnection ? <View style={{ ...styles.headerView, marginTop: 0, marginBottom: 20 }}>
+                                                            <View style={{ flexDirection: "row", }}>
+                                                                <View style={styles.headerCol1}>
+                                                                    <TouchableOpacity style={this.state.paidConnection ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 0.4 }}
+                                                                        onPress={() => { this.setState({ paidConnection: true }) }}>
+                                                                        {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
+                                                                    </TouchableOpacity>
+                                                                    <View>
+                                                                        <Text style={styles.preferrenceLabel} >
+                                                                            Preferred Date for Connection
+                                                                        </Text>
+                                                                        <Text style={{ ...styles.preferrenceLabel, fontSize: 10 }} >
+                                                                            Additional charges apply for Immediate Connection + Associated Fees : 105 AED
+                                                                        </Text>
+                                                                    </View>
+                                                                </View>
+                                                            </View>
+                                                        </View> : null
+                                                    }
 
 
-                                            <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
-                                                <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
-                                                    onPress={() => {
-                                                        this.setState({
-                                                            step: 2
-                                                        })
-                                                    }}
-                                                    disabled={apiCallFlags.requestConnectionApiCalled}
-                                                >
-                                                    <View style={{ ...styles.paymentDueRow2 }}
-                                                    >
-                                                        <Image
-                                                            source={require('../../../assets/images/backBlue.png')}
-                                                            style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
-                                                        />
-                                                        <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
-                                                    </View>
-                                                    {/* <Text
+                                                    <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
+                                                        <TouchableOpacity
+                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    step: 2
+                                                                })
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
+                                                        >
+                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            >
+                                                                <Image
+                                                                    source={require('../../../assets/images/backBlue.png')}
+                                                                    style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
+                                                                />
+                                                                <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
+                                                            </View>
+                                                            {/* <Text
                                             style={styles.buttonLabelStyle}>Next</Text> */}
 
-                                                </TouchableOpacity>
-                                                <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
-                                                    onPress={() => {
-                                                        if (this.state.paidConnection) {
-                                                            this.setState({
-                                                                showPaidModal: true
-                                                            })
-                                                        } else {
-                                                            this.setState({
-                                                                step: 4
-                                                            })
-                                                        }
-                                                    }}
-                                                    disabled={apiCallFlags.requestConnectionApiCalled}
-                                                >
-                                                    <View style={{ ...styles.paymentDueRow2 }}
-                                                    >
-                                                        <Text style={styles.buttonLabelStyle}>Next</Text>
-                                                        <Image
-                                                            source={require('../../../assets/images/clickWhite.png')}
-                                                            style={styles.clickImage}
-                                                        />
-                                                    </View>
-                                                    {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
-
-                                                </TouchableOpacity>
-                                            </View>
-                                        </> :
-                                        <>
-                                            <View style={styles.inputGroupStyle}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ ...styles.inputLabelStyle, color: "#e5a026" }}>New Connection Charges</Text>
-                                                </View>
-                                            </View>
-                                            {
-                                                (this.state.feeDetails.connectionAmt != "") && (this.state.feeDetails.connectionAmt != 0) ?
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Connection fee:</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.connectionAmt == "" ? 0 : (parseFloat(this.state.feeDetails.connectionAmt) + (parseFloat(this.state.feeDetails.connectionAmt) * (parseFloat(this.state.feeDetails.connectionTaxPerc) / 100))).toFixed(2)}</Text>
-                                                        </View>
-                                                    </View> : null
-                                            }
-
-                                            {
-                                                (this.state.feeDetails.depositAmt != "") && (this.state.feeDetails.depositAmt != 0) ?
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Deposit:</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.depositAmt == "" ? 0 : (parseFloat(this.state.feeDetails.depositAmt) + (parseFloat(this.state.feeDetails.depositAmt) * (parseFloat(this.state.feeDetails.depositTaxPerc) / 100))).toFixed(2)}</Text>
-                                                        </View>
-                                                    </View> : null
-                                            }
-
-                                            {
-                                                (this.state.feeDetails.disconnectionAmt != "") && (this.state.feeDetails.disconnectionAmt != 0) ?
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Disconnection fee:</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.disconnectionAmt == "" ? 0 : (parseFloat(this.state.feeDetails.disconnectionAmt) + (parseFloat(this.state.feeDetails.disconnectionAmt) * (parseFloat(this.state.feeDetails.disconnectionTaxPerc) / 100))).toFixed(2)}</Text>
-                                                        </View>
-                                                    </View> : null
-                                            }
-
-                                            {
-                                                (this.state.feeDetails.insuranceAmt != "") && (this.state.feeDetails.insuranceAmt != 0) ?
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Insurance:</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.insuranceAmt == "" ? 0 : (parseFloat(this.state.feeDetails.insuranceAmt) + (parseFloat(this.state.feeDetails.insuranceAmt) * (parseFloat(this.state.feeDetails.insuranceTaxPerc) / 100))).toFixed(2)}</Text>
-                                                        </View>
-                                                    </View> : null
-                                            }
-
-                                            {
-                                                (this.state.feeDetails.maintainanceAmt != "") && (this.state.feeDetails.maintainanceAmt != 0) ?
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Maintenance Fee:</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.maintainanceAmt == "" ? 0 : (parseFloat(this.state.feeDetails.maintainanceAmt) + (parseFloat(this.state.feeDetails.maintainanceAmt) * (parseFloat(this.state.feeDetails.maintainanceTaxPerc) / 100))).toFixed(2)}</Text>
-                                                        </View>
-                                                    </View> : null
-                                            }
-
-                                            {
-                                                ((this.state.feeDetails.other1Amt != "") && (this.state.feeDetails.other1Amt != 0)) || ((this.state.feeDetails.other2Amt != "") && (this.state.feeDetails.other2Amt != 0)) || ((this.state.feeDetails.other3Amt != "") && (this.state.feeDetails.other3Amt != 0)) ?
-                                                    <View style={styles.cardBodyRow}>
-                                                        <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Misc:</Text>
-                                                        </View>
-                                                        <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>
-                                                                {
-                                                                    ((this.state.feeDetails.other1Amt == "" ? 0 : parseFloat(this.state.feeDetails.other1Amt) + (parseFloat(this.state.feeDetails.other1Amt) * (parseFloat(this.state.feeDetails.other1TaxPerc) / 100))) +
-                                                                        (this.state.feeDetails.other2Amt == "" ? 0 : parseFloat(this.state.feeDetails.other2Amt) + (parseFloat(this.state.feeDetails.other2Amt) * (parseFloat(this.state.feeDetails.other2TaxPerc) / 100))) +
-                                                                        (this.state.feeDetails.other3Amt == "" ? 0 : parseFloat(this.state.feeDetails.other3Amt) + (parseFloat(this.state.feeDetails.other3Amt) * (parseFloat(this.state.feeDetails.other3TaxPerc) / 100)))).toFixed(2)
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
+                                                            onPress={() => {
+                                                                if (this.state.paidConnection) {
+                                                                    this.setState({
+                                                                        showPaidModal: true
+                                                                    })
+                                                                } else {
+                                                                    this.setState({
+                                                                        step: 4
+                                                                    })
                                                                 }
-                                                            </Text>
-                                                        </View>
-                                                    </View> : null
-                                            }
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
+                                                        >
+                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            >
+                                                                <Text style={styles.buttonLabelStyle}>Next</Text>
+                                                                <Image
+                                                                    source={require('../../../assets/images/clickWhite.png')}
+                                                                    style={styles.clickImage}
+                                                                />
+                                                            </View>
+                                                            {/* <Text
+                                            style={styles.buttonLabelStyle}>Next</Text> */}
 
-                                            {
-                                                (this.state.feeDetails.registrationAmt != "") && (this.state.feeDetails.registrationAmt != 0) ?
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </> :
+                                                <>
+                                                    <View style={styles.inputGroupStyle}>
+                                                        <View style={{ flexDirection: 'row' }}>
+                                                            <Text style={{ ...styles.inputLabelStyle, color: "#e5a026" }}>New Connection Charges</Text>
+                                                        </View>
+                                                    </View>
+                                                    {
+                                                        (this.state.feeDetails.connectionAmt != "") && (this.state.feeDetails.connectionAmt != 0) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Connection fee:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.connectionAmt == "" ? 0 : (parseFloat(this.state.feeDetails.connectionAmt) + (parseFloat(this.state.feeDetails.connectionAmt) * (parseFloat(this.state.feeDetails.connectionTaxPerc) / 100))).toFixed(2)}</Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {
+                                                        (this.state.feeDetails.depositAmt != "") && (this.state.feeDetails.depositAmt != 0) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Deposit:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.depositAmt == "" ? 0 : (parseFloat(this.state.feeDetails.depositAmt) + (parseFloat(this.state.feeDetails.depositAmt) * (parseFloat(this.state.feeDetails.depositTaxPerc) / 100))).toFixed(2)}</Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {
+                                                        (this.state.feeDetails.disconnectionAmt != "") && (this.state.feeDetails.disconnectionAmt != 0) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Disconnection fee:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.disconnectionAmt == "" ? 0 : (parseFloat(this.state.feeDetails.disconnectionAmt) + (parseFloat(this.state.feeDetails.disconnectionAmt) * (parseFloat(this.state.feeDetails.disconnectionTaxPerc) / 100))).toFixed(2)}</Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {
+                                                        (this.state.feeDetails.insuranceAmt != "") && (this.state.feeDetails.insuranceAmt != 0) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Insurance:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.insuranceAmt == "" ? 0 : (parseFloat(this.state.feeDetails.insuranceAmt) + (parseFloat(this.state.feeDetails.insuranceAmt) * (parseFloat(this.state.feeDetails.insuranceTaxPerc) / 100))).toFixed(2)}</Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {
+                                                        (this.state.feeDetails.maintainanceAmt != "") && (this.state.feeDetails.maintainanceAmt != 0) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Maintenance Fee:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.maintainanceAmt == "" ? 0 : (parseFloat(this.state.feeDetails.maintainanceAmt) + (parseFloat(this.state.feeDetails.maintainanceAmt) * (parseFloat(this.state.feeDetails.maintainanceTaxPerc) / 100))).toFixed(2)}</Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {
+                                                        ((this.state.feeDetails.other1Amt != "") && (this.state.feeDetails.other1Amt != 0)) || ((this.state.feeDetails.other2Amt != "") && (this.state.feeDetails.other2Amt != 0)) || ((this.state.feeDetails.other3Amt != "") && (this.state.feeDetails.other3Amt != 0)) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Misc:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>
+                                                                        {
+                                                                            ((this.state.feeDetails.other1Amt == "" ? 0 : parseFloat(this.state.feeDetails.other1Amt) + (parseFloat(this.state.feeDetails.other1Amt) * (parseFloat(this.state.feeDetails.other1TaxPerc) / 100))) +
+                                                                                (this.state.feeDetails.other2Amt == "" ? 0 : parseFloat(this.state.feeDetails.other2Amt) + (parseFloat(this.state.feeDetails.other2Amt) * (parseFloat(this.state.feeDetails.other2TaxPerc) / 100))) +
+                                                                                (this.state.feeDetails.other3Amt == "" ? 0 : parseFloat(this.state.feeDetails.other3Amt) + (parseFloat(this.state.feeDetails.other3Amt) * (parseFloat(this.state.feeDetails.other3TaxPerc) / 100)))).toFixed(2)
+                                                                        }
+                                                                    </Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {
+                                                        (this.state.feeDetails.registrationAmt != "") && (this.state.feeDetails.registrationAmt != 0) ?
+                                                            <View style={styles.cardBodyRow}>
+                                                                <View style={styles.cardBodyColumnLeft}>
+                                                                    <Text style={styles.cardBodyText}>Registration fee:</Text>
+                                                                </View>
+                                                                <View style={styles.cardBodyColumnRight}>
+                                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.registrationAmt == "" ? 0 : (parseFloat(this.state.feeDetails.registrationAmt) + (parseFloat(this.state.feeDetails.registrationAmt) * (parseFloat(this.state.feeDetails.registrationTaxPerc) / 100))).toFixed(2)}</Text>
+                                                                </View>
+                                                            </View> : null
+                                                    }
+
+                                                    {this.state.paidConnection ?
+                                                        <View style={styles.cardBodyRow}>
+                                                            <View style={styles.cardBodyColumnLeft}>
+                                                                <Text style={styles.cardBodyText}>Preferred connection fee:</Text>
+                                                            </View>
+                                                            <View style={styles.cardBodyColumnRight}>
+                                                                <Text style={styles.cardBodyText1}>{parseFloat(105).toFixed(2)}</Text>
+                                                            </View>
+                                                        </View> : null
+                                                    }
+
                                                     <View style={styles.cardBodyRow}>
                                                         <View style={styles.cardBodyColumnLeft}>
-                                                            <Text style={styles.cardBodyText}>Registration fee:</Text>
+                                                            <Text style={{ ...styles.cardBodyText, fontSize: 16 }}>Total to be paid now:</Text>
                                                         </View>
                                                         <View style={styles.cardBodyColumnRight}>
-                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.registrationAmt == "" ? 0 : (parseFloat(this.state.feeDetails.registrationAmt) + (parseFloat(this.state.feeDetails.registrationAmt) * (parseFloat(this.state.feeDetails.registrationTaxPerc) / 100))).toFixed(2)}</Text>
+                                                            <Text style={{ ...styles.cardBodyText1, fontSize: 16 }}>{this.state.paidConnection ? (this.state.feeDetails.totalAmt + 105).toFixed(2) : this.state.feeDetails.totalAmt.toFixed(2)}</Text>
                                                         </View>
-                                                    </View> : null
-                                            }
-
-                                            {this.state.paidConnection ?
-                                                <View style={styles.cardBodyRow}>
-                                                    <View style={styles.cardBodyColumnLeft}>
-                                                        <Text style={styles.cardBodyText}>Preferred connection fee:</Text>
                                                     </View>
-                                                    <View style={styles.cardBodyColumnRight}>
-                                                        <Text style={styles.cardBodyText1}>{parseFloat(105).toFixed(2)}</Text>
+
+                                                    <View style={{ ...styles.inputGroupStyle, marginTop: 20 }}>
+                                                        <View style={{ flexDirection: 'row' }}>
+                                                            <Text style={{ ...styles.inputLabelStyle, color: "#e5a026" }}>Other Charges</Text>
+                                                        </View>
                                                     </View>
-                                                </View> : null
-                                            }
 
-                                            <View style={styles.cardBodyRow}>
-                                                <View style={styles.cardBodyColumnLeft}>
-                                                    <Text style={{ ...styles.cardBodyText, fontSize: 16 }}>Total to be paid now:</Text>
-                                                </View>
-                                                <View style={styles.cardBodyColumnRight}>
-                                                    <Text style={{ ...styles.cardBodyText1, fontSize: 16 }}>{this.state.paidConnection ? (this.state.feeDetails.totalAmt + 105).toFixed(2) : this.state.feeDetails.totalAmt.toFixed(2)}</Text>
-                                                </View>
-                                            </View>
+                                                    <View style={styles.cardBodyRow}>
+                                                        <View style={styles.cardBodyColumnLeft}>
+                                                            <Text style={styles.cardBodyText}>Monthly Fee:</Text>
+                                                        </View>
+                                                        <View style={styles.cardBodyColumnRight}>
+                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.monthlyFee == "" ? 0 : (parseFloat(this.state.feeDetails.monthlyFee) + (parseFloat(this.state.feeDetails.monthlyFee) * (parseFloat(this.state.feeDetails.monthlyTaxPerc) / 100))).toFixed(2)}</Text>
+                                                        </View>
+                                                    </View>
 
-                                            <View style={{ ...styles.inputGroupStyle, marginTop: 20 }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ ...styles.inputLabelStyle, color: "#e5a026" }}>Other Charges</Text>
-                                                </View>
-                                            </View>
-
-                                            <View style={styles.cardBodyRow}>
-                                                <View style={styles.cardBodyColumnLeft}>
-                                                    <Text style={styles.cardBodyText}>Monthly Fee:</Text>
-                                                </View>
-                                                <View style={styles.cardBodyColumnRight}>
-                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.monthlyFee == "" ? 0 : (parseFloat(this.state.feeDetails.monthlyFee) + (parseFloat(this.state.feeDetails.monthlyFee) * (parseFloat(this.state.feeDetails.monthlyTaxPerc) / 100))).toFixed(2)}</Text>
-                                                </View>
-                                            </View>
-
-                                            <View style={styles.cardBodyRow}>
-                                                <View style={styles.cardBodyColumnLeft}>
-                                                    <Text style={styles.cardBodyText}>Unit Price:</Text>
-                                                </View>
-                                                <View style={styles.cardBodyColumnRight}>
-                                                    <Text style={styles.cardBodyText1}>{this.state.feeDetails.unitPrice == "" ? 0 : (parseFloat(this.state.feeDetails.unitPrice)).toFixed(2)}</Text>
-                                                </View>
-                                            </View>
+                                                    <View style={styles.cardBodyRow}>
+                                                        <View style={styles.cardBodyColumnLeft}>
+                                                            <Text style={styles.cardBodyText}>Unit Price:</Text>
+                                                        </View>
+                                                        <View style={styles.cardBodyColumnRight}>
+                                                            <Text style={styles.cardBodyText1}>{this.state.feeDetails.unitPrice == "" ? 0 : (parseFloat(this.state.feeDetails.unitPrice)).toFixed(2)}</Text>
+                                                        </View>
+                                                    </View>
 
 
-                                            <View style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row', marginTop: 60 } }}
-                                            >
-                                                <View style={styles.optionIconViewCol1}>
-                                                    <CheckBox isChecked={this.state.terms} checkBoxColor='#102D4F' style={{ borderRadius: 4 }}
-                                                        onClick={() => {
-                                                            this.setState({
-                                                                terms: !this.state.terms
-                                                            })
-                                                        }} />
-                                                </View>
-                                                {/* <Text style={styles.accountNumberText}>{t("support.emergency")}</Text> */}
-                                                {/* <View style={styles.paymentDueRow1}>
+                                                    <View style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row', marginTop: 60 } }}
+                                                    >
+                                                        <View style={styles.optionIconViewCol1}>
+                                                            <CheckBox isChecked={this.state.terms} checkBoxColor='#102D4F' style={{ borderRadius: 4 }}
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        terms: !this.state.terms
+                                                                    })
+                                                                }} />
+                                                        </View>
+                                                        {/* <Text style={styles.accountNumberText}>{t("support.emergency")}</Text> */}
+                                                        {/* <View style={styles.paymentDueRow1}>
                                                         <Text style={styles.notCustomerText}>{t("home.savedCards")}</Text>
                                                     </View>
                                                     <View style={styles.paymentDueRow1}>
                                                         <Text style={styles.accountNumberText}>{t("home.viewCrds")}</Text>
                                                     </View> */}
-                                                <View style={{ ...styles.paymentDueRow2 }}
-                                                >
-                                                    <Text style={styles.payBillText}>Accept </Text>
-                                                    <TouchableOpacity onPress={() => {
-                                                        this.setState({ showTermsModal: true })
-                                                    }}>
-                                                        <Text style={{ fontSize: 12, color: "#102D4F" }}>Terms and Conditions</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-
-                                            <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
-                                                <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
-                                                    onPress={() => {
-                                                        this.setState({
-                                                            step: 3
-                                                        })
-                                                    }}
-                                                    disabled={apiCallFlags.requestConnectionApiCalled}
-                                                >
-                                                    <View style={{ ...styles.paymentDueRow2 }}
-                                                    >
-                                                        <Image
-                                                            source={require('../../../assets/images/backBlue.png')}
-                                                            style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
-                                                        />
-                                                        <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
+                                                        <View style={{ ...styles.paymentDueRow2 }}
+                                                        >
+                                                            <Text style={styles.payBillText}>Accept </Text>
+                                                            <TouchableOpacity onPress={() => {
+                                                                this.setState({ showTermsModal: true })
+                                                            }}>
+                                                                <Text style={{ fontSize: 12, color: "#102D4F" }}>Terms and Conditions</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
                                                     </View>
-                                                    {/* <Text
+
+                                                    <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
+                                                        <TouchableOpacity
+                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    step: 3
+                                                                })
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
+                                                        >
+                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            >
+                                                                <Image
+                                                                    source={require('../../../assets/images/backBlue.png')}
+                                                                    style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
+                                                                />
+                                                                <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
+                                                            </View>
+                                                            {/* <Text
                                             style={styles.buttonLabelStyle}>Next</Text> */}
 
-                                                </TouchableOpacity>
-                                                <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
-                                                    onPress={() => {
-                                                        if (this.state.terms) {
-                                                            this.setState({
-                                                                showPayModal: true
-                                                            })
-                                                        } else {
-                                                            this.toastIt("Accept terms and conditions", false)
-                                                        }
-                                                    }}
-                                                    disabled={apiCallFlags.requestConnectionApiCalled}
-                                                >
-                                                    <View style={{ ...styles.paymentDueRow2 }}
-                                                    >
-                                                        {
-                                                            (this.state.makepaymentcalled || this.state.apiCallFlags.requestConnectionApiCalled ) ?
-                                                                <ActivityIndicator size={"small"} color={"#FFFFFF"} /> :
-                                                                <Text style={styles.buttonLabelStyle}>Pay {this.state.paidConnection ? (parseFloat(this.state.feeDetails.totalAmt) + 105).toFixed(2) : parseFloat(this.state.feeDetails.totalAmt).toFixed(2)} AED</Text>
-                                                        }
-                                                        {/* <Image
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
+                                                            onPress={() => {
+                                                                if (this.state.terms) {
+                                                                    this.setState({
+                                                                        showPayModal: true
+                                                                    })
+                                                                } else {
+                                                                    this.toastIt("Accept terms and conditions", false)
+                                                                }
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
+                                                        >
+                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            >
+                                                                {
+                                                                    (this.state.makepaymentcalled || this.state.apiCallFlags.requestConnectionApiCalled) ?
+                                                                        <ActivityIndicator size={"small"} color={"#FFFFFF"} /> :
+                                                                        <Text style={styles.buttonLabelStyle}>Pay {this.state.paidConnection ? (parseFloat(this.state.feeDetails.totalAmt) + 105).toFixed(2) : parseFloat(this.state.feeDetails.totalAmt).toFixed(2)} AED</Text>
+                                                                }
+                                                                {/* <Image
                                                             source={require('../../../assets/images/clickWhite.png')}
                                                             style={styles.clickImage}
                                                         /> */}
-                                                    </View>
-                                                    {/* <Text
+                                                            </View>
+                                                            {/* <Text
                                             style={styles.buttonLabelStyle}>Next</Text> */}
 
-                                                </TouchableOpacity>
-                                            </View>
+                                                        </TouchableOpacity>
+                                                    </View>
 
-                                        </>
-                            }
-
-                        </ScrollView>
-
-                        {this.state.showImageModal ? (
-                            <Modal
-                                onClose={() => this.setState({ showImageModal: false })}
-                                visible={this.state.showImageModal}
-                                button1={true}
-                                onButton1={() => {
-                                    this.setState({
-                                        showPickerModal: true,
-                                        currentImageType: this.state.currentImageType
-                                    })
-                                    this.setState({ showImageModal: false })
-                                }}
-                                button2={true}
-                                onButton2={() => this.setState({ showImageModal: false })}
-                                data={{
-                                    title: "Test",
-                                    button1Text: "Retake",
-                                    button2Text: "Cancel",
-                                    uri: { uri: this.state.currentImageUri }
-                                }}
-                                titleText={{ alignItems: 'center' }}
-                            />
-                        ) : null}
-                        {this.state.showPickerModal ? (
-                            <Modal
-                                onClose={() => this.setState({ showPickerModal: false })}
-                                visible={this.state.showPickerModal}
-                                button1={true}
-                                onButton1={() => {
-                                    this.setState({ showPickerModal: false })
-                                    setTimeout(() => {
-                                        this.handleAttachImages("capture", this.state.currentImageType)
-                                    }, 1000)
-                                }}
-                                button2={true}
-                                onButton2={() => {
-                                    this.setState({ showPickerModal: false })
-                                    setTimeout(() => {
-                                        this.handleAttachImages("", this.state.currentImageType)
-                                    }, 1000)
-                                }}
-                                data={{
-                                    title: "Test",
-                                    message: "Test",
-                                    button1Text: "Camera",
-                                    button2Text: "Gallery",
-                                    uri: null
-                                }}
-                                titleText={{ alignItems: 'center' }}
-                            />
-                        ) : null}
-                        {this.state.showHelpModal ? (
-                            <Modal
-                                onClose={() => this.setState({ showHelpModal: false })}
-                                visible={this.state.showHelpModal}
-                                // button2={true}
-                                onButton2={() => {
-                                    this.setState({ showHelpModal: false })
-                                }}
-                                data={{
-                                    title: "Test",
-                                    message: "Test",
-                                    button2Text: "Close",
-                                    uri: this.state.helpImageUrl,
-                                    imageStyle: {
-                                        height: 400,
-                                        width: 330,
-                                        resizeMode: "stretch",
+                                                </>
                                     }
-                                }}
-                                titleText={{ alignItems: 'center' }}
-                            />
-                        ) : null}
+                                </View>
+                            </ScrollView>
 
-                        { this.state.showPaidModal ? <Modal
-                                    onClose={() => this.setState({ showPaidModal: false })}
-                                    visible={this.state.showPaidModal}
+                            {this.state.showImageModal ? (
+                                <Modal
+                                    onClose={() => this.setState({ showImageModal: false })}
+                                    visible={this.state.showImageModal}
                                     button1={true}
-                                    button2={true}
                                     onButton1={() => {
-                                        this.setState({ showPaidModal: false })
+                                        this.setState({
+                                            showPickerModal: true,
+                                            currentImageType: this.state.currentImageType
+                                        })
+                                        this.setState({ showImageModal: false })
                                     }}
-                                    onButton2={() => {
-                                        this.setState({ showPaidModal: false, step: 4 })
-                                        // this.makePayment()
-
-                                    }}
+                                    button2={true}
+                                    onButton2={() => this.setState({ showImageModal: false })}
                                     data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Next",
-                                        // uri: this.state.helpImageUrl,
-                                        view: <View style={{ width: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                                            {/* <View style={{ ...styles.cardView, marginBottom: 0 }}> */}
-                                            {/* <View style={styles.inputGroupStyle}> */}
-                                            <View>
-                                                <Text style={styles.inputLabelStyle}>{t("myLinks.preferredDateAndTime")}</Text>
-                                            </View>
-                                            <View>
-                                                <DatePicker
-                                                    mode="date"
-                                                    minimumDate={new Date().getHours() > 10 ? new Date(new Date().getTime() + (1 * 86400000)) : new Date()}
-                                                    maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
-                                                    minuteInterval={30}
-                                                    date={this.state.date}
-                                                    onDateChange={(date) => {
-                                                        this.setState({
-                                                            date: date
-                                                        })
-                                                    }} />
-                                            </View>
-                                        </View>
+                                        title: "Test",
+                                        button1Text: "Retake",
+                                        button2Text: "Cancel",
+                                        uri: { uri: this.state.currentImageUri }
                                     }}
                                     titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.showPayModal ?
+                                />
+                            ) : null}
+                            {this.state.showPickerModal ? (
                                 <Modal
-                                    onClose={() => {
-                                        this.setState({ showPayModal: false })
+                                    onClose={() => this.setState({ showPickerModal: false })}
+                                    visible={this.state.showPickerModal}
+                                    button1={true}
+                                    onButton1={() => {
+                                        this.setState({ showPickerModal: false })
+                                        setTimeout(() => {
+                                            this.handleAttachImages("capture", this.state.currentImageType)
+                                        }, 1000)
                                     }}
-                                    visible={this.state.showPayModal}
+                                    button2={true}
+                                    onButton2={() => {
+                                        this.setState({ showPickerModal: false })
+                                        setTimeout(() => {
+                                            this.handleAttachImages("", this.state.currentImageType)
+                                        }, 1000)
+                                    }}
                                     data={{
-                                        title: "Select payment method",
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                        title: "Test",
+                                        message: "Test",
+                                        button1Text: "Camera",
+                                        button2Text: "Gallery",
+                                        uri: null
+                                    }}
+                                    titleText={{ alignItems: 'center' }}
+                                />
+                            ) : null}
+                            {this.state.showHelpModal ? (
+                                <Modal
+                                    onClose={() => this.setState({ showHelpModal: false })}
+                                    visible={this.state.showHelpModal}
+                                    // button2={true}
+                                    onButton2={() => {
+                                        this.setState({ showHelpModal: false })
+                                    }}
+                                    data={{
+                                        title: "Test",
+                                        message: "Test",
+                                        button2Text: "Close",
+                                        uri: this.state.helpImageUrl,
+                                        imageStyle: {
+                                            height: 400,
+                                            width: 330,
+                                            resizeMode: "stretch",
+                                        }
+                                    }}
+                                    titleText={{ alignItems: 'center' }}
+                                />
+                            ) : null}
 
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%", marginBottom: 10 }}
-                                                onPress={() => {
+                            {this.state.showPaidModal ? <Modal
+                                onClose={() => this.setState({ showPaidModal: false })}
+                                visible={this.state.showPaidModal}
+                                button1={true}
+                                button2={true}
+                                onButton1={() => {
+                                    this.setState({ showPaidModal: false })
+                                }}
+                                onButton2={() => {
+                                    this.setState({ showPaidModal: false, step: 4 })
+                                    // this.makePayment()
+
+                                }}
+                                data={{
+                                    // title: "Immediate Disconnection",
+                                    // message: "Test",
+                                    button1Text: "Close",
+                                    button2Text: "Next",
+                                    // uri: this.state.helpImageUrl,
+                                    view: <View style={{ width: "100%", justifyContent: 'center', alignItems: 'center' }}>
+                                        {/* <View style={{ ...styles.cardView, marginBottom: 0 }}> */}
+                                        {/* <View style={styles.inputGroupStyle}> */}
+                                        <View>
+                                            <Text style={styles.inputLabelStyle}>{t("myLinks.preferredDateAndTime")}</Text>
+                                        </View>
+                                        <View>
+                                            <DatePicker
+                                                mode="date"
+                                                minimumDate={new Date().getHours() > 10 ? new Date(new Date().getTime() + (1 * 86400000)) : new Date()}
+                                                maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
+                                                minuteInterval={30}
+                                                date={this.state.date}
+                                                onDateChange={(date) => {
                                                     this.setState({
-                                                        showPayModal: false,
-                                                        makepaymentcalled: true
+                                                        date: date
                                                     })
-                                                    this.makePayment("")
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>Pay {this.state.paidConnection ? (parseFloat(this.state.feeDetails.totalAmt) + 105).toFixed(2) : parseFloat(this.state.feeDetails.totalAmt).toFixed(2)} AED now</Text>
-                                            </TouchableOpacity>
-
-                                            
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            {
-                                            this.state.applePaySupported || this.state.samsungPaySupported ?
+                                                }} />
+                                        </View>
+                                    </View>
+                                }}
+                                titleText={{ alignItems: 'center' }}
+                            /> :
+                                null
+                            }
+                            {
+                                this.state.showPayModal ?
+                                    <Modal
+                                        onClose={() => {
+                                            this.setState({ showPayModal: false })
+                                        }}
+                                        visible={this.state.showPayModal}
+                                        data={{
+                                            title: "Select payment method",
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
 
                                                 <TouchableOpacity
-                                                    style={{...styles.buttonStyle, width: "100%", marginBottom: 20}}
+                                                    style={{ ...styles.buttonStyle, width: "100%", marginBottom: 10 }}
                                                     onPress={() => {
                                                         this.setState({
                                                             showPayModal: false,
-                                                            payMode: this.state.applePaySupported ? "applepay" : "samsungpay",
                                                             makepaymentcalled: true
                                                         })
-                                                        this.makePayment(this.state.applePaySupported ? "applepay" : "samsungpay")
+                                                        this.makePayment("")
                                                     }}
                                                 >
-                                                            {
-                                                                this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain"}}/> :
-                                                                    <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain"}}/>
-                                                            }
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>Pay {this.state.paidConnection ? (parseFloat(this.state.feeDetails.totalAmt) + 105).toFixed(2) : parseFloat(this.state.feeDetails.totalAmt).toFixed(2)} AED now</Text>
                                                 </TouchableOpacity>
-                                                : null
-                                        }
 
-                                            {/* <TouchableOpacity
+
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                {
+                                                    this.state.applePaySupported || this.state.samsungPaySupported ?
+
+                                                        <TouchableOpacity
+                                                            style={{ ...styles.buttonStyle, width: "100%", marginBottom: 20 }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    showPayModal: false,
+                                                                    payMode: this.state.applePaySupported ? "applepay" : "samsungpay",
+                                                                    makepaymentcalled: true
+                                                                })
+                                                                this.makePayment(this.state.applePaySupported ? "applepay" : "samsungpay")
+                                                            }}
+                                                        >
+                                                            {
+                                                                this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain" }} /> :
+                                                                    <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain" }} />
+                                                            }
+                                                        </TouchableOpacity>
+                                                        : null
+                                                }
+
+                                                {/* <TouchableOpacity
                                                 style={{ ...styles.buttonStyle, width: "100%", marginBottom: 2 }}
                                                 onPress={() => {
                                                     this.setState({
@@ -2392,26 +2366,26 @@ class RequestNewConnection extends Component {
                                             <Text style={{ ...styles.accountNumberText, fontSize: 14, lineHeight: 20, color: "red" }}>Pay on connection will add 50 AED as additional charges. Total - {this.state.paidConnection ? ((parseFloat(this.state.feeDetails.totalAmt) + 105 + 52.5).toFixed(2)) : ((parseFloat(this.state.feeDetails.totalAmt) + 52.5).toFixed(2))} AED</Text>
                                             </View> */}
 
-                                            {/* </View> */}
+                                                {/* </View> */}
 
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.showBuildingSearch ?
-                                // true ?
-                                <Modal
-                                    onClose={() => this.setState({ showBuildingSearch: false })}
-                                    visible={this.state.showBuildingSearch}
-                                    // visible={true}
-                                    button1={false}
-                                    button2={false}
-                                    data={{
-                                        view: <View style={{ width: "100%", marginTop: 10 }}>
-                                            {/* <TextInput
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.showBuildingSearch ?
+                                    // true ?
+                                    <Modal
+                                        onClose={() => this.setState({ showBuildingSearch: false })}
+                                        visible={this.state.showBuildingSearch}
+                                        // visible={true}
+                                        button1={false}
+                                        button2={false}
+                                        data={{
+                                            view: <View style={{ width: "100%", marginTop: 10 }}>
+                                                {/* <TextInput
                                                 editable={true}
                                                 Placeholder="Search Building"
                                                 OnChange={(value) => {
@@ -2430,352 +2404,352 @@ class RequestNewConnection extends Component {
                                                 }}
                                                 Style={{ borderColor: "#848484", width: "100%" }}
                                             /> */}
-                                            <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Select Building</Text>
-                                            <ScrollView
-                                                style={{ height: 300, marginBottom: 5 }}
-                                            >
-                                                {
-                                                    this.state.pickerBuildingData.length ? this.state.pickerBuildingData.map(
-                                                        data => {
-                                                            return <TouchableOpacity
-                                                                onPress={() => {
-                                                                    this.setState({
-                                                                        buildingCode: data.value,
-                                                                        apartmentCode: "",
-                                                                        showBuildingSearch: false
-                                                                    })
-                                                                }}
-                                                                style={{
-                                                                    borderBottomWidth: 0.4, borderColor: "#E2E2E2", borderStyle: "solid", height: 40, borderRadius: 4, justifyContent: 'center'
-                                                                }}>
-                                                                <Text style={{
-                                                                    ...styles.inputLabelStyle,
-                                                                    marginLeft: 10
-                                                                }}>
-                                                                    {data.name}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        }
-                                                    ) : <Text style={{ ...styles.inputLabelStyle, alignSelf: 'center' }}>No data found</Text>
-                                                }
-                                            </ScrollView>
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.showApartmentSearch ?
-                                // true ?
-                                <Modal
-                                    onClose={() => this.setState({ showApartmentSearch: false })}
-                                    visible={this.state.showApartmentSearch}
-                                    // visible={true}
-                                    button1={false}
-                                    button2={false}
-                                    data={{
-                                        view: <View style={{ width: "100%", marginTop: 10 }}>
-                                            <TextInput
-                                                editable={true}
-                                                Placeholder="Search Apartment"
-                                                OnChange={(value) => {
-                                                    // this.setState({ apartmentCode: value })
-                                                    this.setState({
-                                                        getVacantApartmentsCalled: true,
-                                                        pickerApartmentData: []
-                                                    }, () => {
-                                                        this.props.getVacantApartments({
-                                                            "TYPE": "APARTMENT_CODE",
-                                                            "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                            "B_CODE": this.state.buildingCode,
-                                                            "A_CODE": value
+                                                <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Select Building</Text>
+                                                <ScrollView
+                                                    style={{ height: 300, marginBottom: 5 }}
+                                                >
+                                                    {
+                                                        this.state.pickerBuildingData.length ? this.state.pickerBuildingData.map(
+                                                            data => {
+                                                                return <TouchableOpacity
+                                                                    onPress={() => {
+                                                                        this.setState({
+                                                                            buildingCode: data.value,
+                                                                            apartmentCode: "",
+                                                                            showBuildingSearch: false
+                                                                        })
+                                                                    }}
+                                                                    style={{
+                                                                        borderBottomWidth: 0.4, borderColor: "#E2E2E2", borderStyle: "solid", height: 40, borderRadius: 4, justifyContent: 'center'
+                                                                    }}>
+                                                                    <Text style={{
+                                                                        ...styles.inputLabelStyle,
+                                                                        marginLeft: 10
+                                                                    }}>
+                                                                        {data.name}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            }
+                                                        ) : <Text style={{ ...styles.inputLabelStyle, alignSelf: 'center' }}>No data found</Text>
+                                                    }
+                                                </ScrollView>
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.showApartmentSearch ?
+                                    // true ?
+                                    <Modal
+                                        onClose={() => this.setState({ showApartmentSearch: false })}
+                                        visible={this.state.showApartmentSearch}
+                                        // visible={true}
+                                        button1={false}
+                                        button2={false}
+                                        data={{
+                                            view: <View style={{ width: "100%", marginTop: 10 }}>
+                                                <TextInput
+                                                    editable={true}
+                                                    Placeholder="Search Apartment"
+                                                    OnChange={(value) => {
+                                                        // this.setState({ apartmentCode: value })
+                                                        this.setState({
+                                                            getVacantApartmentsCalled: true,
+                                                            pickerApartmentData: []
+                                                        }, () => {
+                                                            this.props.getVacantApartments({
+                                                                "TYPE": "APARTMENT_CODE",
+                                                                "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                "B_CODE": this.state.buildingCode,
+                                                                "A_CODE": value
+                                                            })
                                                         })
-                                                    })
-                                                }}
-                                                Style={{ borderColor: "#848484", width: "100%" }}
-                                            />
-                                            <ScrollView
-                                                style={{ height: 300, marginBottom: 5 }}
-                                            >
-                                                {
-                                                    this.state.pickerApartmentData.length ? this.state.pickerApartmentData.map(
-                                                        data => {
-                                                            return <TouchableOpacity
-                                                                onPress={() => {
-                                                                    this.setState({
-                                                                        apartmentCode: data.name,
-                                                                        showApartmentSearch: false
-                                                                    })
-                                                                }}
-                                                                style={{
-                                                                    borderBottomWidth: 0.4, borderColor: "#E2E2E2", borderStyle: "solid", height: 40, borderRadius: 4, justifyContent: 'center'
-                                                                }}>
-                                                                <Text style={{
-                                                                    ...styles.inputLabelStyle,
-                                                                    marginLeft: 10
-                                                                }}>
-                                                                    {data.name}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        }
-                                                    ) : this.state.getVacantApartmentsCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : <Text style={{ ...styles.inputLabelStyle, alignSelf: 'center' }}>No data found</Text>
-                                                }
-                                            </ScrollView>
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.showMeterBrandList ?
-                                // true ?
-                                <Modal
-                                    onClose={() => this.setState({ showMeterBrandList: false })}
-                                    visible={this.state.showMeterBrandList}
-                                    // visible={true}
-                                    button1={false}
-                                    button2={false}
-                                    data={{
-                                        view: <View style={{ width: "100%", marginTop: 10 }}>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Select Meter Brand</Text>
+                                                    }}
+                                                    Style={{ borderColor: "#848484", width: "100%" }}
+                                                />
+                                                <ScrollView
+                                                    style={{ height: 300, marginBottom: 5 }}
+                                                >
+                                                    {
+                                                        this.state.pickerApartmentData.length ? this.state.pickerApartmentData.map(
+                                                            data => {
+                                                                return <TouchableOpacity
+                                                                    onPress={() => {
+                                                                        this.setState({
+                                                                            apartmentCode: data.name,
+                                                                            showApartmentSearch: false
+                                                                        })
+                                                                    }}
+                                                                    style={{
+                                                                        borderBottomWidth: 0.4, borderColor: "#E2E2E2", borderStyle: "solid", height: 40, borderRadius: 4, justifyContent: 'center'
+                                                                    }}>
+                                                                    <Text style={{
+                                                                        ...styles.inputLabelStyle,
+                                                                        marginLeft: 10
+                                                                    }}>
+                                                                        {data.name}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            }
+                                                        ) : this.state.getVacantApartmentsCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : <Text style={{ ...styles.inputLabelStyle, alignSelf: 'center' }}>No data found</Text>
+                                                    }
+                                                </ScrollView>
                                             </View>
-                                            <ScrollView
-                                                style={{ height: 300, marginBottom: 5 }}
-                                            >
-                                                {
-                                                    this.state.pickerBrandData.length ? this.state.pickerBrandData.map(
-                                                        data => {
-                                                            return <TouchableOpacity
-                                                                onPress={() => {
-                                                                    this.setState({
-                                                                        meterBrand: data.label,
-                                                                        showMeterBrandList: false
-                                                                    }, () => {
-                                                                        if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                                                            this.toastIt("Select Emirate to search Building code and Apartment code", false)
-                                                                        } else {
-                                                                            if (this.state.meterNo != "") {
-                                                                                this.setState({
-                                                                                    getMeterDetailsCalled: true
-                                                                                }, () => {
-                                                                                    let req = {
-                                                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                                                        "QUERY": this.state.meterNo,
-                                                                                        "REMARKS": this.state.meterBrand
-                                                                                    }
-                                                                                    this.props.getMeterDetails(req)
-                                                                                })
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.showMeterBrandList ?
+                                    // true ?
+                                    <Modal
+                                        onClose={() => this.setState({ showMeterBrandList: false })}
+                                        visible={this.state.showMeterBrandList}
+                                        // visible={true}
+                                        button1={false}
+                                        button2={false}
+                                        data={{
+                                            view: <View style={{ width: "100%", marginTop: 10 }}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <Text style={{ ...styles.inputLabelStyle, color: "#ABB2AC" }}>Select Meter Brand</Text>
+                                                </View>
+                                                <ScrollView
+                                                    style={{ height: 300, marginBottom: 5 }}
+                                                >
+                                                    {
+                                                        this.state.pickerBrandData.length ? this.state.pickerBrandData.map(
+                                                            data => {
+                                                                return <TouchableOpacity
+                                                                    onPress={() => {
+                                                                        this.setState({
+                                                                            meterBrand: data.label,
+                                                                            showMeterBrandList: false
+                                                                        }, () => {
+                                                                            if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                                this.toastIt("Select Emirate to search Building code and Apartment code", false)
+                                                                            } else {
+                                                                                if (this.state.meterNo != "") {
+                                                                                    this.setState({
+                                                                                        getMeterDetailsCalled: true
+                                                                                    }, () => {
+                                                                                        let req = {
+                                                                                            "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                                            "QUERY": this.state.meterNo,
+                                                                                            "REMARKS": this.state.meterBrand
+                                                                                        }
+                                                                                        this.props.getMeterDetails(req)
+                                                                                    })
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    })
-                                                                }}
-                                                                style={{
-                                                                    borderBottomWidth: 0.4, borderColor: "#E2E2E2", borderStyle: "solid", height: 40, borderRadius: 4, justifyContent: 'center'
-                                                                }}>
-                                                                <Text style={{
-                                                                    ...styles.inputLabelStyle,
-                                                                    marginLeft: 10
-                                                                }}>
-                                                                    {data.label}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        }
-                                                    ) : this.state.getBnoAnoCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : <Text style={{ ...styles.inputLabelStyle, alignSelf: 'center' }}>No data found</Text>
-                                                }
-                                            </ScrollView>
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.showModal ?
+                                                                        })
+                                                                    }}
+                                                                    style={{
+                                                                        borderBottomWidth: 0.4, borderColor: "#E2E2E2", borderStyle: "solid", height: 40, borderRadius: 4, justifyContent: 'center'
+                                                                    }}>
+                                                                    <Text style={{
+                                                                        ...styles.inputLabelStyle,
+                                                                        marginLeft: 10
+                                                                    }}>
+                                                                        {data.label}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            }
+                                                        ) : this.state.getBnoAnoCalled ? <ActivityIndicator size={'small'} color={'#102D4F'} style={{ marginLeft: 5 }} /> : <Text style={{ ...styles.inputLabelStyle, alignSelf: 'center' }}>No data found</Text>
+                                                    }
+                                                </ScrollView>
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.showModal ?
+                                    <Modal
+                                        close={this.state.readingResult.split(" ")[0] !== "Payment"}
+                                        onClose={() => this.setState({ showModal: false })}
+                                        visible={this.state.showModal}
+                                        // button1={true}
+                                        // button2={true}
+                                        onButton1={() => {
+                                            this.setState({ showPaidModal: false })
+                                        }}
+                                        onButton2={() => {
+                                            this.setState({ showPaidModal: false })
+                                            this.makePayment()
+                                        }}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            button1Text: "Close",
+                                            button2Text: "Pay",
+                                            // uri: this.state.helpImageUrl,
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult.split(" ")[0] == "Payment" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>{this.state.readingResult.split(" ")[0] == "Payment" ? "Thank You" : "Technical Error"} </Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
+                                                </View>
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            showModal: false
+                                                        })
+                                                        this.state.readingResult.split(" ")[0] !== "Payment" ? null : this.props.navigation.goBack()
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>{this.state.readingResult.split(" ")[0] !== "Payment" ? "Try Again" : "Done"}</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+
+                            {
+                                this.state.updateEmiratesId ?
+                                    <Modal
+                                        onClose={() => {
+                                            this.setState({ updateEmiratesId: false })
+                                            this.props.navigation.goBack()
+                                        }}
+                                        visible={this.state.updateEmiratesId}
+                                        // button1={true}
+                                        // button2={true}
+                                        onButton1={() => {
+                                            this.setState({ showPaidModal: false })
+                                        }}
+                                        onButton2={() => {
+                                            this.setState({ showPaidModal: false })
+                                            this.makePayment()
+                                        }}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            button1Text: "Close",
+                                            button2Text: "Pay",
+                                            // uri: this.state.helpImageUrl,
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={require("../../../assets/images/readingSuccess.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>Update Emirates ID</Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={styles.accountNumberText}>Update Emirates ID to proceed for requesting the new connection</Text>
+                                                </View>
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            updateEmiratesId: false
+                                                        })
+                                                        this.props.navigation.navigate("OcrTest", { fromOtp: true })
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>Update Now</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {
+                                this.state.excludedConnectionModal ?
+                                    <Modal
+                                        onClose={() => {
+                                            this.setState({ excludedConnectionModal: false })
+                                        }}
+                                        visible={this.state.excludedConnectionModal}
+                                        data={{
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={require("../../../assets/images/readingSuccess.png")}
+                                                />
+
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>Almost there</Text>
+                                                </View>
+
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={{ ...styles.accountNumberText, fontSize: 14, lineHeight: 20 }}>You are our special customer 😀. We get you everything at your doorstep 🧑‍🔧.</Text>
+                                                </View>
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                <TouchableOpacity
+                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            excludedConnectionModal: false
+                                                        })
+                                                        Linking.openURL(`tel:600565657`)
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.buttonLabelStyle}>Call us</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
+                                            </View>
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                            {this.state.showTermsModal ? (
                                 <Modal
-                                    close={this.state.readingResult.split(" ")[0] !== "Payment"}
-                                    onClose={() => this.setState({ showModal: false })}
-                                    visible={this.state.showModal}
-                                    // button1={true}
-                                    // button2={true}
-                                    onButton1={() => {
-                                        this.setState({ showPaidModal: false })
-                                    }}
+                                    onClose={() => this.setState({ showTermsModal: false })}
+                                    visible={this.state.showTermsModal}
                                     onButton2={() => {
-                                        this.setState({ showPaidModal: false })
-                                        this.makePayment()
+                                        this.setState({ showTermsModal: false })
                                     }}
+                                    //   }}
                                     data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Pay",
-                                        // uri: this.state.helpImageUrl,
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={this.state.readingResult.split(" ")[0] == "Payment" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                            // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
-                                            />
-
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>{this.state.readingResult.split(" ")[0] == "Payment" ? "Thank You" : "Technical Error"} </Text>
-                                            </View>
-
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        showModal: false
-                                                    })
-                                                    this.state.readingResult.split(" ")[0] !== "Payment" ? null : this.props.navigation.goBack()
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>{this.state.readingResult.split(" ")[0] !== "Payment" ? "Try Again" : "Done"}</Text>
-                                            </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
+                                        title: "Terms & conditions",
+                                        message: this.state.buildingTerms
                                     }}
                                     titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
+                                />
+                            ) : null}
 
-                        {
-                            this.state.updateEmiratesId ?
-                                <Modal
-                                    onClose={() => {
-                                        this.setState({ updateEmiratesId: false })
-                                        this.props.navigation.goBack()
-                                    }}
-                                    visible={this.state.updateEmiratesId}
-                                    // button1={true}
-                                    // button2={true}
-                                    onButton1={() => {
-                                        this.setState({ showPaidModal: false })
-                                    }}
-                                    onButton2={() => {
-                                        this.setState({ showPaidModal: false })
-                                        this.makePayment()
-                                    }}
-                                    data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Pay",
-                                        // uri: this.state.helpImageUrl,
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={require("../../../assets/images/readingSuccess.png")}
-                                            // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
-                                            />
-
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>Update Emirates ID</Text>
-                                            </View>
-
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={styles.accountNumberText}>Update Emirates ID to proceed for requesting the new connection</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        updateEmiratesId: false
-                                                    })
-                                                    this.props.navigation.navigate("OcrTest", { fromOtp: true })
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>Update Now</Text>
-                                            </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {
-                            this.state.excludedConnectionModal ?
-                                <Modal
-                                    onClose={() => {
-                                        this.setState({ excludedConnectionModal: false })
-                                    }}
-                                    visible={this.state.excludedConnectionModal}
-                                    data={{
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={require("../../../assets/images/readingSuccess.png")}
-                                            />
-
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>Almost there</Text>
-                                            </View>
-
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={{ ...styles.accountNumberText, fontSize: 14, lineHeight: 20 }}>You are our special customer 😀. We get you everything at your doorstep 🧑‍🔧.</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        excludedConnectionModal: false
-                                                    })
-                                                    Linking.openURL(`tel:600565657`)
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>Call us</Text>
-                                            </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                        {this.state.showTermsModal ? (
-                            <Modal
-                                onClose={() => this.setState({ showTermsModal: false })}
-                                visible={this.state.showTermsModal}
-                                onButton2={() => {
-                                    this.setState({ showTermsModal: false })
-                                }}
-                                //   }}
-                                data={{
-                                    title: "Terms & conditions",
-                                    message: this.state.buildingTerms
-                                }}
-                                titleText={{ alignItems: 'center' }}
-                            />
-                        ) : null}
-
-                    </KeyboardAwareScrollView>
-                </View>
-                {/* </InfoContainer> */}
-                {this.state.showToast ? (
-                    <Toast message={this.state.toastMessage} isImageShow={false} />
-                ) : null}
-            </SafeAreaView>
-            </ImageBackground>
+                        </KeyboardAwareScrollView>
+                    </InfoContainer>
+                    {/* </InfoContainer> */}
+                    {this.state.showToast ? (
+                        <Toast message={this.state.toastMessage} isImageShow={false} />
+                    ) : null}
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
 

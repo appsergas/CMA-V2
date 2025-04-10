@@ -15,7 +15,8 @@ import TextInput from '../../controls/TextInput'
 import HomeMainCard from '../../components/HomeMainCard';
 import { connect } from 'react-redux';
 import { updateContracts } from '../../stores/actions/contracts.action';
-import Modal from '../../controls/Modal'
+// import Modal from '../../controls/Modal';
+import CustomModal from '../../controls/CustomModal';
 import ButtonLogoView from '../../components/molecules/ButtonLogoView';
 import InfoContainer from '../../components/molecules/InfoContainer';
 import { Colors } from '../../utils/Colors/Colors';
@@ -25,7 +26,10 @@ import { TermsAndConditions } from '../Login/TermsAndConditions';
 import { updateUserDetails } from '../../stores/actions/user.action';
 import { logout } from '../../utils/uaePassService';
 import DeviceInfo from 'react-native-device-info';
-import { ArrowLeftIcon, CheckIcon, NavIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+
+import { ArrowIcon, CheckIcon, NavIcon, IdentificationIcon, InfoSquareIcon, MoreCircleIcon, LogOutIcon } from '../../../assets/icons'
 
 class MyLinksMain extends Component {
     constructor(props) {
@@ -143,10 +147,7 @@ class MyLinksMain extends Component {
 
     render() {
         return (
-            <ImageBackground
-                source={require('../../assets/images/coverheader.png')}
-                style={{ flex: 1, width: '100%', height: '100%' }}
-                resizeMode="cover">
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
                 <SafeAreaView style={{ height: "100%", flex: 1 }} >
                     {/* header */}
                     <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
@@ -154,7 +155,7 @@ class MyLinksMain extends Component {
                             <TouchableOpacity
                                 style={Mainstyles.backbutton}
                                 onPress={() => this.props.navigation.goBack()} >
-                                <ArrowLeftIcon />
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
                             <View style={Mainstyles.textContainer}>
                                 <View style={Mainstyles.nameRow}>
@@ -171,7 +172,8 @@ class MyLinksMain extends Component {
                             Update your account details and access support easily
                         </Text>
                     </View>
-                    <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_1 : Dimensions.HP_1, }}>
+                    {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ flexGrow: 1 }}> */}
+                    <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ flexGrow: 1 }}>
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
@@ -215,147 +217,156 @@ class MyLinksMain extends Component {
                                                     </Text>
                                                     <CheckIcon size={18} color="#4A90E2" style={styles.verifiedIcon} />
                                                 </View>
-                                                <Text style={styles.welcomeSubText}>Welcome Back</Text>
+
+                                                <TouchableOpacity onPress={() => { this.props.navigation.navigate("myAccounts") }} >
+                                                    <Text style={styles.welcomeSubText}>Edit your profile</Text>
+                                                </TouchableOpacity>
                                             </View>
                                         </View>
                                     </View>
 
-                                    {/* 👤 Profile Setting Button */}
-                                    {/* <TouchableOpacity
-                                        style={styles.cardView}
-                                        onPress={() => this.props.navigation.navigate("myAccounts")}
-                                    >
-                                        <View style={styles.optionIconViewCol1}>
-                                            {
-                                                this.props.userDetails.PARTY_NAME ? (
-                                                    <Text style={styles.accountNumberText}>
-                                                        {this.props.userDetails.PARTY_NAME}
-                                                    </Text>
-                                                ) : this.state.existingDetails ? (
-                                                    <Text style={styles.accountNumberText}>
-                                                        {this.state.existingDetails.PARTY_NAME}
-                                                    </Text>
-                                                ) : (
-                                                    <ActivityIndicator size={"small"} color={"#102D4F"} />
-                                                )
-                                            }
-                                            <View style={styles.paymentDueRow2}>
-                                                <Image
-                                                    source={require("../../../assets/images/setting.png")}
-                                                    style={{ ...styles.clickImage, height: 16, width: 16 }}
-                                                />
-                                                <Text style={styles.payBillText}>Profile Setting</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity> */}
+                                    <View style={styles.divider} />
 
-                                    {/* 🔒 Section Title */}
-                                    {/* <View style={styles.accountsLabelView}>
-                                        <Text style={styles.accountsLabel}>My Account</Text>
-                                    </View> */}
-
-                                    {/* 🧾 My Requests / Emirates ID */}
                                     <View style={styles.cardView}>
-                                        <TouchableOpacity
-                                            style={styles.rowItem}
-                                            onPress={() => this.props.navigation.navigate("myRequests")}
-                                        >
+                                        <TouchableOpacity style={styles.rowItem} onPress={() => this.props.navigation.navigate("myRequests")} >
                                             <View style={styles.rowLeft}>
-                                            <NavIcon width={50} height={50} />
+                                                <NavIcon width={30} height={30} strokeWidth="1.5" />
                                                 <Text style={styles.accountNumberText}>{t("myLinks.myRequests")}</Text>
                                             </View>
                                             <View style={styles.optionIconViewCol2}>
-                                                <Image
-                                                    source={require("../../../assets/images/ClickNew.png")}
-                                                    style={styles.clickImage}
-                                                />
+                                                {/* <ArrowRightIcon /> */}
+                                                <ArrowIcon direction={"right"} size={15} color="#102D4F" />
                                             </View>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity
-                                            style={styles.rowItem}
-                                            onPress={() =>
-                                                this.props.navigation.navigate("OcrTest", { fromOtp: false })
-                                            }
-                                        >
-                                            <View style={styles.optionIconViewCol1}>
+                                        <TouchableOpacity style={styles.rowItem} onPress={() => this.props.navigation.navigate("OcrTest", { fromOtp: false })} >
+                                            <View style={styles.rowLeft}>
+                                                <IdentificationIcon width={30} height={30} strokeWidth="1.5" />
                                                 <Text style={styles.accountNumberText}>Emirates ID</Text>
                                             </View>
                                             <View style={styles.optionIconViewCol2}>
-                                                <Image
-                                                    source={require("../../../assets/images/ClickNew.png")}
-                                                    style={styles.clickImage}
-                                                />
+                                                {/* <ArrowRightIcon /> */}
+                                                <ArrowIcon direction={"right"} size={15} color="#102D4F" />
                                             </View>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.divider} />
-                                    {/* ⚙️ App Settings Label */}
-                                    {/* <View style={[styles.accountsLabelView, { marginTop: 10 }]}>
-                                        <Text style={styles.accountsLabel}>App Settings</Text>
-                                    </View> */}
 
-                                    {/* 🆘 Help / Terms */}
                                     <View style={styles.cardView}>
-                                        <TouchableOpacity
-                                            style={styles.rowItem}
-                                            onPress={() => this.props.navigation.navigate("helpAndSupport")}
-                                        >
-                                            <View style={styles.optionIconViewCol1}>
+                                        <TouchableOpacity style={styles.rowItem} onPress={() => this.props.navigation.navigate("helpAndSupport")} >
+                                            <View style={styles.rowLeft}>
+                                                <InfoSquareIcon width={30} height={30} strokeWidth="1.5" />
                                                 <Text style={styles.accountNumberText}>Help and Support</Text>
                                             </View>
                                             <View style={styles.optionIconViewCol2}>
-                                                <Image
-                                                    source={require("../../../assets/images/ClickNew.png")}
-                                                    style={styles.clickImage}
-                                                />
+                                                {/* <ArrowRightIcon /> */}
+                                                <ArrowIcon direction={"right"} size={15} color="#102D4F" />
                                             </View>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity
-                                            style={styles.rowItem}
-                                            onPress={() => this.setState({ showTermsModal: true })}
-                                        >
-                                            <View style={styles.optionIconViewCol1}>
+                                        <TouchableOpacity style={styles.rowItem} onPress={() => this.setState({ showTermsModal: true })} >
+                                            <View style={styles.rowLeft}>
+                                                <MoreCircleIcon width={30} height={30} strokeWidth="1.5" />
                                                 <Text style={styles.accountNumberText}>Terms and Conditions</Text>
                                             </View>
                                             <View style={styles.optionIconViewCol2}>
-                                                <Image
-                                                    source={require("../../../assets/images/ClickNew.png")}
-                                                    style={styles.clickImage}
-                                                />
+                                                {/* <ArrowRightIcon /> */}
+                                                <ArrowIcon direction={"right"} size={15} color="#102D4F" />
                                             </View>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.divider} />
                                     {/* 🚪 Logout */}
-                                    <TouchableOpacity
-                                        style={styles.logoutRow}
-                                        onPress={() => this.setState({ showModal: true })}
-                                    >
-                                        <Image
-                                            source={require("../../../assets/images/logOut.png")}
-                                            style={{ ...styles.clickImage, height: 16, width: 16 }}
-                                        />
+                                    <TouchableOpacity style={styles.logoutRow} onPress={() => this.setState({ showModal: true })}>
+                                        <LogOutIcon width={28} height={28} color="#F75555" />
                                         <Text style={styles.logoutText}>Logout</Text>
                                     </TouchableOpacity>
-
-                                   
                                 </View>
-                                 {/* 📄 Footer */}
-                                 
+                                {/* 📄 Footer */}
+
                             </ScrollView>
                             <Text style={styles.footerText}>
-                                        © 2025 SERGAS Group{"\n"}Sergas Mobile App
-                                    </Text>
-                            {this.state.showToast ? (
+                                © 2025 SERGAS Group{"\n"}Sergas Mobile App
+                            </Text>
+                            {/* {this.state.showToast ? (
                                 <Toast message={this.state.toastMessage} isImageShow={false} />
+                            ) : null} */}
+
+
+                            {
+                                this.state.showModal && (
+                                    <CustomModal
+                                        visible={this.state.showModal}
+                                        close={false}
+                                        position="bottom"
+                                        onClose={() => this.setState({ showModal: false })}
+                                        button1
+                                        button2
+                                        onButton1={() => {
+                                            this.setState({ showModal: false });
+                                        }}
+                                        onButton2={() => {
+                                            this.setState({ showModal: false });
+                                            this.props.updateContracts([]);
+                                            this.handleLogout();
+                                        }}
+                                        data={{
+                                            button1: false, // we'll use custom buttons below
+                                            button2: false,
+                                            uri: this.state.helpImageUrl,
+                                            view: (
+                                                <View style={{ alignItems: 'center', width: "100%",  }}>
+                                                    <Text style={styles.logoutTitle}>Logout?</Text>
+                                                    <Text style={styles.logoutMessage}>Are you sure to want logout?</Text>
+
+                                                    <View style={styles.logoutButtonContainer}>
+                                                        <TouchableOpacity
+                                                            style={styles.cancelButton}
+                                                            onPress={() => this.setState({ showModal: false })}
+                                                        >
+                                                            <Text style={styles.cancelButtonText}>Cancel</Text>
+                                                        </TouchableOpacity>
+
+                                                        <TouchableOpacity
+                                                            style={styles.logoutButton}
+                                                            onPress={() => {
+                                                                this.setState({ showModal: false });
+                                                                this.props.updateContracts([]);
+                                                                this.handleLogout();
+                                                            }}
+                                                        >
+                                                            <Text style={styles.logoutButtonText}>Logout</Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            )
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                        logOutWarningMessage
+                                    />
+                                )
+                            }
+
+                            {this.state.showTermsModal ? (
+                                <CustomModal
+                                    visible={this.state.showTermsModal}
+                                    onClose={() => this.setState({ showTermsModal: false })}
+                                    button1={false}
+                                    button2={false} // <--- explicitly disabling button2
+                                    data={{
+                                        // title: "Version 1.0",
+                                        message: TermsAndConditions,
+                                    }}
+                                    titleText={{ marginBottom: 10 }}
+                                />
                             ) : null}
+
                         </KeyboardAwareScrollView>
+
                     </InfoContainer>
 
                 </SafeAreaView>
-            </ImageBackground>
+            </LinearGradient>
 
         )
     }

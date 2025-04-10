@@ -20,147 +20,165 @@ const styles = StyleSheet.create({
     // marginTop: -125,
   },
   scrollView: {
-    // flex: 1,
-    // display: "flex",
     flexGrow: 1,
-    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingTop: 40,
+  },
+  imageView: {
     alignItems: 'center',
-    // height: "100%",
-    // overflow: "scroll"
+    marginBottom: 30,
+  },
+  goodieeLogoImage: {
+    width: 90,
+    height: 90,
+    resizeMode: 'contain',
   },
   cardView: {
-    width: "95%",
-    minHeight: 100,
-    // borderRadius: 8,
-    // borderStyle: "solid",
-    // borderColor: "rgba(0, 0, 0, 1)",
-    // // borderWidth: 0.1,
-    // shadowColor: 'rgba(0,0,0, .4)',
-    // shadowOffset: { height: 25, width: 25 }, // IOS
-    // shadowOpacity: 1, // IOS
-    // shadowRadius: 1, //IOS
-    // backgroundColor: '#fff',
-    // elevation: 10,  // Android
-    // paddingVertical: 20,
+    backgroundColor: 'transparent',
+    marginTop: 10,
+    paddingHorizontal: 0,
   },
   cardHeader: {
-    paddingHorizontal: 15,
-    alignItems: "center",
-    height: 35,
-    marginVertical: 25
+    alignItems: 'center',
+    marginVertical: 5,
   },
   cardHeaderText: {
-    fontFamily: "Tajawal-Bold",
-    fontSize: 20,
-    color: "#4A5E9C",
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: '700',
+    textAlign: 'center',
   },
-  inputGroupStyle: {
-    paddingHorizontal: 15,
-    marginBottom: 10
-  },
-  inputLabelStyle: {
-    color: "#2D395A",
-    fontFamily: "Tajawal-Medium",
-    fontSize: 14,
-    marginBottom: 5
-  },
+
   buttonView: {
-    paddingHorizontal: 15,
-    marginTop: 25
+    marginTop: 15,
   },
   buttonStyle: {
-    // backgroundColor: "rgb(79, 194, 212)",
-    borderColor: "rgba(110, 149, 213, 0.2)",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderRadius: 4,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 0,
-    alignSelf: "flex-end",
-    width: "100%",
-    height: 40,
-    shadowColor: 'rgba(0,0,0, .4)',
-    shadowOffset: { height: 2, width: 2 }, // IOS
-    shadowOpacity: 1, // IOS
-    shadowRadius: 1, //IOS
-    backgroundColor: '#102D4F',
-    elevation: 5,  // Android
+    backgroundColor: '#FF8D00',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
   },
   buttonLabelStyle: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Tajawal-Medium"
-  },
-  registerButtonViewStyle: {
-    width: "95%",
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   registerButtonStyle: {
-    // backgroundColor: "rgb(79, 194, 212)",
-    // borderColor: "rgba(110, 149, 213, 0.2)",
-    // borderStyle: "solid",
-    // borderWidth: 1,
-    // borderRadius: 9,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 15,
-    alignSelf: "flex-end",
-    width: "95%",
-    // height: 70,
-    // shadowColor: 'rgba(0,0,0, .4)',
-    // shadowOffset: { height: 25, width: 25 }, // IOS
-    // shadowOpacity: 1, // IOS
-    // shadowRadius: 1, //IOS
-    // elevation: 5,  // Android
+    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   notCustomerText: {
-    color: "#2D395A",
-    fontFamily: "Tajawal-Medium",
+    color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: "600"
   },
-  registerHereText: {
-    color: "#FEBA12",
-    fontSize: 14,
-    fontFamily: "Tajawal-Bold"
-  },
+  // registerHereView: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  // },
   notCustomerView: {
-    // width: "50%",
-    alignItems: "flex-start",
-  },
-  registerHereView: {
-    // width: "50%",
-    alignItems: 'center',
-    textAlign: "right",
-    flexDirection: "row",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   payBillView: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: "center",
-    margin: 5
+    marginLeft: 5,
   },
-  clickImage: {
-    height: 20,
-    // width: 7,
-    resizeMode: 'center',
-
+  registerHereText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+    fontSize: 14,
   },
   uaepassorText: {
-    color: "#FEBA12",
+    color: '#FFFFFF',
     fontSize: 14,
-    fontFamily: "Tajawal-Bold",
-    alignItems: 'center',
+    marginVertical: 16,
+    textAlign: 'center',
   },
   buttonuaepassStyle: {
-    backgroundColor: "transparent",
-    resizeMode: "stretch",
-    width: screenWidth * 0.9,  // 90% of the screen width
+    width: 250,
     height: 50,
+    resizeMode: 'contain',
   },
+
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+    justifyContent: 'center',
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#0057A2',
+    opacity: 0.3,
+  },
+  dividerText: {
+    color: '#FFFFFF',
+    marginHorizontal: 12,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  
+  registerHereView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  
+  inlineRegisterText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  
+  registerLinkText: {
+    fontWeight: '700',
+    textDecorationLine: 'underline',
+    color: '#FFFFFF',
+  },
+
+
+
+
+
+
+  inputGroupStyle: {
+    // backgroundColor: 'rgba(255, 255, 255, 0.06)', // ✅ Subtle frosted look
+    borderColor: '#0057A2',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    // paddingVertical: 1,
+    marginTop: 30,
+    
+  },
+  
+  
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent', // ✅ must be transparent
+  },
+  
+  flagIcon: {
+    width: 46,
+    height: 34,
+    marginRight: 8,
+  },
+  
+  countryCode: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+    marginRight: 8,
+  },
+  
+
+  
+  
+  
 })
 
 export default styles

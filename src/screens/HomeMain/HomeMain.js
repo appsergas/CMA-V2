@@ -549,10 +549,10 @@ class HomeMain extends Component {
                                             <>
 
                                                 {/* Services */}
-                                                <View style={styles.accountsLabelView}><Text style={styles.accountsLabel}>Services</Text></View>
+                                                {/* <View style={styles.accountsLabelView}><Text style={styles.accountsLabel}>Services</Text></View> */}
 
 
-                                                <View style={styles.accountsLabelView}>
+                                                <View style={{...styles.accountsLabelView, marginLeft:20}}>
                                                     <Text style={styles.accountsLabel} >
                                                         {t("home.accounts")}
                                                     </Text>
@@ -679,7 +679,8 @@ class HomeMain extends Component {
                                                                 }
                                                             }}>
                                                             <View style={styles.iconContainer}>
-                                                                <StatementIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} />
+                                                                {/* <StatementIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} /> */}
+                                                                <StatementIcon  width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
                                                             </View>
                                                             <View style={styles.labelContainer}>
                                                                 <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700", opacity: this.props.contracts.length ? 1 : 0.5 }}>Statement</Text>

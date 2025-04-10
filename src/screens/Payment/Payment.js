@@ -1,4 +1,4 @@
-
+import Mainstyles from '../../styles/globalStyles'
 import styles from './PaymentStyles'
 
 import React, { Component } from 'react'
@@ -51,6 +51,9 @@ import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import { API_PATH } from '../../services/api/data/data/api-utils';
 import DeviceInfo from 'react-native-device-info';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
 
 class Payment extends Component {
     constructor(props) {
@@ -238,10 +241,11 @@ class Payment extends Component {
 
     carouselCurrentItem = (currentItemIndex) => {
 
-        this.setState({ 
-            activeItemIndex: currentItemIndex, 
+        this.setState({
+            activeItemIndex: currentItemIndex,
             currentInvoice: '',
-            apiCallFlags: { ...this.state.apiCallFlags,getLatestInvoiceCalled: true }},
+            apiCallFlags: { ...this.state.apiCallFlags, getLatestInvoiceCalled: true }
+        },
             () => {
                 this.props.getLatestInvoice({
                     "contract": this.props.contracts[this.state.activeItemIndex].CONTRACT_NO,
@@ -253,16 +257,16 @@ class Payment extends Component {
     }
 
     getTraceId = async () => {
-        var pattern =  "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
+        var pattern = "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
         var date = new Date().getTime();
-        
-        var uuid = pattern.replace(/[xy]/g, function(c) {
-            var r = (date + Math.random()*16)%16 | 0;
-            date = Math.floor(date/16);
-            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+
+        var uuid = pattern.replace(/[xy]/g, function (c) {
+            var r = (date + Math.random() * 16) % 16 | 0;
+            date = Math.floor(date / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
-        return uuid.toString()  
-      }
+        return uuid.toString()
+    }
 
     formatDate = date => {
         var d = new Date(date),
@@ -284,201 +288,230 @@ class Payment extends Component {
 
     makePayment = async (type) => {
         let currentGasContract = this.props.contracts[this.state.activeItemIndex]
-        if ((currentGasContract.LAST_INVDOCNO == "") && (this.state.currentInvoice == "") ) {
+        if ((currentGasContract.LAST_INVDOCNO == "") && (this.state.currentInvoice == "")) {
             this.toastIt("Invoice not available. Please contact customer care.")
         } else {
-        let outLetReference = "", apiKey = "", tokenApiUrl = "", orderApiUrl = ""
-        
-        if (currentGasContract.COMPANY == "97") {
-            outLetReference = abudhabiTestOutletReference
-            apiKey = paymentApiKeyTest
-            tokenApiUrl = paymentGatewayTokenApiUrlTest
-            orderApiUrl = paymentGatewayCreateOrderUrlTest
-        } else if (currentGasContract.COMPANY == "91") {
-            outLetReference = dubaiTestOutletReference
-            apiKey = paymentApiKeyTest
-            tokenApiUrl = paymentGatewayTokenApiUrlTest
-            orderApiUrl = paymentGatewayCreateOrderUrlTest
-        } else if (currentGasContract.COMPANY == "92") {
-            outLetReference = fujairahTestOutletReference
-            apiKey = paymentApiKeyTest
-            tokenApiUrl = paymentGatewayTokenApiUrlTest
-            orderApiUrl = paymentGatewayCreateOrderUrlTest
-        } else if (currentGasContract.COMPANY == "01") {
-            outLetReference = abudhabiOutletReference
-            apiKey = paymentApiKeyAUH
-            tokenApiUrl = paymentGatewayTokenApiUrl
-            orderApiUrl = paymentGatewayCreateOrderUrl
-        } else if (currentGasContract.COMPANY == "02") {
-            outLetReference = dubaiOutletReference
-            apiKey = paymentApiKeyDXB
-            tokenApiUrl = paymentGatewayTokenApiUrl
-            orderApiUrl = paymentGatewayCreateOrderUrl
-        } else if (currentGasContract.COMPANY == "03") {
-            outLetReference = fujairahOutletReference
-            apiKey = paymentApiKeyTest
-            tokenApiUrl = paymentGatewayTokenApiUrl
-            orderApiUrl = paymentGatewayCreateOrderUrl
-        } else if (currentGasContract.COMPANY == "05") {
-            outLetReference = alainOutletReference
-            apiKey = paymentApiKeyALN
-            tokenApiUrl = paymentGatewayTokenApiUrl
-            orderApiUrl = paymentGatewayCreateOrderUrl
-        }
+            let outLetReference = "", apiKey = "", tokenApiUrl = "", orderApiUrl = ""
 
-        this.setState({ makePaymentClicked: true }, async () => {
-            let token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
-            if (token != null) {
-                let paidCardDetails = {
-                    name: "MASTER",
-                    cardType: "DEBIT"
-                }
-                let createOrderHeader = {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/vnd.ni-payment.v2+json',
-                    'Accept': 'application/vnd.ni-payment.v2+json'
-                };
-                let createOrderReq = {
-                    "action": "SALE",
-                    "amount": {
-                        "currencyCode": "AED",
-                        // "value": 1200
-                        "value": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) * 100 : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100)
-                    },
-                    "emailAddress": (currentGasContract.EMAIL != "") && (currentGasContract.EMAIL != null) ? currentGasContract.EMAIL : "accounts@sergas.com",
-                    "merchantDefinedData": {
-                        "ContractId": currentGasContract.CONTRACT_NO,
-                        "CustomerName": currentGasContract.PARTY_NAME
-                    },
-                    "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g,'').substring(0, 7).toUpperCase()}-MP`
-                }
+            if (currentGasContract.COMPANY == "97") {
+                outLetReference = abudhabiTestOutletReference
+                apiKey = paymentApiKeyTest
+                tokenApiUrl = paymentGatewayTokenApiUrlTest
+                orderApiUrl = paymentGatewayCreateOrderUrlTest
+            } else if (currentGasContract.COMPANY == "91") {
+                outLetReference = dubaiTestOutletReference
+                apiKey = paymentApiKeyTest
+                tokenApiUrl = paymentGatewayTokenApiUrlTest
+                orderApiUrl = paymentGatewayCreateOrderUrlTest
+            } else if (currentGasContract.COMPANY == "92") {
+                outLetReference = fujairahTestOutletReference
+                apiKey = paymentApiKeyTest
+                tokenApiUrl = paymentGatewayTokenApiUrlTest
+                orderApiUrl = paymentGatewayCreateOrderUrlTest
+            } else if (currentGasContract.COMPANY == "01") {
+                outLetReference = abudhabiOutletReference
+                apiKey = paymentApiKeyAUH
+                tokenApiUrl = paymentGatewayTokenApiUrl
+                orderApiUrl = paymentGatewayCreateOrderUrl
+            } else if (currentGasContract.COMPANY == "02") {
+                outLetReference = dubaiOutletReference
+                apiKey = paymentApiKeyDXB
+                tokenApiUrl = paymentGatewayTokenApiUrl
+                orderApiUrl = paymentGatewayCreateOrderUrl
+            } else if (currentGasContract.COMPANY == "03") {
+                outLetReference = fujairahOutletReference
+                apiKey = paymentApiKeyTest
+                tokenApiUrl = paymentGatewayTokenApiUrl
+                orderApiUrl = paymentGatewayCreateOrderUrl
+            } else if (currentGasContract.COMPANY == "05") {
+                outLetReference = alainOutletReference
+                apiKey = paymentApiKeyALN
+                tokenApiUrl = paymentGatewayTokenApiUrl
+                orderApiUrl = paymentGatewayCreateOrderUrl
+            }
+
+            this.setState({ makePaymentClicked: true }, async () => {
+                let token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
+                if (token != null) {
+                    let paidCardDetails = {
+                        name: "MASTER",
+                        cardType: "DEBIT"
+                    }
+                    let createOrderHeader = {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/vnd.ni-payment.v2+json',
+                        'Accept': 'application/vnd.ni-payment.v2+json'
+                    };
+                    let createOrderReq = {
+                        "action": "SALE",
+                        "amount": {
+                            "currencyCode": "AED",
+                            // "value": 1200
+                            "value": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) * 100 : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100)
+                        },
+                        "emailAddress": (currentGasContract.EMAIL != "") && (currentGasContract.EMAIL != null) ? currentGasContract.EMAIL : "accounts@sergas.com",
+                        "merchantDefinedData": {
+                            "ContractId": currentGasContract.CONTRACT_NO,
+                            "CustomerName": currentGasContract.PARTY_NAME
+                        },
+                        "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g, '').substring(0, 7).toUpperCase()}-MP`
+                    }
 
 
 
-                axios.post(orderApiUrl + outLetReference + "/orders", createOrderReq, { headers: createOrderHeader })
-                    .then(async createOrderRes => {
-                        if (createOrderRes.reference != undefined) {
-                            let currentDate = new Date()
-                            if ((type == "applepay") || (type == "samsungpay")) {
-                                try {
-                                    const payResponse = type == "samsungpay" ?
-                                        await initiateSamsungPay(createOrderRes,
-                                            currentGasContract.COMPANY == "01" ? 'SERGAS Customer AUH' :
-                                                currentGasContract.COMPANY == "02" ? 'SERGAS Customer DXB' :
-                                                    currentGasContract.COMPANY == "05" ? 'SERGAS Customer ALN' :
-                                                        'SERGAS Customer',
-                                            currentGasContract.COMPANY == "01" ? '7b41f6ef17874fc3bf4ccb' :
-                                                currentGasContract.COMPANY == "02" ? '44f457d4b8da4a8bbe2dfe' :
-                                                    currentGasContract.COMPANY == "05" ? 'c084781e34924bf7b13927' :
-                                                        'aa1080513289421082caa1') :
-                                        type == "applepay" ? await initiateApplePay(createOrderRes, {
-                                            merchantIdentifier: currentGasContract.COMPANY == "01" ? 'merchant.sergas.sergascustomerauh' : currentGasContract.COMPANY == "02" ? 'merchant.sergas.sergascustomerdxb' : currentGasContract.COMPANY == "05" ? 'merchant.sergas.sergascustomeralain' : 'merchant.sergas.sergascustomer', // Merchant ID created in Apple's portal
-                                            countryCode: 'AE', // Country code of the order
-                                            merchantName: currentGasContract.COMPANY == "01" ? 'SERGAS Customer AUH' : currentGasContract.COMPANY == "02" ? 'SERGAS Customer DXB' : currentGasContract.COMPANY == "05" ? 'SERGAS Customer ALN' : 'SERGAS Customer', // name of the merchant to be shown in Apple Pay button
-                                        }) : null;
-                                    if (payResponse.status == "Success") {
+                    axios.post(orderApiUrl + outLetReference + "/orders", createOrderReq, { headers: createOrderHeader })
+                        .then(async createOrderRes => {
+                            if (createOrderRes.reference != undefined) {
+                                let currentDate = new Date()
+                                if ((type == "applepay") || (type == "samsungpay")) {
+                                    try {
+                                        const payResponse = type == "samsungpay" ?
+                                            await initiateSamsungPay(createOrderRes,
+                                                currentGasContract.COMPANY == "01" ? 'SERGAS Customer AUH' :
+                                                    currentGasContract.COMPANY == "02" ? 'SERGAS Customer DXB' :
+                                                        currentGasContract.COMPANY == "05" ? 'SERGAS Customer ALN' :
+                                                            'SERGAS Customer',
+                                                currentGasContract.COMPANY == "01" ? '7b41f6ef17874fc3bf4ccb' :
+                                                    currentGasContract.COMPANY == "02" ? '44f457d4b8da4a8bbe2dfe' :
+                                                        currentGasContract.COMPANY == "05" ? 'c084781e34924bf7b13927' :
+                                                            'aa1080513289421082caa1') :
+                                            type == "applepay" ? await initiateApplePay(createOrderRes, {
+                                                merchantIdentifier: currentGasContract.COMPANY == "01" ? 'merchant.sergas.sergascustomerauh' : currentGasContract.COMPANY == "02" ? 'merchant.sergas.sergascustomerdxb' : currentGasContract.COMPANY == "05" ? 'merchant.sergas.sergascustomeralain' : 'merchant.sergas.sergascustomer', // Merchant ID created in Apple's portal
+                                                countryCode: 'AE', // Country code of the order
+                                                merchantName: currentGasContract.COMPANY == "01" ? 'SERGAS Customer AUH' : currentGasContract.COMPANY == "02" ? 'SERGAS Customer DXB' : currentGasContract.COMPANY == "05" ? 'SERGAS Customer ALN' : 'SERGAS Customer', // name of the merchant to be shown in Apple Pay button
+                                            }) : null;
+                                        if (payResponse.status == "Success") {
 
-                                        token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
-                                        createOrderHeader.Authorization = 'Bearer ' + token
-                                        await axios.get(orderApiUrl + outLetReference + "/orders/" + createOrderRes.reference, { headers: createOrderHeader })
-                                            .then(getOrderDetailsRes => {
+                                            token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
+                                            createOrderHeader.Authorization = 'Bearer ' + token
+                                            await axios.get(orderApiUrl + outLetReference + "/orders/" + createOrderRes.reference, { headers: createOrderHeader })
+                                                .then(getOrderDetailsRes => {
 
-                                                if (getOrderDetailsRes &&
-                                                    (getOrderDetailsRes._embedded.length != 0) &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state=="CAPTURED" &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
-                                                    if (type == "samsungpay") {
-                                                        paidCardDetails = {
-                                                            name: "SAMSUNG_PAY",
-                                                            cardType: "DEBIT"
+                                                    if (getOrderDetailsRes &&
+                                                        (getOrderDetailsRes._embedded.length != 0) &&
+                                                        getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
+                                                        getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
+                                                        if (type == "samsungpay") {
+                                                            paidCardDetails = {
+                                                                name: "SAMSUNG_PAY",
+                                                                cardType: "DEBIT"
+                                                            }
+
+                                                        }
+                                                        else {
+                                                            paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
                                                         }
 
-                                                    }
-                                                    else {
-                                                        paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
-                                                    }
+                                                        this.toastIt("Payment Successful. It will be reflected in your account shortly.")
+                                                        let reqBody = {
+                                                            "COMPANY": currentGasContract.COMPANY,
+                                                            "CONTRACT_NO": currentGasContract.CONTRACT_NO,
+                                                            "BUILDING_CODE": currentGasContract.BUILDING_CODE,
+                                                            "APARTMENT_CODE": currentGasContract.APARTMENT_CODE,
+                                                            "AMT": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                            "YEARCODE": currentDate.getFullYear(),
+                                                            "INV_DOCNO": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
+                                                            "INV_DOCTYPE": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
+                                                            "INV_YEARCODE": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
+                                                            "CREDITCARD": paidCardDetails.name,
+                                                            "ONLINE_DOCDATE": this.formatDate(currentDate.toDateString()),
+                                                            "PAYMODE": paidCardDetails.name,
+                                                            "TRANSACTION_ID": createOrderRes.reference,
+                                                            "PROVIDER": "MAPP"
+                                                        }
 
-                                                    this.toastIt("Payment Successful. It will be reflected in your account shortly.")
-                                                    let reqBody = {
-                                                        "COMPANY": currentGasContract.COMPANY,
-                                                        "CONTRACT_NO": currentGasContract.CONTRACT_NO,
-                                                        "BUILDING_CODE": currentGasContract.BUILDING_CODE,
-                                                        "APARTMENT_CODE": currentGasContract.APARTMENT_CODE,
-                                                        "AMT": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                                        "YEARCODE": currentDate.getFullYear(),
-                                                        "INV_DOCNO": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                                        "INV_DOCTYPE": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
-                                                        "INV_YEARCODE": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
-                                                        "CREDITCARD": paidCardDetails.name,
-                                                        "ONLINE_DOCDATE": this.formatDate(currentDate.toDateString()),
-                                                        "PAYMODE": paidCardDetails.name,
-                                                        "TRANSACTION_ID": createOrderRes.reference,
-                                                        "PROVIDER": "MAPP"
-                                                    }
+                                                        this.setState({
+                                                            apiCallFlags: { ...this.state.apiCallFlags, ...{ updatePaymentApiCalled: true } },
+                                                            updatePaymentReqBody: reqBody
+                                                        }, () => {
+                                                            this.props.updatePayment(reqBody)
+                                                            this.props.updatePaymentLog({
+                                                                "OrderId": createOrderRes.reference,
+                                                                "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                                "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                                "OnlineDocDate": new Date(),
+                                                                "Status": "SUCCESS",
+                                                                "ContractNo": currentGasContract.CONTRACT_NO,
+                                                                "Company": currentGasContract.COMPANY,
+                                                                "TransactionId": createOrderRes.reference,
+                                                                "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
+                                                                "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
+                                                                "InvoiceYearCode": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
+                                                                "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
+                                                                "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
+                                                                "PaymentType": "INVOICE_PAYMENT"
+                                                            })
+                                                        })
 
-                                                    this.setState({
-                                                        apiCallFlags: { ...this.state.apiCallFlags, ...{ updatePaymentApiCalled: true } },
-                                                        updatePaymentReqBody: reqBody
-                                                    }, () => {
-                                                        this.props.updatePayment(reqBody)
+                                                    } else {
+                                                        console.log('status ', getOrderDetailsRes)
+                                                        this.setState({ makePaymentClicked: false })
+                                                        this.toastIt("Payment Failed please try another method")
+                                                        const paidCardDetails =
+                                                            type === "samsungpay"
+                                                                ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
+                                                                : type === "applepay"
+                                                                    ? { name: "APPLE_PAY", cardType: "DEBIT" }
+                                                                    : { name: "", cardType: "" };
+
                                                         this.props.updatePaymentLog({
                                                             "OrderId": createOrderRes.reference,
                                                             "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
                                                             "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
                                                             "OnlineDocDate": new Date(),
-                                                            "Status": "SUCCESS",
+                                                            "Status": "FAILED",
                                                             "ContractNo": currentGasContract.CONTRACT_NO,
                                                             "Company": currentGasContract.COMPANY,
                                                             "TransactionId": createOrderRes.reference,
                                                             "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                                            "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
-                                                            "InvoiceYearCode": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
+                                                            "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
+                                                            "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
                                                             "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
                                                             "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
                                                             "PaymentType": "INVOICE_PAYMENT"
                                                         })
-                                                    })
+                                                    }
 
-                                                } else {
-                                                    console.log('status ', getOrderDetailsRes)
+                                                })
+                                                .catch(getOrderDetailsErr => {
                                                     this.setState({ makePaymentClicked: false })
-                                                    this.toastIt("Payment Failed please try another method")
-                                                    const paidCardDetails =
-                                                        type === "samsungpay"
-                                                            ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
-                                                            : type === "applepay"
-                                                                ? { name: "APPLE_PAY", cardType: "DEBIT" }
-                                                                : { name: "", cardType: "" };
+                                                    this.toastIt("Payment Failed")
+                                                    clg("getOrderDetailsErr >> ", getOrderDetailsErr)
+                                                })
 
-                                                    this.props.updatePaymentLog({
-                                                        "OrderId": createOrderRes.reference,
-                                                        "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                                        "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                                        "OnlineDocDate": new Date(),
-                                                        "Status": "FAILED",
-                                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                                        "Company": currentGasContract.COMPANY,
-                                                        "TransactionId": createOrderRes.reference,
-                                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentType": "INVOICE_PAYMENT"
-                                                    })
-                                                }
 
+
+                                        }
+                                        else {
+                                            this.setState({ makePaymentClicked: false })
+                                            this.toastIt("Payment Failed")
+
+                                            const paidCardDetails =
+                                                type === "samsungpay"
+                                                    ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
+                                                    : type === "applepay"
+                                                        ? { name: "APPLE_PAY", cardType: "DEBIT" }
+                                                        : { name: "", cardType: "" };
+
+                                            this.props.updatePaymentLog({
+                                                "OrderId": createOrderRes.reference,
+                                                "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                "OnlineDocDate": new Date(),
+                                                "Status": "FAILED",
+                                                "ContractNo": currentGasContract.CONTRACT_NO,
+                                                "Company": currentGasContract.COMPANY,
+                                                "TransactionId": createOrderRes.reference,
+                                                "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
+                                                "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
+                                                "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
+                                                "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
+                                                "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
+                                                "PaymentType": "INVOICE_PAYMENT"
                                             })
-                                            .catch(getOrderDetailsErr => {
-                                                this.setState({ makePaymentClicked: false })
-                                                this.toastIt("Payment Failed")
-                                                clg("getOrderDetailsErr >> ", getOrderDetailsErr)
-                                            })
+                                        }
 
-
-
-                                    }
-                                    else {
+                                    } catch (err) {
                                         this.setState({ makePaymentClicked: false })
                                         this.toastIt("Payment Failed")
 
@@ -506,132 +539,129 @@ class Payment extends Component {
                                             "PaymentType": "INVOICE_PAYMENT"
                                         })
                                     }
-
-                                } catch (err) {
-                                    this.setState({ makePaymentClicked: false })
-                                    this.toastIt("Payment Failed")
-
-                                    const paidCardDetails =
-                                        type === "samsungpay"
-                                            ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
-                                            : type === "applepay"
-                                                ? { name: "APPLE_PAY", cardType: "DEBIT" }
-                                                : { name: "", cardType: "" };
-
-                                    this.props.updatePaymentLog({
-                                        "OrderId": createOrderRes.reference,
-                                        "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                        "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                        "OnlineDocDate": new Date(),
-                                        "Status": "FAILED",
-                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                        "Company": currentGasContract.COMPANY,
-                                        "TransactionId": createOrderRes.reference,
-                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentType": "INVOICE_PAYMENT"
-                                    })
                                 }
-                            }
-                            else {
-                                try {
-                                    const initiateCardPaymentResponse = await initiateCardPayment(createOrderRes);
-                                    if (initiateCardPaymentResponse.status == "Success") {
+                                else {
+                                    try {
+                                        const initiateCardPaymentResponse = await initiateCardPayment(createOrderRes);
+                                        if (initiateCardPaymentResponse.status == "Success") {
 
-                                        token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
-                                        createOrderHeader.Authorization = 'Bearer ' + token
-                                        await axios.get(orderApiUrl + outLetReference + "/orders/" + createOrderRes.reference, { headers: createOrderHeader })
-                                            .then(getOrderDetailsRes => {
-                                                //console.log('status ', getOrderDetailsRes._embedded.payment[0].state=="CAPTURED")
-                                                //console.log('status', getOrderDetailsRes);
-                                                if (getOrderDetailsRes &&
-                                                    (getOrderDetailsRes._embedded.length != 0) &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state=="CAPTURED" &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
+                                            token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
+                                            createOrderHeader.Authorization = 'Bearer ' + token
+                                            await axios.get(orderApiUrl + outLetReference + "/orders/" + createOrderRes.reference, { headers: createOrderHeader })
+                                                .then(getOrderDetailsRes => {
+                                                    //console.log('status ', getOrderDetailsRes._embedded.payment[0].state=="CAPTURED")
+                                                    //console.log('status', getOrderDetailsRes);
+                                                    if (getOrderDetailsRes &&
+                                                        (getOrderDetailsRes._embedded.length != 0) &&
+                                                        getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
+                                                        getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
 
-                                                    paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
-                                                    this.toastIt("Payment Successful. It will be reflected in your account shortly.")
-                                                    let reqBody = {
-                                                        "COMPANY": currentGasContract.COMPANY,
-                                                        "CONTRACT_NO": currentGasContract.CONTRACT_NO,
-                                                        "BUILDING_CODE": currentGasContract.BUILDING_CODE,
-                                                        "APARTMENT_CODE": currentGasContract.APARTMENT_CODE,
-                                                        "AMT": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                                        "YEARCODE": currentDate.getFullYear(),
-                                                        "INV_DOCNO": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                                        "INV_DOCTYPE": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
-                                                        "INV_YEARCODE": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
-                                                        "CREDITCARD": paidCardDetails.name,
-                                                        "ONLINE_DOCDATE": this.formatDate(currentDate.toDateString()),
-                                                        "PAYMODE": paidCardDetails.cardType,
-                                                        "TRANSACTION_ID": createOrderRes.reference,
-                                                        "PROVIDER": "MAPP"
-                                                    }
+                                                        paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
+                                                        this.toastIt("Payment Successful. It will be reflected in your account shortly.")
+                                                        let reqBody = {
+                                                            "COMPANY": currentGasContract.COMPANY,
+                                                            "CONTRACT_NO": currentGasContract.CONTRACT_NO,
+                                                            "BUILDING_CODE": currentGasContract.BUILDING_CODE,
+                                                            "APARTMENT_CODE": currentGasContract.APARTMENT_CODE,
+                                                            "AMT": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                            "YEARCODE": currentDate.getFullYear(),
+                                                            "INV_DOCNO": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
+                                                            "INV_DOCTYPE": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
+                                                            "INV_YEARCODE": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
+                                                            "CREDITCARD": paidCardDetails.name,
+                                                            "ONLINE_DOCDATE": this.formatDate(currentDate.toDateString()),
+                                                            "PAYMODE": paidCardDetails.cardType,
+                                                            "TRANSACTION_ID": createOrderRes.reference,
+                                                            "PROVIDER": "MAPP"
+                                                        }
 
-                                                    this.setState({
-                                                        apiCallFlags: { ...this.state.apiCallFlags, ...{ updatePaymentApiCalled: true } },
-                                                        updatePaymentReqBody: reqBody
-                                                    }, () => {
-                                                        this.props.updatePayment(reqBody)
+                                                        this.setState({
+                                                            apiCallFlags: { ...this.state.apiCallFlags, ...{ updatePaymentApiCalled: true } },
+                                                            updatePaymentReqBody: reqBody
+                                                        }, () => {
+                                                            this.props.updatePayment(reqBody)
+                                                            this.props.updatePaymentLog({
+                                                                "OrderId": createOrderRes.reference,
+                                                                "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                                "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                                "OnlineDocDate": new Date(),
+                                                                "Status": "SUCCESS",
+                                                                "ContractNo": currentGasContract.CONTRACT_NO,
+                                                                "Company": currentGasContract.COMPANY,
+                                                                "TransactionId": createOrderRes.reference,
+                                                                "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
+                                                                "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
+                                                                "InvoiceYearCode": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
+                                                                "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
+                                                                "PaymentMode": paidCardDetails.cardType != null ? paidCardDetails.cardType : "",
+                                                                "PaymentType": "INVOICE_PAYMENT"
+                                                            })
+                                                        })
+                                                    } else {
+
+
+                                                        console.log('status ', getOrderDetailsRes)
+                                                        this.setState({ makePaymentClicked: false })
+                                                        this.toastIt("Payment Failed please try another method")
                                                         this.props.updatePaymentLog({
                                                             "OrderId": createOrderRes.reference,
                                                             "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
                                                             "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
                                                             "OnlineDocDate": new Date(),
-                                                            "Status": "SUCCESS",
+                                                            "Status": "FAILURE",
                                                             "ContractNo": currentGasContract.CONTRACT_NO,
                                                             "Company": currentGasContract.COMPANY,
                                                             "TransactionId": createOrderRes.reference,
                                                             "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                                            "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE != "" ? currentGasContract.LAST_INVDOCTYPE : this.state.currInvDocType,
-                                                            "InvoiceYearCode": currentGasContract.LAST_YEARCODE != "" ? currentGasContract.LAST_YEARCODE : this.state.currInvYearCode,
+                                                            "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
+                                                            "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
                                                             "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
                                                             "PaymentMode": paidCardDetails.cardType != null ? paidCardDetails.cardType : "",
                                                             "PaymentType": "INVOICE_PAYMENT"
                                                         })
-                                                    })
-                                                } else {
+                                                    }
 
-                                                    
+                                                })
+                                                .catch(getOrderDetailsErr => {
                                                     console.log('status ', getOrderDetailsRes)
-                                                    this.setState({ makePaymentClicked: false })
-                                                    this.toastIt("Payment Failed please try another method")
-                                                    this.props.updatePaymentLog({
-                                                        "OrderId": createOrderRes.reference,
-                                                        "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                                        "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                                        "OnlineDocDate": new Date(),
-                                                        "Status": "FAILURE",
-                                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                                        "Company": currentGasContract.COMPANY,
-                                                        "TransactionId": createOrderRes.reference,
-                                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentMode": paidCardDetails.cardType != null ? paidCardDetails.cardType : "",
-                                                        "PaymentType": "INVOICE_PAYMENT"
-                                                    })
-                                                }
+                                                    clg("getOrderDetailsErr >> ", getOrderDetailsErr)
+                                                })
 
+
+
+                                        } else {
+                                            this.props.updatePaymentLog({
+                                                "OrderId": createOrderRes.reference,
+                                                "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
+                                                "OnlineDocDate": new Date(),
+                                                "Status": "FAILURE",
+                                                "ContractNo": currentGasContract.CONTRACT_NO,
+                                                "Company": currentGasContract.COMPANY,
+                                                "TransactionId": createOrderRes.reference,
+                                                "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
+                                                "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
+                                                "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
+                                                "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
+                                                "PaymentMode": paidCardDetails.cardType != null ? paidCardDetails.cardType : "",
+                                                "PaymentType": "INVOICE_PAYMENT"
                                             })
-                                            .catch(getOrderDetailsErr => {
-                                                console.log('status ', getOrderDetailsRes)
-                                                clg("getOrderDetailsErr >> ", getOrderDetailsErr)
-                                            })
-
-
-
-                                    } else {
+                                        }
+                                    } catch (initiatePaymentErr) {
+                                        if (initiatePaymentErr.status == "Failed") {
+                                            this.setState({ makePaymentClicked: false })
+                                            this.toastIt("Payment Failed")
+                                        }
+                                        if (initiatePaymentErr.status == "Aborted") {
+                                            this.setState({ makePaymentClicked: false })
+                                            this.toastIt("Payment Aborted")
+                                        }
                                         this.props.updatePaymentLog({
                                             "OrderId": createOrderRes.reference,
                                             "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
                                             "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
                                             "OnlineDocDate": new Date(),
-                                            "Status": "FAILURE",
+                                            "Status": initiatePaymentErr.status,
                                             "ContractNo": currentGasContract.CONTRACT_NO,
                                             "Company": currentGasContract.COMPANY,
                                             "TransactionId": createOrderRes.reference,
@@ -643,48 +673,23 @@ class Payment extends Component {
                                             "PaymentType": "INVOICE_PAYMENT"
                                         })
                                     }
-                                } catch (initiatePaymentErr) {
-                                    if (initiatePaymentErr.status == "Failed") {
-                                        this.setState({ makePaymentClicked: false })
-                                        this.toastIt("Payment Failed")
-                                    }
-                                    if (initiatePaymentErr.status == "Aborted") {
-                                        this.setState({ makePaymentClicked: false })
-                                        this.toastIt("Payment Aborted")
-                                    }
-                                    this.props.updatePaymentLog({
-                                        "OrderId": createOrderRes.reference,
-                                        "TotalAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                        "ReceivedAmount": this.state.payOtherAmount ? parseFloat(this.state.otherAmt) : Math.round(parseFloat(currentGasContract.OUTSTANDING_AMT) * 100) / 100,
-                                        "OnlineDocDate": new Date(),
-                                        "Status": initiatePaymentErr.status,
-                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                        "Company": currentGasContract.COMPANY,
-                                        "TransactionId": createOrderRes.reference,
-                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO != "" ? currentGasContract.LAST_INVDOCNO : this.state.currentInvoice,
-                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentMode": paidCardDetails.cardType != null ? paidCardDetails.cardType : "",
-                                        "PaymentType": "INVOICE_PAYMENT"
-                                    })
                                 }
+                            } else {
+                                this.setState({ makePaymentClicked: false })
+                                this.toastIt("Something went wrong. Try again later.")
                             }
-                        } else {
+                        })
+                        .catch(createOrderErr => {
                             this.setState({ makePaymentClicked: false })
                             this.toastIt("Something went wrong. Try again later.")
-                        }
-                    })
-                    .catch(createOrderErr => {
-                        this.setState({ makePaymentClicked: false })
-                        this.toastIt("Something went wrong. Try again later.")
-                    })
-            } else {
-                this.setState({ makePaymentClicked: false })
-                this.toastIt("Something went wrong. Try again later.")
-            }
-        })
-    }}
+                        })
+                } else {
+                    this.setState({ makePaymentClicked: false })
+                    this.toastIt("Something went wrong. Try again later.")
+                }
+            })
+        }
+    }
 
 
     getPaymentGatewayAccessToken = async (apiKey, tokenApiUrl) => {
@@ -719,278 +724,267 @@ class Payment extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-                <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                    <View style={{ flexDirection: "row", }}>
-                        <View style={styles.headerCol1}>
-                            <TouchableOpacity style={{ marginRight: 5 }} onPress={() => { this.props.navigation.goBack() }}>
-                                <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image>
+            <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                {/* <ArrowIcon direction={"left"} size={20} color="#FFFFFF" /> */}
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
                             </TouchableOpacity>
-                            <Text style={styles.welcomeLabel} >
-                                Payment
-                            </Text>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Payment
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
-
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            Pay your gas bills quickly and securely with just a few taps.
+                        </Text>
                     </View>
-                </View>
 
-                {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}>
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    > */}
-                <View style={{
-                    height: Platform.OS == 'ios' ? "90%" : "100%", backgroundColor: "#FFFFFF", overflow: 'hidden',
-                    borderTopLeftRadius: 24,
-                    borderTopRightRadius: 24,
-                    width: '100%'
-                }} >
-                    <KeyboardAwareScrollView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-                        style={{ flex: 1 }}
-                        enabled
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <ScrollView
-                            ref={(ref) => (this.scrollView = ref)}
+                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+
+                        <KeyboardAwareScrollView
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            style={{ flex: 1 }}
+                            enabled
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.scrollView}>
+                        >
+                            <ScrollView
+                                ref={(ref) => (this.scrollView = ref)}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={Mainstyles.containerView}>
 
-                            {
-                                this.props.contracts.length ?
-                                    <>
-                                        <View style={{ ...styles.accountsLabelView, marginTop: 30 }}>
-                                            <Text style={styles.accountsLabel} >
-                                                {t("home.selectAccount")}
-                                            </Text>
-                                        </View>
-                                        <HomeMainCard
-                                            contracts={this.props.contracts}
-                                            from="payment"
-                                            usageCharges={1234}
-                                            userName="User NameX"
-                                            accountNumber="YYYY XXXX YYYY XXXX"
-                                            currentIndex={this.carouselCurrentItem}
-                                            makePayment={() => this.makePayment("")}
-                                            loading={this.state.makePaymentClicked}
-                                        />
+                                {
+                                    this.props.contracts.length ?
+                                        <>
+                                            <View style={{ ...Mainstyles.accountsLabelView, marginTop: 30 }}>
+                                                <Text style={Mainstyles.accountsLabel} >
+                                                    {t("home.selectAccount")}
+                                                </Text>
+                                            </View>
+                                            <HomeMainCard
+                                                contracts={this.props.contracts}
+                                                from="payment"
+                                                usageCharges={1234}
+                                                userName="User NameX"
+                                                accountNumber="YYYY XXXX YYYY XXXX"
+                                                currentIndex={this.carouselCurrentItem}
+                                                makePayment={() => this.makePayment("")}
+                                                loading={this.state.makePaymentClicked}
+                                            />
 
-
-                                        <View style={{ ...styles.amountView }}>
-                                            <View style={{ flexDirection: "row", }}>
-                                                <View style={styles.amountCol1}>
-                                                    <Text style={styles.accountLabel} >
-                                                        Total Amount Due
-                                                    </Text>
-                                                </View>
-                                                <View style={styles.amountCol2}>
-                                                    <Text style={styles.userNameLabel} >
+                                            <View style={Mainstyles.row}>
+                                                <Text style={Mainstyles.label}>Total Amount Due</Text>
+                                                <View style={Mainstyles.badge}>
+                                                    <Text style={Mainstyles.amount}>
                                                         {this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0 ? Math.round(parseFloat(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT) * 100) / 100 : 0} AED
                                                     </Text>
                                                 </View>
                                             </View>
 
-                                            <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
+                                            <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: false }) }} style={{ ...styles.headerView, marginBottom: 0, minHeight: 40 }}>
 
-                                            </View>
-                                        </View>
-
-                                        <View style={{ flexDirection: "row", marginBottom: 0, minHeight: 40 }}>
-                                            <View style={styles.headerCol1}>
-                                                <TouchableOpacity style={this.state.payOtherAmount ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1 } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" }}
-                                                    onPress={() => { this.setState({ payOtherAmount: false }) }}>
-                                                    {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                                                </TouchableOpacity>
-                                                <Text style={styles.preferrenceLabel} >
-                                                    Pay total outstanding amount
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View style={{ flexDirection: "row", marginTop: 0, marginBottom: 20 }}>
-                                            <View style={{ ...styles.headerCol1 }}>
-                                                <TouchableOpacity style={this.state.payOtherAmount ? { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 1, backgroundColor: "#102D4F" } : { marginRight: 5, height: 16, width: 16, borderRadius: 8, borderColor: "#8E9093", borderWidth: 0.4 }}
-                                                    onPress={() => { this.setState({ payOtherAmount: true }) }}>
-                                                    {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                                                </TouchableOpacity>
-                                                <View style={{ width: "100%" }}>
-
-                                                    {
-                                                        this.state.payOtherAmount ?
-                                                            <>
-                                                                <Text style={styles.preferrenceLabel} >
-                                                                    Enter amount
-                                                                </Text>
-                                                                <TextInput
-                                                                    ref={this.otherAmtRef}
-                                                                    onFocus={() => {
-                                                                        setTimeout(() => {
-                                                                            this.otherAmtRef.current.focus()
-                                                                        }, 1000)
-                                                                    }}
-                                                                    placeholder="Enter other amount"
-                                                                    style={styles.textInputStyle}
-                                                                    value={this.state.otherAmt}
-                                                                    onChangeText={val => {
-                                                                        this.setState({ otherAmt: val }, () => {
-                                                                        })
-                                                                    }}
-                                                                    keyboardType='numeric'
-                                                                />
-
-                                                            </> : <Text style={styles.preferrenceLabel} >
-                                                                Pay other amount
+                                                <View style={{ flexDirection: "row", }}>
+                                                    <View style={Mainstyles.headerCol1}>
+                                                        <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: false }) }}>
+                                                            {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
+                                                            <CircleRadioIcon width={24} height={24} fill={this.state.payOtherAmount ? '#D3D3D3' : '#0057A2'} />
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: false }) }} style={{ marginLeft: 10 }}>
+                                                            <Text style={{ ...Mainstyles.preferrenceHeader, color: this.state.payOtherAmount ? '#102C4EB3' : '#102C4E' }} >
+                                                                Pay total outstanding amount
                                                             </Text>
-                                                    }
+
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: true }) }} style={{ ...Mainstyles.headerSubView, marginBottom: 20 }}>
+                                                <View style={{ flexDirection: "row", }}>
+                                                    <View style={{ ...Mainstyles.headerCol1 }}>
+                                                        <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: true }) }}>
+                                                            <CircleRadioIcon width={24} height={24} fill={this.state.payOtherAmount ? '#0057A2' : '#D3D3D3'} />
+                                                        </TouchableOpacity>
+                                                        <View style={{ width: "100%" }}>
+
+                                                            {
+                                                                this.state.payOtherAmount ?
+                                                                    <>
+                                                                        <Text style={{ ...Mainstyles.preferrenceHeader, color: this.state.payOtherAmount ? '#102C4E' : '#102C4EB3', marginLeft: 10 }} >
+                                                                            {/* Enter amount */}
+                                                                            Pay other amount
+                                                                        </Text>
+                                                                        <TextInput
+                                                                            ref={this.otherAmtRef}
+                                                                            onFocus={() => {
+                                                                                setTimeout(() => {
+                                                                                    this.otherAmtRef.current.focus()
+                                                                                }, 1000)
+                                                                            }}
+                                                                            placeholder="Enter the amount"
+                                                                            style={{ ...styles.textInputStyle, width: "80%", marginLeft: 10, borderWidth: 1, borderColor: "#0057A21A", borderRadius: 12 }}
+                                                                            value={this.state.otherAmt}
+                                                                            onChangeText={val => {
+                                                                                this.setState({ otherAmt: val }, () => {
+                                                                                })
+                                                                            }}
+                                                                            keyboardType='numeric'
+                                                                        />
+
+                                                                    </> : <Text style={{ ...Mainstyles.preferrenceHeader, color: this.state.payOtherAmount ? '#102C4E' : '#102C4EB3', marginLeft: 10 }} >
+                                                                        Pay other amount
+                                                                    </Text>
+                                                            }
 
 
-                                                    {/* <Text style={{ ...styles.preferrenceLabel, fontSize: 10 }} >
+                                                            {/* <Text style={{ ...styles.preferrenceLabel, fontSize: 10 }} >
                                                                 Additional charges apply for Immediate Connection + Associated Fees : 105 AED
                                                             </Text> */}
+                                                        </View>
+
+                                                    </View>
+
                                                 </View>
-
-                                            </View>
-
-                                        </View>
-
-                                        {
-                                            this.state.payOtherAmount && (this.state.otherAmt != '') && ((parseFloat(this.state.otherAmt) < 10)) ?
-                                                <Text style={{ fontSize: 12, color: "red" }}>
-                                                    Minimum amount to be paid - 10 AED.
-                                                </Text> : this.state.payOtherAmount && (this.state.otherAmt != '') && !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)) ?
-                                                    <Text style={{ fontSize: 12, color: "red" }}>
-                                                        Invalid amount
-                                                    </Text> : null
-                                        }
-
-                                        {this.state.cardPaySupported ? (
-                                            <TouchableOpacity
-                                                style={(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0) && !(this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)))) ? styles.buttonStyle : { ...styles.buttonStyle, backgroundColor: "#99b1d1" }}
-                                                onPress={() => this.makePayment("")}
-                                                disabled={(!(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0)) || (this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt))))}
-                                            >
-                                                {this.state.makePaymentClicked && (this.state.payMode == "") ?
-                                                    <ActivityIndicator size={'small'} color={'black'} /> :
-                                                    <>
-                                                        <Text
-                                                            style={styles.buttonLabelStyle}>Pay</Text>
-
-                                                    </>
-                                                }
                                             </TouchableOpacity>
-                                        ) : null}
-                                        {
-                                            this.state.applePaySupported || this.state.samsungPaySupported ?
 
+                                            {
+                                                this.state.payOtherAmount && (this.state.otherAmt != '') && ((parseFloat(this.state.otherAmt) < 10)) ?
+                                                    <Text style={{ fontSize: 12, color: "red" }}>
+                                                        Minimum amount to be paid - 10 AED.
+                                                    </Text> : this.state.payOtherAmount && (this.state.otherAmt != '') && !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)) ?
+                                                        <Text style={{ fontSize: 12, color: "red" }}>
+                                                            Invalid amount
+                                                        </Text> : null
+                                            }
+
+                                            {this.state.cardPaySupported ? (
                                                 <TouchableOpacity
-                                                    style={(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0) && !(this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)))) ? { ...styles.buttonStyle, marginTop: 20 } : { ...styles.buttonStyle, backgroundColor: "#99b1d1", marginTop: 20 }}
-                                                    onPress={() => {
-                                                        this.setState({
-                                                            payMode: this.state.applePaySupported ? "applepay" : "samsungpay"
-                                                        })
-                                                        this.makePayment(this.state.applePaySupported ? "applepay" : "samsungpay")
-                                                    }}
+                                                    style={(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0) && !(this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)))) ? Mainstyles.buttonStyle : { ...Mainstyles.buttonStyle, backgroundColor: "#99b1d1" }}
+                                                    onPress={() => this.makePayment("")}
                                                     disabled={(!(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0)) || (this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt))))}
                                                 >
-                                                    {this.state.makePaymentClicked && ((this.state.payMode == "applepay") || (this.state.payMode == "samsungpay")) ?
+                                                    {this.state.makePaymentClicked && (this.state.payMode == "") ?
                                                         <ActivityIndicator size={'small'} color={'black'} /> :
                                                         <>
-                                                            {/* <Text
-                                                            style={styles.buttonLabelStyle}>{this.state.applePaySupported ? "Pay using Apple Pay" : "Pay using Samsung Pay"}</Text> */}
-                                                            {
-                                                                this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain" }} /> :
-                                                                    <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain" }} />
-                                                            }
+                                                            <Text
+                                                                style={Mainstyles.buttonLabelStyle}>Pay</Text>
+
                                                         </>
                                                     }
                                                 </TouchableOpacity>
-                                                : null
-                                        }
+                                            ) : null}
+                                            {
+                                                this.state.applePaySupported || this.state.samsungPaySupported ?
 
+                                                    <TouchableOpacity
+                                                        style={(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0) && !(this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)))) ? { ...Mainstyles.buttonStyle, marginTop: 20 } : { ...Mainstyles.buttonStyle, backgroundColor: "#99b1d1", marginTop: 20 }}
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                payMode: this.state.applePaySupported ? "applepay" : "samsungpay"
+                                                            })
+                                                            this.makePayment(this.state.applePaySupported ? "applepay" : "samsungpay")
+                                                        }}
+                                                        disabled={(!(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0)) || (this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt))))}
+                                                    >
+                                                        {this.state.makePaymentClicked && ((this.state.payMode == "applepay") || (this.state.payMode == "samsungpay")) ?
+                                                            <ActivityIndicator size={'small'} color={'black'} /> :
+                                                            <>
+                                                                {/* <Text
+                                                            style={styles.buttonLabelStyle}>{this.state.applePaySupported ? "Pay using Apple Pay" : "Pay using Samsung Pay"}</Text> */}
+                                                                {
+                                                                    this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain" }} /> :
+                                                                        <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain" }} />
+                                                                }
+                                                            </>
+                                                        }
+                                                    </TouchableOpacity>
+                                                    : null
+                                            }
 
-                                    </>
-                                    :
-                                    null}
+                                        </>
+                                        :
+                                        null}
 
+                                <TouchableOpacity style={{ ...Mainstyles.buttonStyle, marginTop:10 }}>
+                                    <Text style={Mainstyles.buttonLabelStyle}>Pay Now</Text>
+                                </TouchableOpacity>
 
+                            </ScrollView>
+                            {
+                                this.state.showModal ?
+                                    <Modal
+                                        onClose={() => this.setState({ showModal: false })}
+                                        visible={this.state.showModal}
+                                        // button1={true}
+                                        // button2={true}
+                                        onButton1={() => {
+                                            this.setState({ showPaidModal: false })
+                                        }}
+                                        onButton2={() => {
+                                            this.setState({ showPaidModal: false })
+                                            this.makePayment("")
+                                        }}
+                                        data={{
+                                            // title: "Immediate Disconnection",
+                                            // message: "Test",
+                                            button1Text: "Close",
+                                            button2Text: "Pay",
+                                            uri: this.state.helpImageUrl,
+                                            view: <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                />
 
-                        </ScrollView>
-                        {
-                            this.state.showModal ?
-                                <Modal
-                                    onClose={() => this.setState({ showModal: false })}
-                                    visible={this.state.showModal}
-                                    // button1={true}
-                                    // button2={true}
-                                    onButton1={() => {
-                                        this.setState({ showPaidModal: false })
-                                    }}
-                                    onButton2={() => {
-                                        this.setState({ showPaidModal: false })
-                                        this.makePayment("")
-                                    }}
-                                    data={{
-                                        // title: "Immediate Disconnection",
-                                        // message: "Test",
-                                        button1Text: "Close",
-                                        button2Text: "Pay",
-                                        uri: this.state.helpImageUrl,
-                                        view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                            <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                source={this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                            // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
-                                            />
+                                                <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={styles.inputLabelStyle}>{this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? "Thank You" : "Technical Error"} </Text>
+                                                </View>
 
-                                            <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={styles.inputLabelStyle}>{this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? "Thank You" : "Technical Error"} </Text>
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                                    <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
+                                                </View>
+                                                {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
+
+                                                <TouchableOpacity
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%" }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            showModal: false
+                                                        })
+                                                        this.state.readingResult !== "Payment Successful. It will be reflected in your account shortly." ? null : this.props.navigation.goBack()
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={Mainstyles.buttonLabelStyle}>{this.state.readingResult !== "Payment Successful. It will be reflected in your account shortly." ? "Go Back" : "Done"}</Text>
+                                                </TouchableOpacity>
+
+                                                {/* </View> */}
+
                                             </View>
-
-                                            <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                <Text style={styles.accountNumberText}>{this.state.readingResult}</Text>
-                                            </View>
-                                            {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
-
-                                            <TouchableOpacity
-                                                style={{ ...styles.buttonStyle, width: "100%" }}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        showModal: false
-                                                    })
-                                                    this.state.readingResult !== "Payment Successful. It will be reflected in your account shortly." ? null : this.props.navigation.goBack()
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.buttonLabelStyle}>{this.state.readingResult !== "Payment Successful. It will be reflected in your account shortly." ? "Go Back" : "Done"}</Text>
-                                            </TouchableOpacity>
-
-                                            {/* </View> */}
-
-                                        </View>
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
-                                /> :
-                                null
-                        }
-                    </KeyboardAwareScrollView>
-                </View>
-                {/* </InfoContainer> */}
-                {this.state.showToast ? (
-                    <Toast message={this.state.toastMessage} isImageShow={false} />
-                ) : null}
-                {/* </ImageBackground> */}
-            </SafeAreaView>
-
-
-
-
-
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+                        </KeyboardAwareScrollView>
+                    </InfoContainer>
+                    {/* </InfoContainer> */}
+                    {this.state.showToast ? (
+                        <Toast message={this.state.toastMessage} isImageShow={false} />
+                    ) : null}
+                    {/* </ImageBackground> */}
+                </SafeAreaView>
+            </LinearGradient>
 
         )
     }
@@ -1038,419 +1032,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(withApiConnector(Pay
         },
     }
 }))
-
-// <SafeAreaView style={{
-//     backgroundColor: '#FFFFFF',
-//     flex: 1,
-// }} >
-//     <Image
-//             style={{
-//                 width: "100%",
-//                 zIndex: 1,
-//                 backgroundColor: "transparent",
-//                 position: 'absolute'
-//             }}
-//             source={require("../../../assets/images/miniHeader.png")}
-//         />
-//                             <View style={styles.headerView}>
-//             <View style={{ flexDirection: "row", }}>
-//                 {/* <Text style={styles.pageHeader}>{t("pages.billsAndPayment")}</Text> */}
-//                 {
-//                     this.props.contracts.length ?
-//                         <>
-//                             <View style={styles.headerCol1}>
-//                                 <Text style={styles.pageHeader}>
-//                                     {this.props.contracts[this.state.activeItemIndex].CONTRACT_NO}
-//                                 </Text>
-//                             </View>
-//                             <View style={styles.headerCol2}>
-//                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('My Links', { screen: 'myAccounts' })}>
-//                                     <Image
-//                                         source={require("../../../assets/images/profile.png")}
-//                                     />
-//                                 </TouchableOpacity>
-//                             </View>
-//                         </>
-//                         :
-//                         <>
-//                         <View style={styles.headerCol1}>
-//                             <Text style={styles.pageHeader}>
-//                                 No Contracts
-//                             </Text>
-//                         </View>
-//                         <View style={styles.headerCol2}>
-//                         </View>
-//                     </>
-//                 }
-
-//             </View>
-//             <View style={styles.cardHeader}>
-//                 {/* <Image
-//                     source={require("../../../assets/images/HomeProfile.png")}
-//                     style={styles.HomeProfileImage} />
-//                 <View style={styles.profileLabelView}>
-//                     <Text style={styles.cardHeaderText}>{this.props.contracts.length ? this.props.contracts[0].PARTYNAME : ''}</Text>
-//                     <Text style={styles.accountNumberText}>{this.props.contracts.length ? this.props.contracts[0].USER_ID : ''}</Text>
-//                 </View> */}
-//             </View>
-//         </View>
-//     <KeyboardAvoidingView
-//         behavior={Platform.OS === 'ios' ? 'padding' : null}
-//         style={{
-//             flex: 1,
-//             backgroundColor: "rgba(255,255,255,0)",
-//             // alignItems: 'center'
-//         }}
-//         enabled
-//     >
-
-
-
-//         <ScrollView
-//             ref={(ref) => (this.scrollView = ref)}
-//             showsVerticalScrollIndicator={false}
-//             contentContainerStyle={styles.scrollView}>
-
-//             {/* <View style={styles.cardView} >
-//                 <View style={styles.paymentDueRow1}>
-//                     <Text style={styles.accountNumberText}>{t("home.paymentDueUpto")}</Text>
-//                 </View>
-//                 <View style={styles.paymentDueRow2}>
-//                     <View style={styles.amountView}>
-//                         <Text style={styles.amountText}>1234</Text>
-//                         <Text style={styles.aedText}>{t("home.aed")}</Text>
-//                     </View>
-//                     <TouchableOpacity style={styles.payBillView}>
-//                         <Text style={styles.payBillText}>{t("home.payBill")}</Text>
-//                         <Image
-//                             source={require('../../../assets/images/click.png')}
-//                             style={styles.clickImage}
-//                         />
-//                     </TouchableOpacity>
-//                 </View>
-//             </View> */}
-
-//             {/* <View style={styles.accountsLabelView}>
-//                 <Text style={styles.accountsLabel} >
-//                     {t("home.accounts")}
-//                 </Text>
-//             </View> */}
-
-
-
-//             {/* <View style={{ ...styles.cardView, ...{ backgroundColor: "rgba(223, 231, 240, 1)", minHeight: 0 } }} >
-//                 <View style={styles.paymentDueRow1}>
-//                 <Text style={styles.notCustomerText}>{t("payment.saveTime")}</Text>
-//                 </View>
-//                 <View style={styles.paymentDueRow1}>
-//                 <Text style={styles.accountNumberText}>{t("payment.enjoyPeaceOfMind")}</Text>
-//                 </View>
-//                 <TouchableOpacity style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }}>
-//                     <Text style={styles.payBillText}>{t("payment.setItUpNow")}</Text>
-//                     <Image
-//                     source={require('../../../assets/images/click.png')}
-//                     style={styles.clickImage}
-//                     />
-//                 </TouchableOpacity>
-//             </View> */}
-
-
-//             {this.props.contracts.length ?
-//                 (
-//                     <>
-//                         <HomeMainCard
-//                             contracts={this.props.contracts}
-//                             from="payment"
-//                             usageCharges={1234}
-//                             userName="User NameX"
-//                             accountNumber="YYYY XXXX YYYY XXXX"
-//                             currentIndex={this.carouselCurrentItem}
-//                             makePayment={this.makePayment}
-//                             loading={this.state.makePaymentClicked}
-//                         />
-//                         <View style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }} >
-//                             {/* <View style={styles.optionIconViewCol1}>
-//                     <Image
-//                     source={require('../../../assets/images/optionIcon.png')}
-//                     />
-//                 </View> */}
-//                             <View style={styles.optionIconViewCol1}>
-//                                 <View >
-//                                     <Text style={styles.billHistoryText}>{t("payment.billHistory")}</Text>
-//                                 </View>
-//                                 <TouchableOpacity style={{ ...styles.paymentDueRow2, ...{ marginTop: 5, paddingHorizontal: 0 } }}
-//                                     onPress={() => this.props.navigation.navigate("statement")}
-//                                 // onPress={this.handleEmail}
-//                                 >
-//                                     <Text style={styles.payBillText}>{t("payment.viewLast6MonthsBill")}</Text>
-//                                     <Image
-//                                         source={require('../../../assets/images/click.png')}
-//                                         style={styles.clickImage}
-//                                     />
-//                                 </TouchableOpacity>
-//                             </View>
-//                         </View>
-//                         <View style={styles.cardView} >
-//                             {/* <View style={styles.paymentDueRow1}>
-//                                 <Text style={styles.notCustomerText}>{t("home.meterReading")}</Text>
-//                             </View> */}
-//                             <View style={styles.paymentDueRow1}>
-//                                 <Text style={styles.billHistoryText}>{t("home.updateRadingYourself")}</Text>
-//                             </View>
-//                             <TouchableOpacity style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }}
-//                                 onPress={() => this.props.navigation.navigate("submitReading")}
-//                             >
-//                                 <Text style={styles.payBillText}>{t("home.submitMeterReading")}</Text>
-//                                 <Image
-//                                     source={require('../../../assets/images/click.png')}
-//                                     style={styles.clickImage}
-//                                 />
-//                             </TouchableOpacity>
-//                         </View>
-//                         <View style={{ ...styles.cardView, ...{ minHeight: "auto" } }} >
-//                             <View style={styles.paymentDueRow1}>
-//                                 <Text style={styles.billHistoryText}>{t("home.wantDisconnection")}</Text>
-//                             </View>
-//                             <TouchableOpacity style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }} onPress={() => this.props.navigation.navigate("disconnection")}>
-//                                 <Text style={styles.payBillText}>{t("home.requestDisConnection")}</Text>
-//                                 <Image
-//                                     source={require('../../../assets/images/click.png')}
-//                                     style={styles.clickImage}
-//                                 />
-//                             </TouchableOpacity>
-//                         </View>
-
-//                     </>
-//                 )
-//                 : null}
-//             <View style={{ ...styles.cardView, ...{ minHeight: "auto" } }} >
-//                 <View style={styles.paymentDueRow1}>
-//                     <Text style={styles.billHistoryText}>{t("home.wantConnection")}</Text>
-//                 </View>
-//                 <TouchableOpacity style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }} onPress={() => this.props.navigation.navigate("reqNewConn")}>
-//                     <Text style={styles.payBillText}>{t("home.requestNewConnection")}</Text>
-//                     <Image
-//                         source={require('../../../assets/images/click.png')}
-//                         style={styles.clickImage}
-//                     />
-//                 </TouchableOpacity>
-//             </View>
-
-
-//         </ScrollView>
-//         {this.state.showToast ? (
-//             <Toast message={this.state.toastMessage} isImageShow={false} />
-//         ) : null}
-//     </KeyboardAvoidingView>
-// </SafeAreaView>
-
-{/* {
-                                this.props.contracts.length ?
-                                    <>
-                                        <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                                        // onPress={() => { Linking.openURL(`tel:600565657`) }}
-                                        >
-                                            <View style={styles.optionIconViewCol1}>
-                                                <Image
-                                                    style={styles.icon}
-                                                    source={require('../../../assets/images/StatementHome1.png')}
-                                                />
-                                            </View>
-                                            <View style={styles.optionIconViewCol2}>
-                                                <Text style={styles.accountNumberText}>{t("support.emergency")}</Text>
-                                                <View style={styles.paymentDueRow1}>
-                                                    <Text style={styles.notCustomerText}>{t("pages.statement")}</Text>
-                                                </View>
-                                                <View style={styles.paymentDueRow1}>
-                                                    <Text style={styles.accountNumberText}>{t("payment.viewLast6MonthsBill")}</Text>
-                                                </View>
-                                                <View style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }}
-                                                >
-                                                    <Text style={styles.payBillText}>{t("home.checkNow")}</Text>
-                                                    <Image
-                                                        source={require('../../../assets/images/click.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </>
-                                    :
-                                    null} */}
-
-{/* <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                            // onPress={() => { Linking.openURL(`tel:600565657`) }}
-                            >
-                                <View style={styles.optionIconViewCol1}>
-                                    <Image
-                                        style={styles.icon}
-                                        source={require('../../../assets/images/SavedCardsHome1.png')}
-                                    />
-                                </View>
-                                <View style={styles.optionIconViewCol2}>
-                                    <Text style={styles.accountNumberText}>{t("support.emergency")}</Text>
-                                    <View style={styles.paymentDueRow1}>
-                                        <Text style={styles.notCustomerText}>{t("home.savedCards")}</Text>
-                                    </View>
-                                    <View style={styles.paymentDueRow1}>
-                                        <Text style={styles.accountNumberText}>{t("home.viewCrds")}</Text>
-                                    </View>
-                                    <View style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }}
-                                    >
-                                        <Text style={styles.payBillText}>{t("home.checkNow")}</Text>
-                                        <Image
-                                            source={require('../../../assets/images/click.png')}
-                                            style={styles.clickImage}
-                                        />
-                                    </View>
-                                </View>
-                            </TouchableOpacity> */}
-
-
-{/* <TouchableOpacity
-                        style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                        onPress={() => { this.props.navigation.navigate("HelpMain") }}
-                    >
-                        <View style={styles.optionIconViewCol1}>
-                            <Image
-                                style={styles.icon}
-                                source={require('../../../assets/images/helpArticles.png')}
-                            />
-                        </View>
-                        <View style={styles.optionIconViewCol2}>
-                            <Text style={styles.accountNumberText}>{t("support.helpArticles")}</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                        onPress={() => { Linking.openURL(`tel:600565657`) }}
-                    >
-                        <View style={styles.optionIconViewCol1}>
-                            <Image
-                                style={styles.icon}
-                                source={require('../../../assets/images/callUs.png')}
-                            />
-                        </View>
-                        <View style={styles.optionIconViewCol2}>
-                            <Text style={styles.accountNumberText}>{t("support.callUs")}</Text>
-                        </View>
-                    </TouchableOpacity> */}
-
-{/* <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }} >
-                        <View style={styles.optionIconViewCol1}>
-                            <Image
-                                source={require('../../../assets/images/chatWithUs.png')}
-                                style={styles.icon}
-                            />
-                        </View>
-                        <View style={styles.optionIconViewCol2}>
-                            <Text style={styles.accountNumberText}>{t("support.chatWithUs")}</Text>
-                        </View>
-                    </TouchableOpacity> */}
-
-{/* {
-                        this.props.contracts.length ?
-                            <>
-                                <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                                    onPress={() => this.props.navigation.navigate("raiseComplaint")}
-                                >
-                                    <View style={styles.optionIconViewCol1}>
-                                        <Image
-                                            source={require('../../../assets/images/complaint.png')}
-                                            style={styles.icon}
-                                        />
-                                    </View>
-                                    <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>Let Us Serve You</Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                                    onPress={() => this.props.navigation.navigate("feedback")}
-                                >
-                                    <View style={styles.optionIconViewCol1}>
-                                        <Image
-                                            source={require('../../../assets/images/feedback.png')}
-                                            style={styles.icon}
-                                        />
-                                    </View>
-                                    <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>{t("support.feedback")}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </>
-                            :
-                            null} */}
-
-{/* <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                        onPress={() => this.props.navigation.navigate("AboutUs")}
-                    >
-                        <View style={styles.optionIconViewCol1}>
-                            <Image
-                                source={require('../../../assets/images/aboutUs.png')}
-                                style={styles.icon}
-                            />
-                        </View>
-                        <View style={styles.optionIconViewCol2}>
-                            <Text style={styles.accountNumberText}>{t("support.aboutUs")}</Text>
-                        </View>
-                    </TouchableOpacity> */}
-
-
-{/* <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row', marginTop: 20 } }}
-                                        // onPress={() => { Linking.openURL(`tel:600565657`) }}
-                                        >
-                                            <View style={styles.optionIconViewCol1}>
-                                                <Image
-                                                    style={styles.icon}
-                                                    source={require('../../../assets/images/MakePaymentHome1.png')}
-                                                />
-                                            </View>
-                                            <View style={styles.optionIconViewCol2}>
-                                                <Text style={styles.accountNumberText}>{t("support.emergency")}</Text>
-                                                <View style={styles.paymentDueRow1}>
-                                                    <Text style={styles.notCustomerText}>{t("home.makePayment")}</Text>
-                                                </View>
-                                                <View style={styles.paymentDueRow1}>
-                                                    <Text style={styles.accountNumberText}>{t("home.payYourself")}</Text>
-                                                </View>
-                                                <View style={{ ...styles.paymentDueRow2, ...{ marginTop: 5 } }}
-                                                >
-                                                    <Text style={styles.payBillText}>{t("home.payNow")}</Text>
-                                                    <Image
-                                                        source={require('../../../assets/images/click.png')}
-                                                        style={styles.clickImage}
-                                                    />
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity> */}
-{/* <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                                    onPress={() => this.props.navigation.navigate("raiseComplaint")}
-                                >
-                                    <View style={styles.optionIconViewCol1}>
-                                        <Image
-                                            source={require('../../../assets/images/complaint.png')}
-                                            style={styles.icon}
-                                        />
-                                    </View>
-                                    <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>Let Us Serve You</Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row' } }}
-                                    onPress={() => this.props.navigation.navigate("feedback")}
-                                >
-                                    <View style={styles.optionIconViewCol1}>
-                                        <Image
-                                            source={require('../../../assets/images/feedback.png')}
-                                            style={styles.icon}
-                                        />
-                                    </View>
-                                    <View style={styles.optionIconViewCol2}>
-                                        <Text style={styles.accountNumberText}>{t("support.feedback")}</Text>
-                                    </View>
-                                </TouchableOpacity> */}
-
-
-

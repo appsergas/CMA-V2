@@ -16,6 +16,9 @@ import RaiseComplaint from '../screens/RaiseComplaint/RaiseComplaint'
 import HelpAnswer from '../screens/HelpAnswer/HelpAnswer'
 import HelpMain from '../screens/HelpMain/HelpMain'
 
+import OcrTest from '../screens/OcrTest/OcrTest'
+
+
 const Stack = createStackNavigator()
 const MyLinksNavigationStack = () => {
   return (
@@ -186,7 +189,23 @@ const MyLinksNavigationStack = () => {
         //   },
         // })}
       />
+
+
+<Stack.Screen
+        name="OcrTest"
+        component={OcrTest}
+        options={{ title: '' }}
+        // listeners={({ navigation, route }) => ({
+        //   focus: (e) => {
+        //     BackHandler.addEventListener('hardwareBackPress', () => {
+        //       navigation.goBack()
+        //       return true;
+        //     });
+        //   },
+        // })}
+      />
     </Stack.Navigator>
+    
   )
 }
 

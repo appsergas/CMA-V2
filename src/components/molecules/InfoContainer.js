@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform, Dimensions } from 'react-native';
 
 import {
     Image,
@@ -10,7 +11,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../../utils/Colors/Colors';
-import Dimensions from '../../utils/Dimensions';
+// import Dimensions from '../../utils/Dimensions';
 
 
 const InfoContainer = (props) => {
@@ -34,10 +35,13 @@ const InfoContainer = (props) => {
     )
 }
 
+const { height } = Dimensions.get('window');
+const modalMinHeight = Platform.isPad ? Dimensions.get('screen').height * 0.74 : height * 0.84;
+
 const styles = StyleSheet.create({
     modalView: {
         // backgroundColor: Colors.Blue1,
-        minHeight: Dimensions.HP_74,
+        // minHeight: modalMinHeight,
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
         width: '100%',

@@ -65,25 +65,26 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   cardHeader: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
     alignItems: "center",
+    justifyContent: "center",
     height: 35,
     marginVertical: 25
   },
   cardHeaderText: {
     fontFamily: "Tajawal-Bold",
-    fontSize: 20,
-    color: "#4A5E9C",
+    fontSize: 24,
+    fontWeight:"500",
+    color: "#102C4E",
   },
   inputGroupStyle: {
     paddingHorizontal: 15,
     // marginBottom: 10
   },
   inputLabelStyle: {
-    color: "#8E9093",
+    color: "#102C4EB3",
     fontFamily: "Tajawal-Medium",
-    fontSize: 16,
-    fontWeight: "600"
+    fontSize: 18,
   },
   resendOtpViewStyle: {
     alignItems: "center",
@@ -97,33 +98,74 @@ const styles = StyleSheet.create({
   },
   buttonView: {
     paddingHorizontal: 15,
-    marginVertical: 25
+    // marginVertical: 15
+    marginTop: 15,
   },
   buttonStyle: {
+    backgroundColor: '#022D51',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: "center",
     // backgroundColor: "rgb(79, 194, 212)",
     borderColor: "rgba(110, 149, 213, 0.2)",
     borderStyle: "solid",
     borderWidth: 1,
-    borderRadius: 4,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "center",
     padding: 0,
     alignSelf: "flex-end",
     width: "100%",
-    height: 40,
     shadowColor: 'rgba(0,0,0, .4)',
     shadowOffset: { height: 2, width: 2 }, // IOS
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
-    backgroundColor: '#102D4F',
     elevation: 5,  // Android
+    
+
   },
   buttonLabelStyle: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Tajawal-Medium"
+    fontSize: 18,
+    fontFamily: "Tajawal-Medium",
+    fontWeight:"bold",
+    
   },
+
+  buttonViewR: {
+    paddingHorizontal: 15,
+    // marginVertical: 15
+    marginTop: 15,
+  },
+  buttonStyleR: {
+    // backgroundColor: '#022D51',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: "center",
+    // backgroundColor: "rgb(79, 194, 212)",
+    borderColor: "#0057A2",
+    borderStyle: "solid",
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: 0,
+    alignSelf: "flex-end",
+    width: "100%",
+    // shadowColor: 'rgba(0,0,0, .4)',
+    // shadowOffset: { height: 2, width: 2 }, // IOS
+    // shadowOpacity: 1, // IOS
+    // shadowRadius: 1, //IOS
+    elevation: 5,  // Android
+    
+
+  },
+  buttonLabelStyleR: {
+    color: "#102C4E",
+    fontSize: 16,
+    fontFamily: "Tajawal-Medium",
+    fontWeight:"bold",
+    
+  },
+
   registerButtonViewStyle: {
     width: "95%",
   },

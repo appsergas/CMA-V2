@@ -29,8 +29,15 @@ import { TermsAndConditions } from './TermsAndConditions';
 import { UAEPass } from 'react-native-uaepass';
 import { UAEPassConfig } from '../../utils/permissions';
 import { encode } from 'base-64';
-import { login, logout, register, getUserDetails, getAccessToken, postLoginDeviceLog, CheckUserbyuuid ,CheckUAEPASS} from '../../utils/uaePassService';
+import { login, logout, register, getUserDetails, getAccessToken, postLoginDeviceLog, CheckUserbyuuid, CheckUAEPASS } from '../../utils/uaePassService';
 import DeviceInfo from 'react-native-device-info';
+
+import AppTextInput from '../../controls/AppTextInput';
+import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { LogoIcon, OTPIcon} from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+
+
 var qs = require('qs');
 
 
@@ -101,12 +108,12 @@ class Login extends Component {
   async UAEPASSVisible() {
     try {
       const data = await CheckUAEPASS();
-      console.log('A',data)
+      console.log('A', data)
       const platformPayType = Platform.OS === 'ios' ? 'UAEPASS_IOS' : 'UAEPASS_ANDROID';
-      const UAEPASSVisible = data.some(paymentType => 
+      const UAEPASSVisible = data.some(paymentType =>
         paymentType.PayType === platformPayType && paymentType.Is_Active
       );
-  
+
       this.setState({
         UAEPASSSupported: UAEPASSVisible
       });
@@ -115,7 +122,7 @@ class Login extends Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    const { getAllContractsResult, getAllContractsWithoutOtpResult, registerResult, loginResult, checkTermsResult, updateTermsResult,getUserDetailsResult } = nextProps
+    const { getAllContractsResult, getAllContractsWithoutOtpResult, registerResult, loginResult, checkTermsResult, updateTermsResult, getUserDetailsResult } = nextProps
 
     if (this.state.apiCallFlags.getAllContractsCalled) {
       this.setState({
@@ -130,7 +137,7 @@ class Login extends Component {
             ConfirmPassword: "Test@123"
           }
 
-         
+
           if (cotractsResult.content.MSG == "CONTRACTS SAVED AGAINST MOBILE USER") {
 
             this.setState({
@@ -143,7 +150,7 @@ class Login extends Component {
             }, () => this.getAuthenticationToken(this.state.mobileNumber))
 
           }
-          
+
           await AsyncStorage.setItem(
             'contract_list',
             JSON.stringify(cotractsResult.content.DETAIL)
@@ -198,7 +205,7 @@ class Login extends Component {
               await postLoginDeviceLog(this.state.LoginDeviceLog);
               await AsyncStorage.setItem("sergas_customer_login_flag", "true");
               this.setState({
-                mobileNumber:''
+                mobileNumber: ''
               })
               //console.log('B',this.state.LoginDeviceLog)
               console.log('A')
@@ -217,7 +224,7 @@ class Login extends Component {
         }
       });
     }
-    
+
     if (this.state.apiCallFlags.registerCalled) {
       if (registerResult && registerResult.content == "SUCESS") {
         this.setState({
@@ -249,9 +256,9 @@ class Login extends Component {
               'sergas_customer_mobile_number',
               "971" + this.state.mobileNumber
             );
-            
-            if (this.state.mobileNumber == "502795358" || this.state.mobileNumber == "506327735") {
-              
+
+            if (this.state.mobileNumber == "507867747" || this.state.mobileNumber == "506327735") {
+
               await AsyncStorage.setItem("sergas_customer_login_flag", "true");
               if (this.state.scanEid) {
                 this.props.navigation.navigate("OcrTest", { fromOtp: true });
@@ -263,7 +270,7 @@ class Login extends Component {
             } else {
               this.props.navigation.navigate("Otp", { mobileNumber: "971" + this.state.mobileNumber, scanEid: this.state.scanEid });
             }
-    
+
           } else {
             this.setState({ showTermsModal: true });
           }
@@ -278,20 +285,20 @@ class Login extends Component {
         }
       });
     }
-    
+
 
     if (this.state.apiCallFlags.updateTermsCalled) {
       this.setState({
         apiCallFlags: { ...this.state.apiCallFlags, ...{ updateTermsCalled: false } }
       }, async () => {
         if (updateTermsResult && updateTermsResult.content && updateTermsResult.content.STATUS == "SUCCESS") {
-    
+
           await AsyncStorage.setItem(
             'sergas_customer_mobile_number',
             "971" + this.state.mobileNumber
           );
-    
-          if (this.state.mobileNumber == "502795358" || this.state.mobileNumber == "506327735") {
+
+          if (this.state.mobileNumber == "507867747" || this.state.mobileNumber == "506327735") {
             await AsyncStorage.setItem("sergas_customer_login_flag", "true");
             if (this.state.scanEid) {
               this.props.navigation.navigate("OcrTest", { fromOtp: true });
@@ -303,7 +310,7 @@ class Login extends Component {
           } else {
             this.props.navigation.navigate("Otp", { mobileNumber: "971" + this.state.mobileNumber, scanEid: this.state.scanEid });
           }
-    
+
         } else {
           this.setState({
             showToast: true,
@@ -315,7 +322,7 @@ class Login extends Component {
         }
       });
     }
-    
+
 
     if (this.state.apiCallFlags.loginCalled) {
 
@@ -333,9 +340,9 @@ class Login extends Component {
     this.setState({
       getUserDetailsCalled: true,
       mobileNumber: await AsyncStorage.getItem("sergas_customer_mobile_number")
-  }, () => {
+    }, () => {
       this.props.getUserDetails({ "mobile": this.state.uaepassmobileNumber })
-  })
+    })
   }
 
   handleLocalizationChange = () => {
@@ -523,8 +530,8 @@ class Login extends Component {
   render() {
     const { getAllContractsCalled, checkTermsCalled, registerCalled, updateTermsCalled, loginCalled } = this.state.apiCallFlags
     // return (
-    //   <WebView source={{uri: "https://stg-id.uaepass.ae/idshub/authorize?acr_values=urn%3Adigitalid%3Aauthentication%3Aflow%3Amobileondevice&client_id=sandbox_stage&redirect_uri=https%3A%2F%2Fstg-selfcare.uaepass.ae&response_type=code&scope=urn%3Auae%3Adigitalid%3Aprofile%3Ageneral&state=ShNP22hyl1jUU2RGjTRkpg%3D%3D"}} 
-    //   // <WebView source={{uri: "uaepassstg://digitalid-users-ids/signatures/HPR17nOsAZissZm02WIm?successurl=sergas_customer:///resume_authn?url=https%3A%2F%2Fstg-ids.uaepass.ae%2Fauthenticationendpoint%2FmobileWaiting.jsp%3Fstatus%3Dsuccess%26sessionDataKey%3D75f9ca05-1459-465e-a623-18075fb0af02%26relyingParty%3Dsandbox_stage&failureurl=sergas_customer:///resume_authn?url=https%3A%2F%2Fstg-ids.uaepass.ae%2Fauthenticationendpoint%2FmobileWaiting.jsp%3Fstatus%3Dfailure%26sessionDataKey%3D75f9ca05-1459-465e-a623-18075fb0af02%26relyingParty%3Dsandbox_stage"}} 
+    //   <WebView source={{uri: "https://stg-id.uaepass.ae/idshub/authorize?acr_values=urn%3Adigitalid%3Aauthentication%3Aflow%3Amobileondevice&client_id=sandbox_stage&redirect_uri=https%3A%2F%2Fstg-selfcare.uaepass.ae&response_type=code&scope=urn%3Auae%3Adigitalid%3Aprofile%3Ageneral&state=ShNP22hyl1jUU2RGjTRkpg%3D%3D"}}
+    //   // <WebView source={{uri: "uaepassstg://digitalid-users-ids/signatures/HPR17nOsAZissZm02WIm?successurl=sergas_customer:///resume_authn?url=https%3A%2F%2Fstg-ids.uaepass.ae%2Fauthenticationendpoint%2FmobileWaiting.jsp%3Fstatus%3Dsuccess%26sessionDataKey%3D75f9ca05-1459-465e-a623-18075fb0af02%26relyingParty%3Dsandbox_stage&failureurl=sergas_customer:///resume_authn?url=https%3A%2F%2Fstg-ids.uaepass.ae%2Fauthenticationendpoint%2FmobileWaiting.jsp%3Fstatus%3Dfailure%26sessionDataKey%3D75f9ca05-1459-465e-a623-18075fb0af02%26relyingParty%3Dsandbox_stage"}}
     //   onMessage={msg => {}}
     //   onNavigationStateChange={test => {
     //     // Linking.openURL(test.url)
@@ -541,160 +548,178 @@ class Login extends Component {
     //   style={{flex: 1}} />
     // )
     return (
-      <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-        {/* <ButtonLogoView
-                hideBackButton={true}
-                    onPress={() => {
-                        this.props.navigation.goBack()
-                    }}
-                    yourRequests={true}
-                    navigation={this.props.navigation}
-                ></ButtonLogoView> */}
-        <ImageBackground source={Images.TransparentBackground} style={{ height: Dimensions.HP_100, width: Dimensions.WP_100 }} resizeMode={'cover'}>
-          {/* <CustomText style={{ color: Colors.DarkBlue, fontFamily: Fonts.Medium, marginTop: 20,marginRight: 30, alignSelf: 'flex-end' }} onPress={() => {
-                                this.props.navigation.navigate("SpotlightList")
-                            }}>Go to your requests</CustomText> */}
-
-          <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Dimensions.HP_90, }}>
-            <KeyboardAwareScrollView
-              behavior={Platform.OS === 'ios' ? 'padding' : null}
-              // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-              style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
-              enabled
-            >
-              <ScrollView
-                ref={(ref) => (this.scrollView = ref)}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollView}
-              >
-                <View style={styles.imageView}>
-                  <Image
-                    source={require("../../../assets/images/sergas_logo.png")}
-                    style={styles.goodieeLogoImage} />
-                </View>
-                <View style={styles.cardView} >
-                  <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
-                    <Text style={styles.cardHeaderText}>{t("login.loginUsing")}</Text>
-                  </View>
-                  <View style={{ ...styles.cardHeader, marginTop: 0 }}>
-                    <Text style={styles.cardHeaderText}>{t("login.loginToYourAccount")}</Text>
-                  </View>
-                  <View style={styles.inputGroupStyle}>
-                    {/* <View>
-                      <Text style={styles.inputLabelStyle}>{t("login.mobile/account")}</Text>
-                    </View> */}
-                    {/* <View> */}
-                    <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderColor: 'white'
-          }}
-        >
-          <Image
-            source={require("../../../assets/images/ae.png")} 
-            style={{ width: 30, height: 25, marginRight: 0,marginBottom: 15 }}
-          />
-          <Text
-            style={{
-              color: "#828E92",
-              fontFamily: "Tajawal-Regular",
-              fontSize: 17,fontWeight:'bold',
-              marginRight: 5,
-              marginBottom: 12,
-            }}
+      <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+      <SafeAreaView style={{ height: "100%", flex: 1 }} >
+          <KeyboardAwareScrollView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+            style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
+            enabled
           >
-            +971
-          </Text>
-          <View style={{ flex: 1 }}>
-            <TextInput
-              style={{ width: "100%", fontSize: 18 }}
-              placeholder={"5XX XXX XXX"}
-              keyboardType={"numeric"}
-              value={this.state.mobileNumber}
-              onChangeText={this.handleMobileNumberField}
-            />
-          </View>
-        </View>
+            <ScrollView
+              ref={(ref) => (this.scrollView = ref)}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollView}
+            >
+              <View style={styles.imageView}>
+                {/* <Image
+                  source={require("../../../assets/images/sergas_logo.png")}
+                  style={styles.goodieeLogoImage} /> */}
+                  <LogoIcon />
+              </View>
+              <View style={styles.cardView} >
+                <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
+                  {/* <Text style={styles.cardHeaderText}>{t("login.loginUsing")}</Text> */}
+                  <Text style={styles.cardHeaderText}>Welcome</Text>
+                </View>
+                <View style={{ ...styles.cardHeader, marginTop: 0 }}>
+                  <Text style={styles.cardHeaderText}>{t("login.loginToYourAccount")}</Text>
+                </View>
+
+                {/* <View style={styles.inputGroupStyle}>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderColor: 'white'
+                    }}
+                  >
+                    <Image
+                      source={require("../../../assets/images/ae.png")}
+                      style={{ width: 30, height: 25, marginRight: 0, marginBottom: 15 }}
+                    />
+                    <Text
+                      style={{
+                        color: "#828E92",
+                        fontFamily: "Tajawal-Regular",
+                        fontSize: 17, fontWeight: 'bold',
+                        marginRight: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      +971
+                    </Text>
+                    <View style={{ flex: 1 }}>
+                      <TextInput
+                        style={{
+                          width: "100%",
+                          fontSize: 18,
+                          color: 'white',
+                          paddingBottom: Platform.OS === 'ios' ? 10 : 4,
+                        }}
+                        placeholder={"5XX XXX XXX"}
+                        placeholderTextColor="#828E92"
+                        keyboardType={"numeric"}
+                        value={this.state.mobileNumber}
+                        onChangeText={this.handleMobileNumberField}
+                      />
+                    </View>
                   </View>
-                  <View style={styles.buttonView}>
+                </View> */}
+
+
+                <View style={styles.inputGroupStyle}>
+                  <View style={styles.inputRow}>
+                    <Image
+                      source={require("../../../assets/images/ae.png")}
+                      style={styles.flagIcon}
+                    />
+                    
+                    <Text style={styles.countryCode}>+971</Text>
+                    {/* <TextInput
+                      style={styles.textInput}
+                      placeholder={"50 1234567"}
+                      placeholderTextColor="#828E92"
+                      keyboardType={"numeric"}
+                      value={this.state.mobileNumber}
+                      onChangeText={this.handleMobileNumberField}
+                      underlineColorAndroid="transparent" // ⬅️ This line is critical on Android
+                    /> */}
+
+                    <AppTextInput
+                      Placeholder="50 1234567"
+                      Value={this.state.mobileNumber}
+                      OnChange={this.handleMobileNumberField}
+                      Type="numeric"
+                      Editable={true}
+                      Style={{
+                        // backgroundColor: 'rgba(255,255,255,0.06)', // ✅ to match screenshot
+                        color: '#FFFFFF',
+                        fontSize: 15,
+                        fontWeight: "700",
+                        marginTop:4
+                        // paddingVertical: Platform.OS === 'ios' ? 10 : 10,
+                      }}
+                    />
+
+
+
+                  </View>
+                </View>
+
+
+                <View style={styles.buttonView}>
+                  <TouchableOpacity
+                    disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
+                    onPress={this.handleSendOtp}
+                    style={styles.buttonStyle}
+                  >
+                    {
+                      (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
+                        <ActivityIndicator size='small' color='white' /> :
+                        <Text
+                          style={styles.buttonLabelStyle}>{t("login.sendOtp")}</Text>
+                    }
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.registerButtonStyle}>
+                <View style={styles.registerHereView}>
+                  <Text style={styles.inlineRegisterText}>
+                    Don’t have an account? <Text style={styles.registerLinkText}>REGISTER</Text>
+                  </Text>
+                </View>
+              </View>
+
+              {
+                this.state.UAEPASSSupported ?
+                  <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+
+                    {/* <Text style={styles.uaepassorText}>OR</Text> */}
+                    <View style={styles.dividerContainer}>
+                      <View style={styles.dividerLine} />
+                      <Text style={styles.dividerText}>Or Login with</Text>
+                      <View style={styles.dividerLine} />
+                    </View>
                     <TouchableOpacity
                       disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
-                      onPress={this.handleSendOtp}
-                      style={styles.buttonStyle}
+                      onPress={this.uaepasslogin}
                     >
                       {
                         (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
                           <ActivityIndicator size='small' color='white' /> :
-                          <Text
-                            style={styles.buttonLabelStyle}>{t("login.sendOtp")}</Text>
+
+                          <View style={styles.imageView}>
+                            <Image
+                              source={require('../../../assets/images/UAEPASS_Login_Btn.png')}
+                              style={styles.buttonuaepassStyle} />
+                          </View>
                       }
                     </TouchableOpacity>
+
+
+
                   </View>
-                </View>
-                <View style={styles.registerButtonStyle}>
-                  {/* <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("RegisterUser")}
-                  style={styles.registerButtonStyle}
-                > */}
-
-                  <View style={styles.registerHereView}>
-                    <Text
-                      style={styles.notCustomerText}>{t("login.notCustomer")}</Text>
-                  </View>
-                  <View style={styles.notCustomerView}>
-                    <TouchableOpacity
-                      style={styles.payBillView}
-                      onPress={() => this.props.navigation.navigate("RegisterUser")}
-                    // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
-                    >
-                      <Text style={styles.registerHereText}>
-                        {t("login.registerHere")}!
-                      </Text>
-                      {/* <Image
-                    source={require('../../../assets/images/click.png')}
-                    style={styles.clickImage}
-                  /> */}
-                    </TouchableOpacity>
-                  </View>
-
-
-                  {/* </TouchableOpacity> */}
-                </View>
-
-                {
-                  this.state.UAEPASSSupported ?
-                    <View style={{
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-
-                      <Text style={styles.uaepassorText}>OR</Text>
-                      <TouchableOpacity
-                        disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
-                        onPress={this.uaepasslogin}
-                      >
-                        {
-                          (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
-                            <ActivityIndicator size='small' color='white' /> :
-
-                            <View style={styles.imageView}>
-                              <Image
-                                source={require('../../../assets/images/UAEPASS_Login_Btn.png')}
-                                style={styles.buttonuaepassStyle} />
-                            </View>
-                        }
-                      </TouchableOpacity>
-
-
-
-                    </View>
-                    : null
-                }
-              </ScrollView>
-              {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis convallis convallis tellus id interdum velit. Tellus rutrum tellus pellentesQUESTION eu. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl. Laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean. Duis ultricies lacus sed turpis tincidunt. Sed euismod nisi porta lorem mollis aliquam ut porttitor. Et malesuada fames ac turpis egestas sed tempus. Aenean pharetra magna ac placerat vestibulum lectus. Malesuada fames ac turpis egestas. Senectus et netus et malesuada fames. Eu non diam phasellus vestibulum. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada. Rhoncus urna neQUESTION viverra justo nec ultrices. Luctus venenatis lectus magna fringilla urna porttitor rhoncus dolor purus. */}
-              {/* <Image
+                  : null
+              }
+            </ScrollView>
+            {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis convallis convallis tellus id interdum velit. Tellus rutrum tellus pellentesQUESTION eu. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl. Laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean. Duis ultricies lacus sed turpis tincidunt. Sed euismod nisi porta lorem mollis aliquam ut porttitor. Et malesuada fames ac turpis egestas sed tempus. Aenean pharetra magna ac placerat vestibulum lectus. Malesuada fames ac turpis egestas. Senectus et netus et malesuada fames. Eu non diam phasellus vestibulum. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada. Rhoncus urna neQUESTION viverra justo nec ultrices. Luctus venenatis lectus magna fringilla urna porttitor rhoncus dolor purus. */}
+            {/* <Image
                 source={require('../../../assets/images/footerBg.png')}
                 style={{
                   height: 192.35,
@@ -705,60 +730,62 @@ class Login extends Component {
                   zIndex: -1
                 }}
               /> */}
-              {this.state.showToast ? (
-                <Toast message={this.state.toastMessage} isImageShow={false} />
-              ) : null}
-              {this.state.showTermsModal ? (
-                <Modal
-                  onClose={() => this.setState({ showTermsModal: false })}
-                  visible={this.state.showTermsModal}
-                  button1={true}
-                  button2={true}
-                  onButton1={() => {
-                    this.setState({ showTermsModal: false })
-                  }}
-                  onButton2={() => {
-                    this.setState({ showTermsModal: false })
-                    this.setState({
-                      apiCallFlags: { ...this.state.apiCallFlags, ...{ updateTermsCalled: true } }
-                    }, () => {
-                      this.props.updateTerms({ "MobileNumber": "971" + this.state.mobileNumber })
-                    })
-                  }}
-                  data={{
-                    title: "Accept terms & conditions",
-                    // message: "Test",
-                    message: TermsAndConditions,
-                    button1Text: "Close",
-                    button2Text: "Accept",
-                    uri: this.state.helpImageUrl
-                  }}
-                  titleText={{ alignItems: 'center' }}
-                />
-              ) : null}
-              {this.state.showUAEPASSCancelModal ? (
-                <Modal
-                  onClose={() => this.setState({ showUAEPASSCancelModal: false })}
-                  close={false}
-                  visible={this.state.showUAEPASSCancelModal}
-                  button2={true}
-                  onButton2={() => {
-                    this.setState({ showUAEPASSCancelModal: false })
-                  }}
+            {this.state.showToast ? (
+              <Toast message={this.state.toastMessage} isImageShow={false} />
+            ) : null}
+            {this.state.showTermsModal ? (
+              <Modal
+                onClose={() => this.setState({ showTermsModal: false })}
+                visible={this.state.showTermsModal}
+                button1={true}
+                button2={true}
+                onButton1={() => {
+                  this.setState({ showTermsModal: false })
+                }}
+                onButton2={() => {
+                  this.setState({ showTermsModal: false })
+                  this.setState({
+                    apiCallFlags: { ...this.state.apiCallFlags, ...{ updateTermsCalled: true } }
+                  }, () => {
+                    this.props.updateTerms({ "MobileNumber": "971" + this.state.mobileNumber })
+                  })
+                }}
+                data={{
+                  title: "Accept terms & conditions",
+                  // message: "Test",
+                  message: TermsAndConditions,
+                  button1Text: "Close",
+                  button2Text: "Accept",
+                  uri: this.state.helpImageUrl
+                }}
+                titleText={{ alignItems: 'center' }}
+              />
+            ) : null}
+            {this.state.showUAEPASSCancelModal ? (
+              <Modal
+                onClose={() => this.setState({ showUAEPASSCancelModal: false })}
+                close={false}
+                visible={this.state.showUAEPASSCancelModal}
+                button2={true}
+                onButton2={() => {
+                  this.setState({ showUAEPASSCancelModal: false })
+                }}
 
-                  data={{
-                    
-                    message: 'User cancelled the login',
-                    button2Text: "Ok",
-                    uri: this.state.helpImageUrl,
-                  }}
-                  titleText={{ alignItems: 'center' }}
-                />
-              ) : null}
-            </KeyboardAwareScrollView>
-          </InfoContainer>
-        </ImageBackground>
-      </SafeAreaView>
+                data={{
+
+                  message: 'User cancelled the login',
+                  button2Text: "Ok",
+                  uri: this.state.helpImageUrl,
+                }}
+                titleText={{ alignItems: 'center' }}
+              />
+            ) : null}
+          </KeyboardAwareScrollView>
+          {/* </InfoContainer> */}
+        {/* </ImageBackground> */}
+        </SafeAreaView>
+        </LinearGradient>
+      
     )
   }
 
@@ -808,7 +835,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withApiConnector(Log
       moduleName: 'api',
       url: 'getMobileUserDetails',
       authenticate: true,
-  },
+    },
     checkTerms: {
       type: 'get',
       moduleName: 'api',// 'goodiee-cataloguecore',

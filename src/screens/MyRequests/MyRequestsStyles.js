@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   scrollView: {
+
     // flex: 1,
     // display: "flex",
     flexGrow: 1,
@@ -62,18 +63,7 @@ const styles = StyleSheet.create({
     // height: "100%",
     // overflow: "scroll"
   },
-  accountsLabelView: {
-    width: "95%",
-    marginBottom: 10
-  },
-  accountsLabel: {
-    fontFamily: "Tajawal-Bold",
-    fontSize: 16,
-    color: "#102D4F",
-    // marginHorizontal: 15,
-    marginBottom: 10,
-    marginTop: 30
-},
+
   userNameLabel: {
     fontFamily: "Tajawal-Regular",
     fontSize: 24,
@@ -294,7 +284,33 @@ payBillText: {
     resizeMode: 'center',
     marginLeft: 6
 
-  }
+  },
+
+  RequestLabelHead: {
+    fontFamily: "Tajawal-Bold",
+    fontSize: 28,
+    color: "#102D4F",
+    textAlign: "center", 
+    alignSelf: "center",
+    flexWrap: "wrap",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    marginTop: 30,
+    fontWeight:"bold"
+},
+RequestLabel: {
+  fontFamily: "Tajawal-Bold",
+  fontSize: 16,
+  color: "#102D4F",
+  // marginHorizontal: 15,
+  marginBottom: 10,
+},
+RequestButton: {
+  color: "#FFFFFF",
+  fontSize: 14,
+  fontFamily: "Tajawal-Medium",
+  fontWeight:"600"
+},
 })
 
 export default styles

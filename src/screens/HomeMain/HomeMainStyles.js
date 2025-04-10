@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
   },
   accountsLabelView: {
       backgroundColor: "#FF8D00",
-      paddingVertical:6,
-      paddingHorizontal:16,
-      borderRadius:10,
+      paddingVertical:2,
+      paddingHorizontal:12,
+      borderRadius:8,
       alignSelf:"flex-start",
       marginBottom:10,
   },
