@@ -3,37 +3,45 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   FlatList,
-  Animated,
   Dimensions,
+  ImageBackground,
+  Animated,
   Platform,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import PickerControl from '../../controls/Picker';
+import { LogooIcon, ArrowIcon } from '../../../assets/icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const walkthroughData = [
   {
-    title: 'Manage your account easily with SERGAS!',
+    title: '',
+    subtitle: 'Manage \nyour account \neasily with SERGAS!',
+    background: require('../../../assets/images/wt1.png'),
+    showLogo: true,
   },
   {
-    title: 'Pay Your Gas Bills',
-    subtitle: 'Effortlessly manage and pay your gas bills anytime, anywhere.',
+    title: 'Pay Your \nGas Bills',
+    subtitle: 'Effortlessly manage\nand pay your gas bills\nanytime, anywhere.',
+    background: require('../../../assets/images/wt2.png'),
   },
   {
-    title: 'Monitor Your Gas Usage',
-    subtitle: 'Stay in control with real-time tracking of your gas consumption.',
+    title: 'Monitor Your\nGas Usage',
+    subtitle: 'Stay in control with\nreal-time tracking \nof your gas consumption.',
+    background: require('../../../assets/images/wt3.png'),
   },
   {
     title: 'Manage Your Gas Service',
-    subtitle: 'Easily request connection or disconnection.',
-    showGetStarted: true,
+    subtitle: 'Easily request connection \nor disconnection.',
+    background: require('../../../assets/images/wt4.png'),
   },
   {
-    title: 'Select Your Country',
+    title: 'Select Your\nCountry',
+    subtitle: '',
     showCountrySelector: true,
+    background: require('../../../assets/images/wt5.png'),
   },
 ];
 
@@ -42,8 +50,8 @@ export default class Walkthrough extends Component {
     super(props);
     this.state = {
       scrollX: new Animated.Value(0),
-      selectedCountry: 'UAE',
       currentIndex: 0,
+      selectedCountry: '',
     };
 
     this.flatListRef = React.createRef();
@@ -56,85 +64,88 @@ export default class Walkthrough extends Component {
     }
   };
 
+  goToNext = () => {
+    const { currentIndex } = this.state;
+    if (currentIndex < walkthroughData.length - 1) {
+      this.flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
+    }
+  };
+
+  skipToEnd = () => {
+    this.flatListRef.current.scrollToIndex({
+      index: walkthroughData.length - 1,
+    });
+  };
+
   renderItem = ({ item, index }) => {
     const { selectedCountry } = this.state;
 
-    if (item.showCountrySelector) {
-      return (
-        <View style={styles.slide}>
-          <Text style={styles.title}>{item.title}</Text>
-          <View style={styles.pickerWrapper}>
-            <Picker
-              selectedValue={selectedCountry}
-              onValueChange={(value) => {
-                this.setState({ selectedCountry: value });
-                this.props.navigation.navigate('Login'); // ✅ Your requested style
-              }}
-              style={styles.picker}
-            >
-              <Picker.Item label="🇦🇪 UAE" value="UAE" />
-              <Picker.Item label="🇸🇦 Saudi Arabia" value="Saudi Arabia" />
-              <Picker.Item label="🇴🇲 Oman" value="Oman" />
-            </Picker>
-          </View>
-        </View>
-      );
-    }
+    const countryItems = [
+      { id: 1, label: '🇦🇪 UAE', value: 'UAE' },
+      { id: 2, label: '🇸🇦 Saudi Arabia', value: 'Saudi Arabia' },
+      { id: 3, label: '🇴🇲 Oman', value: 'Oman' },
+    ];
 
     return (
-      <View style={styles.slide}>
-        <Image
-          source={require('../../../assets/images/sergas_logo.png')}
-          style={styles.logo}
-        />
-        <Text style={styles.title}>{item.title}</Text>
-        {item.subtitle && <Text style={styles.subtitle}>{item.subtitle}</Text>}
+      <ImageBackground source={item.background} resizeMode="cover" style={styles.background}>
+        <View style={styles.overlay}>
+          {item.showLogo && (
+            <View style={styles.logo}>
+              <LogooIcon />
+            </View>
+          )}
 
-        {item.showGetStarted ? (
-          <TouchableOpacity
-            style={styles.getStartedBtn}
-            onPress={() =>
-              this.flatListRef.current.scrollToIndex({
-                index: walkthroughData.length - 1,
-              })
-            }
-          >
-            <Text style={styles.getStartedText}>Get Started</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.navRow}>
-            <TouchableOpacity
-              onPress={() =>
-                this.flatListRef.current.scrollToIndex({
-                  index: walkthroughData.length - 1,
-                })
-              }
-            >
-              <Text style={styles.skip}>Skip</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.arrowBtn}
-              onPress={() =>
-                this.flatListRef.current.scrollToIndex({
-                  index: this.state.currentIndex + 1,
-                })
-              }
-            >
-              <Text style={styles.arrowText}>E</Text>
-            </TouchableOpacity>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{item.title}</Text>
+            {/* {item.subtitle ? <Text style={styles.subtitle}>{item.subtitle}</Text> : null} */}
+            {item.subtitle ? (
+              <Text style={[styles.subtitle, index === 0 && styles.boldSubtitle]}>
+                {item.subtitle}
+              </Text>
+            ) : null}
+
+            {item.title.includes('Manage Your Gas Service') && (
+              <View style={{ height: 100 }} />
+            )}
+
+            {item.showCountrySelector && (
+              <View style={styles.pickerWrapper}>
+                <PickerControl
+                  placeholder="Select Country"
+                  selectedValue={selectedCountry}
+                  onValueChange={(value) => {
+                    this.setState({ selectedCountry: value });
+                  }}
+                  items={countryItems}
+                  mode="dropdown"
+                />
+
+                {!!selectedCountry && (
+                  <TouchableOpacity
+                    style={styles.getStartedButton}
+                    onPress={() => this.props.navigation.navigate('Login')}
+                  >
+                    <Text style={styles.getStartedText}>Continue</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
           </View>
-        )}
-      </View>
+        </View>
+      </ImageBackground>
     );
   };
 
   render() {
+    const { currentIndex } = this.state;
+
     return (
       <View style={styles.container}>
-        <Animated.FlatList
+        <FlatList
           ref={this.flatListRef}
           data={walkthroughData}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString()}
           renderItem={this.renderItem}
           horizontal
           pagingEnabled
@@ -148,34 +159,45 @@ export default class Walkthrough extends Component {
         />
 
         {/* Pagination Dots */}
-        <View style={styles.pagination}>
-          {walkthroughData.map((_, i) => {
-            const inputRange = [
-              (i - 1) * width,
-              i * width,
-              (i + 1) * width,
-            ];
-            const dotWidth = this.state.scrollX.interpolate({
-              inputRange,
-              outputRange: [10, 30, 10],
-              extrapolate: 'clamp',
-            });
-
-            return (
-              <Animated.View
+        <View style={styles.paginationWrapper}>
+          <View style={styles.pagination}>
+            {walkthroughData.map((_, i) => (
+              <View
                 key={i}
                 style={[
                   styles.dot,
-                  {
-                    width: dotWidth,
-                    backgroundColor:
-                      i === this.state.currentIndex ? '#fff' : 'gray',
-                  },
+                  this.state.currentIndex === i && styles.activeDot,
                 ]}
               />
-            );
-          })}
+            ))}
+          </View>
         </View>
+
+        {/* Bottom Controls (hidden on last slide) */}
+        {currentIndex !== 4 && (
+          <View style={styles.bottomRow}>
+            {currentIndex === 3 ? (
+              <TouchableOpacity
+                style={styles.getStartedButton}
+                onPress={() => {
+                  this.flatListRef.current.scrollToIndex({ index: 4 });
+                }}
+              >
+                <Text style={styles.getStartedText}>Get Started</Text>
+              </TouchableOpacity>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.skipButton} onPress={this.skipToEnd}>
+                  <Text style={styles.skipText}>Skip</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.nextButton} onPress={this.goToNext}>
+                  <ArrowIcon direction="right" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        )}
+
       </View>
     );
   }
@@ -186,83 +208,115 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0c1a35',
   },
-  slide: {
+  background: {
+    flex: 1,
     width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
+    height,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: 100,
+    paddingHorizontal: 24,
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 40,
+    // width: 100,
+    // height: 100,
+    alignSelf: 'center',
+    marginTop: 80,
+  },
+  textContainer: {
+    marginTop: 80,
   },
   title: {
-    color: 'white',
-    fontSize: 28,
+    color: '#fff',
+    fontSize: 50,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
+    lineHeight: 60,
   },
   subtitle: {
-    color: 'white',
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  navRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 40,
-    paddingHorizontal: 20,
-  },
-  skip: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 30,
+    marginTop: 30,
+    lineHeight: 40,
+    fontWeight: '300',
+    marginRight: 20,
   },
-  arrowBtn: {
-    backgroundColor: '#f7931e',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  arrowText: {
-    fontSize: 22,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  getStartedBtn: {
-    marginTop: 40,
-    backgroundColor: '#f7931e',
-    borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 80,
-  },
-  getStartedText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
+  paginationWrapper: {
+    position: 'absolute',
+    bottom: Platform.OS === 'ios' ? 238 : 210,
+    left: 24,
   },
   pagination: {
-    position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 90 : 70,
     flexDirection: 'row',
-    alignSelf: 'center',
+    alignItems: 'center',
   },
   dot: {
     height: 4,
-    borderRadius: 5,
-    marginHorizontal: 4,
+    width: 10,
+    borderRadius: 2,
+    backgroundColor: 'gray',
+    marginRight: 6,
   },
+  activeDot: {
+    backgroundColor: '#fff',
+    width: 30,
+  },
+
+  skipButton: {
+    backgroundColor: '#062244',
+    paddingVertical: 12,
+    paddingHorizontal: 45,
+    alignSelf: 'center',
+    borderRadius: 14,
+  },
+  skipText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  nextButton: {
+    backgroundColor: '#f7931e',
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+  },
+  getStartedButton: {
+    backgroundColor: '#f7931e',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    // Remove flex: 1
+  },
+  getStartedText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  bottomRow: {
+    position: 'absolute',
+    bottom: Platform.OS === 'ios' ? 140 : 70,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: width - 48,
+    alignSelf: 'center',
+    // gap: 12,
+  },
+
   pickerWrapper: {
     marginTop: 30,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    width: '90%',
   },
-  picker: {
-    height: 50,
-    width: '100%',
+  boldSubtitle: {
+    fontWeight: 'bold',
   },
+  boldSubtitle: {
+    fontWeight: 'bold',
+  },
+
 });

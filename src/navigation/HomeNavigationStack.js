@@ -175,6 +175,12 @@ const HomeNavigationStack = () => {
         //   },
         // })}
       />
+      {/* <Stack.Screen
+        name="notification"
+        component={Notification}
+        options={{ title: '' }}
+        /> */}
+     
     </Stack.Navigator>
   )
 }

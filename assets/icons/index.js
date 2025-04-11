@@ -25,6 +25,7 @@ export { default as LogOutIcon } from "./LogOutIcon";
 export { default as TypeCursorIcon } from "./TypeCursorIcon";
 export { default as ScanIcon } from "./ScanIcon";
 export { default as LogoIcon } from "./LogoIcon";
+export { default as LogooIcon } from "./LogooIcon";
 export { default as OTPIcon } from "./OTPIcon";
 export { default as XIcon } from "./XIcon";
 export { default as ArrowIcon } from "./ArrowIcon";

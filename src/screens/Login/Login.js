@@ -34,9 +34,8 @@ import DeviceInfo from 'react-native-device-info';
 
 import AppTextInput from '../../controls/AppTextInput';
 import { commonGradient } from '../../components/molecules/gradientStyles'; 
-import { LogoIcon, OTPIcon} from '../../../assets/icons'
+import { LogoIcon, XIcon} from '../../../assets/icons'
 import LinearGradient from 'react-native-linear-gradient';
-
 
 var qs = require('qs');
 
@@ -550,6 +549,22 @@ class Login extends Component {
     return (
       <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
       <SafeAreaView style={{ height: "100%", flex: 1 }} >
+
+      <View style={{ flexDirection: "row", }}>
+              <View style={styles.headerCol1}>
+                  <TouchableOpacity style={{ margin: 20 }} onPress={() => {
+                      if (this.state.step > 1) {
+                          this.setState({ step: this.state.step - 1 })
+                      } else {
+                          this.props.navigation.goBack()
+                      }
+                  }}>
+                       <XIcon color={"#FFFFFF"}/>
+                  </TouchableOpacity>
+                 
+              </View>
+          </View>
+
           <KeyboardAwareScrollView
             behavior={Platform.OS === 'ios' ? 'padding' : null}
             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
