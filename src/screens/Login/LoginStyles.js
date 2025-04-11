@@ -176,7 +176,13 @@ const styles = StyleSheet.create({
   },
   
 
-  
+  headerCol1: {
+    width: "90%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingHorizontal: 15,
+  },
   
   
 })

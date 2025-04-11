@@ -15,12 +15,13 @@ import HomeNavigationStack from './HomeNavigationStack'
 import PaymentNavigationStack from './PaymentNavigationStack'
 import SupportNavigationStack from './SupportNavigationStack'
 import MyLinksNavigationStack from './MyLinksNavigationStack'
-import { Alert, BackHandler, Platform, View, Text,  } from 'react-native'
+import { Alert, BackHandler, Platform, View, Text, } from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import OcrTest from '../screens/OcrTest/OcrTest'
 import ECPLOption from '../screens/ECPLOption/ECPLOption'
 import ECPLinking from '../screens/ECPLinking/ECPLinking'
 import Walkthrough from '../screens/WalkThrough/Walkthrough'
+import Notification from '../screens/Notification/Notification'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -90,7 +91,7 @@ function MainTabs() {
         name="Services"
         component={SupportNavigationStack}
         options={{
-          tabBarIcon: ({ focused, color }) => <SupportIcon fill={focused ? color : "none"} color={color}/>,
+          tabBarIcon: ({ focused, color }) => <SupportIcon fill={focused ? color : "none"} color={color} />,
           tabBarLabel: ({ focused, color }) => (
             <View style={{ alignItems: "center" }}>
               <Text style={{ color, fontSize: 14, fontFamily: "Tajawal-Medium" }}>Services</Text>
@@ -133,37 +134,37 @@ const MainNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }} >
-      <Stack.Screen
+        <Stack.Screen
           name="Splash"
           component={SplashScreen}
           options={{ title: '' }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Walkthrough"
           component={Walkthrough}
           options={{ title: '' }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{ title: '' }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="Otp"
           component={OtpScreen}
           options={{ title: '' }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="EmailLogin"
           component={EmailLogin}
           options={{ title: '' }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="RegisterUser"
           component={Register}
           options={{ title: '' }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="ECPLinking"
           component={ECPLinking}
           options={{ title: '' }}
@@ -182,6 +183,11 @@ const MainNavigation = () => {
           name="HomeBase"
           options={{ headerShown: false }}
           component={MainTabs}
+        />
+        <Stack.Screen
+          name="notification"
+          ooptions={{ headerShown: false }}
+          component={Notification}
         />
       </Stack.Navigator>
     </NavigationContainer>

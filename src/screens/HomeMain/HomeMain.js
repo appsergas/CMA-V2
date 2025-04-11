@@ -254,7 +254,9 @@ class HomeMain extends Component {
     handleRequestNewConnection = () => {
         this.props.navigation.navigate("reqNewConn")
     }
-
+    handleNotification = () => {
+        this.props.navigation.navigate("notification")
+    }
     carouselCurrentItem = (currentItemIndex) => {
         this.setState({ activeItemIndex: currentItemIndex })
     }
@@ -427,6 +429,7 @@ class HomeMain extends Component {
     truncateText = (text, maxLength) => {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     };
+  
 
     render() {
         let totalAmt = 0;
@@ -477,7 +480,7 @@ class HomeMain extends Component {
                         </View>
 
                         {/* Right Section - Notification Icon */}
-                        <TouchableOpacity style={styles.notificationContainer} onPress={() => navigateToNotifications()}>
+                        <TouchableOpacity style={styles.notificationContainer} onPress={this.handleNotification}>
                             <NotificationIcon size={24} color="#000" />
                             {/* Red Dot for New Notifications */}
                             {this.state.hasNotifications && <View style={styles.notificationDot} />}
@@ -552,7 +555,7 @@ class HomeMain extends Component {
                                                 {/* <View style={styles.accountsLabelView}><Text style={styles.accountsLabel}>Services</Text></View> */}
 
 
-                                                <View style={{...styles.accountsLabelView, marginLeft:20}}>
+                                                <View style={{ ...styles.accountsLabelView, marginLeft: 20 }}>
                                                     <Text style={styles.accountsLabel} >
                                                         {t("home.accounts")}
                                                     </Text>
@@ -613,7 +616,7 @@ class HomeMain extends Component {
                                                         <TouchableOpacity style={styles.homeOption}
                                                             onPress={this.handleRequestNewConnection}>
                                                             <View style={styles.iconContainer}>
-                                                                 <NewConIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#0057A2"} />
+                                                                <NewConIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#0057A2"} />
                                                             </View>
                                                             <View style={styles.labelContainer}>
                                                                 <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "700" }}>New Connection</Text>
@@ -680,7 +683,7 @@ class HomeMain extends Component {
                                                             }}>
                                                             <View style={styles.iconContainer}>
                                                                 {/* <StatementIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} /> */}
-                                                                <StatementIcon  width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
+                                                                <StatementIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
                                                             </View>
                                                             <View style={styles.labelContainer}>
                                                                 <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700", opacity: this.props.contracts.length ? 1 : 0.5 }}>Statement</Text>

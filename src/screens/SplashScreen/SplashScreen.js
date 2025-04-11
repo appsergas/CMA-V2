@@ -2,7 +2,7 @@
 import styles from './SplashScreenStyles'
 
 import React, { Component } from 'react'
-import { View, Text, Image, Platform, PermissionsAndroid,ImageBackground, ActivityIndicator } from 'react-native'
+import { View, Text, Image, Platform, PermissionsAndroid, ImageBackground, ActivityIndicator } from 'react-native'
 import { setI18nConfig, translationGetters, t } from '../../services/translate/i18n'
 import * as RNLocalize from 'react-native-localize';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -16,6 +16,9 @@ import { connect } from 'react-redux';
 import { updateContracts } from '../../stores/actions/contracts.action';
 import { updateUserDetails } from '../../stores/actions/user.action';
 import { CheckLoginByMobile } from '../../utils/uaePassService';
+import LinearGradient from 'react-native-linear-gradient';
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { LogoIcon } from '../../../assets/icons'
 
 class SplashScreen extends Component {
   constructor(props) {
@@ -65,9 +68,9 @@ class SplashScreen extends Component {
 
     let access_token = await AsyncStorage.getItem("sergas_customer_mobile_number")
     let loginCheck = await AsyncStorage.getItem("sergas_customer_login_flag")
-    await AsyncStorage.setItem("sergas_customer_active_contract_index", "0") 
-    if (((access_token != null) || (access_token != undefined)) && ((loginCheck != null) && (loginCheck != undefined)  && (loginCheck == "true"))) {
-      
+    await AsyncStorage.setItem("sergas_customer_active_contract_index", "0")
+    if (((access_token != null) || (access_token != undefined)) && ((loginCheck != null) && (loginCheck != undefined) && (loginCheck == "true"))) {
+
       this.setState({
         getUserDetailsCalled: true,
         apiCallFlags: { ...this.state.apiCallFlags, ...{ getAllContractsCalledSplash: true } }
@@ -82,7 +85,7 @@ class SplashScreen extends Component {
         const userLog = await CheckLoginByMobile(mobileNumber);
         if (!userLog || !userLog.device_id) {
           await AsyncStorage.clear();
-           //this.props.navigation.navigate('Login');
+          //this.props.navigation.navigate('Login');
           this.props.navigation.navigate('Walkthrough');
 
         } else {
@@ -92,8 +95,8 @@ class SplashScreen extends Component {
       }, 4000)
     } else {
       setTimeout(() => {
-         //this.props.navigation.navigate('Login')
-         this.props.navigation.navigate('Walkthrough');
+        //this.props.navigation.navigate('Login')
+        this.props.navigation.navigate('Walkthrough');
 
       }, 4000)
     }
@@ -101,7 +104,7 @@ class SplashScreen extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { getAllContractsResult, getUserDetailsResult } = nextProps
-    if (this.state.apiCallFlags.getAllContractsCalledSplash && (getAllContractsResult && getAllContractsResult.content )) {
+    if (this.state.apiCallFlags.getAllContractsCalledSplash && (getAllContractsResult && getAllContractsResult.content)) {
       this.setState({
         apiCallFlags: { ...this.state.apiCallFlags, ...{ getAllContractsCalledSplash: false } }
       }, async () => {
@@ -116,45 +119,45 @@ class SplashScreen extends Component {
           this.getAuthenticationToken(await AsyncStorage.getItem('sergas_customer_mobile_number'))
 
           const mobileNumber = await AsyncStorage.getItem('sergas_customer_mobile_number');
-        const userLog = await CheckLoginByMobile(mobileNumber);
-        if (!userLog || !userLog.device_id) {
-          AsyncStorage.multiRemove([
-            'sergas_customer_mobile_number',
-            'contract_list',
-            'sergas_customer_access_token',
-            'sergas_customer_login_flag',
-            'sergas_customer_user_id'
-            ,'extuuid'
-            ,'loginThroughUaePass'
-        ], () => {
-            // Update the contracts and navigate to Login screen
-            this.props.updateContracts([]);
-            // this.props.navigation.navigate('Login');
-            this.props.navigation.navigate('Walkthrough');
-        });
-        } else {
-          this.props.navigation.navigate('HomeBase');
-        }
+          const userLog = await CheckLoginByMobile(mobileNumber);
+          if (!userLog || !userLog.device_id) {
+            AsyncStorage.multiRemove([
+              'sergas_customer_mobile_number',
+              'contract_list',
+              'sergas_customer_access_token',
+              'sergas_customer_login_flag',
+              'sergas_customer_user_id'
+              , 'extuuid'
+              , 'loginThroughUaePass'
+            ], () => {
+              // Update the contracts and navigate to Login screen
+              this.props.updateContracts([]);
+              // this.props.navigation.navigate('Login');
+              this.props.navigation.navigate('Walkthrough');
+            });
+          } else {
+            this.props.navigation.navigate('HomeBase');
+          }
 
           // setTimeout(() => {
-            
+
           // }, 4000)
         }
       })
 
     }
 
-    if (this.state.getUserDetailsCalled && (getUserDetailsResult && getUserDetailsResult.content )) {
+    if (this.state.getUserDetailsCalled && (getUserDetailsResult && getUserDetailsResult.content)) {
       this.setState({
-          getUserDetailsCalled: false
+        getUserDetailsCalled: false
       }, () => {
-          if (getUserDetailsResult && getUserDetailsResult.content && getUserDetailsResult.content.USER_ID) {
-              this.props.updateUserDetails(getUserDetailsResult.content)
-          } else {
+        if (getUserDetailsResult && getUserDetailsResult.content && getUserDetailsResult.content.USER_ID) {
+          this.props.updateUserDetails(getUserDetailsResult.content)
+        } else {
 
-          }
+        }
       })
-  }
+    }
   }
 
   componentWillUnmount() {
@@ -168,41 +171,41 @@ class SplashScreen extends Component {
       'Password': 'Test@123',
       'grant_type': 'password'
     }
-  
-  var formBody = [];
-  for (var property in details) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(details[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
-  
-  fetch(API_PATH + "/token", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    },
-    body: formBody
-  })
-  .then(res => {
-    return res.json()
-  }).then(async resData => {
-    if (resData && resData.access_token) {
-      await AsyncStorage.setItem(
-        'sergas_customer_access_token',
-        resData.access_token,)
-    } else {
-      // this.setState({
-      //   showToast: true,
-      //   toastMessage: "Something went wrong, Please try again later",
-      // });
-      // setTimeout(() => {
-      //   this.setState({ showToast: false, toastMessage: "" });
-      // }, 5000);
+
+    var formBody = [];
+    for (var property in details) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(details[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
     }
-  })
-  .catch(err => {})
-}
+    formBody = formBody.join("&");
+
+    fetch(API_PATH + "/token", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      },
+      body: formBody
+    })
+      .then(res => {
+        return res.json()
+      }).then(async resData => {
+        if (resData && resData.access_token) {
+          await AsyncStorage.setItem(
+            'sergas_customer_access_token',
+            resData.access_token,)
+        } else {
+          // this.setState({
+          //   showToast: true,
+          //   toastMessage: "Something went wrong, Please try again later",
+          // });
+          // setTimeout(() => {
+          //   this.setState({ showToast: false, toastMessage: "" });
+          // }, 5000);
+        }
+      })
+      .catch(err => { })
+  }
 
   handleLocalizationChange = () => {
     AsyncStorage.getItem('language', (err, res) => {
@@ -220,11 +223,11 @@ class SplashScreen extends Component {
   }
 
   render() {
- 
+
 
     return (
       <>
-          <Image
+        {/* <Image
                     source={require('../../../assets/images/gifgit.gif')}
                     style={{...{
                       height: "100%",
@@ -235,36 +238,42 @@ class SplashScreen extends Component {
                       zIndex: -1,
                       resizeMode: 'stretch'
                     },...styles.viewView}}
-                    />
-                    {/* <Image
-                    source={require('../../../assets/images/loading.gif')}
-                    style={{bottom: 20, position: "absolute", height: 40, resizeMode: "center", alignSelf: "center"}}
                     /> */}
-                    <ActivityIndicator size="small" color="#FFFFFF"
-                    style={{bottom: 20, position: "absolute", height: 40, resizeMode: "center", alignSelf: "center"}}
-                    />
-                    </>
-                    )
+
+        <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+          <View style={styles.centerScreen}>
+          {/* <Image
+                  source={require("../../../assets/images/sergas_logo.png")}
+                  style={styles.goodieeLogoImage} /> */}
+          <LogoIcon />
+        </View>
+
+        <ActivityIndicator size="small" color="#FFFFFF"
+          style={{ bottom: 20, position: "absolute", height: 40, resizeMode: "center", alignSelf: "center" }}
+        />
+      </LinearGradient >
+      </>
+    )
   }
 
 }
 
-const mapStateToProps = ({contractsReducer, userReducer}) => {
+const mapStateToProps = ({ contractsReducer, userReducer }) => {
   return {
-      contracts: contractsReducer.contracts,
-      userDetails: userReducer.userDetails
+    contracts: contractsReducer.contracts,
+    userDetails: userReducer.userDetails
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-      updateContracts: (data) => dispatch(updateContracts(data)),
-      updateUserDetails: (data) => dispatch(updateUserDetails(data))
+    updateContracts: (data) => dispatch(updateContracts(data)),
+    updateUserDetails: (data) => dispatch(updateUserDetails(data))
   };
 
 }
 
-export default connect(mapStateToProps,mapDispatchToProps) (withApiConnector(SplashScreen, {
+export default connect(mapStateToProps, mapDispatchToProps)(withApiConnector(SplashScreen, {
   methods: {
     getAllContracts: {
       type: 'get',
@@ -273,10 +282,10 @@ export default connect(mapStateToProps,mapDispatchToProps) (withApiConnector(Spl
       authenticate: false,
     },
     getUserDetails: {
-        type: 'get',
-        moduleName: 'api',
-        url: 'getMobileUserDetails',
-        authenticate: true,
+      type: 'get',
+      moduleName: 'api',
+      url: 'getMobileUserDetails',
+      authenticate: true,
     },
   }
 }))
