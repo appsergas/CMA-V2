@@ -30,6 +30,11 @@ import { encode } from 'base-64';
 import { login, logout, register, getUserDetails, getAccessToken, postLoginDeviceLog, CheckUAEPASS } from '../../utils/uaePassService';
 import DeviceInfo from 'react-native-device-info';
 
+import AppTextInput from '../../controls/AppTextInput';
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { LogoIcon, XIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
+
 class Register extends Component {
   constructor(props) {
     super(props)
@@ -332,45 +337,48 @@ class Register extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
-        {/* <ButtonLogoView
-                hideBackButton={true}
-                    onPress={() => {
-                        this.props.navigation.goBack()
-                    }}
-                    yourRequests={true}
-                    navigation={this.props.navigation}
-                ></ButtonLogoView> */}
-        <ImageBackground source={Images.TransparentBackground} style={{ height: Dimensions.HP_100, width: Dimensions.WP_100 }} resizeMode={'cover'}>
-          {/* <CustomText style={{ color: Colors.DarkBlue, fontFamily: Fonts.Medium, marginTop: 20,marginRight: 30, alignSelf: 'flex-end' }} onPress={() => {
-                                this.props.navigation.navigate("SpotlightList")
-                            }}>Go to your requests</CustomText> */}
+      <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+        <SafeAreaView style={{ height: "100%", flex: 1 }} >
 
-          <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Dimensions.HP_90, }}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : null}
-              // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-              style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
-              enabled
-            >
-              <ScrollView
-                ref={(ref) => (this.scrollView = ref)}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollView}>
-                <View style={styles.imageView}>
-                  <Image
+          <View style={{ flexDirection: "row", }}>
+            <View style={styles.headerCol1}>
+              <TouchableOpacity style={{ margin: 20 }} onPress={() => {
+                if (this.state.step > 1) {
+                  this.setState({ step: this.state.step - 1 })
+                } else {
+                  this.props.navigation.goBack()
+                }
+              }}>
+                <XIcon color={"#FFFFFF"} />
+              </TouchableOpacity>
+
+            </View>
+          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+            style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
+            enabled
+          >
+            <ScrollView
+              ref={(ref) => (this.scrollView = ref)}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollView}>
+              <View style={styles.imageView}>
+                {/* <Image
                     source={require("../../../assets/images/sergas_logo.png")}
-                    style={styles.goodieeLogoImage} />
+                    style={styles.goodieeLogoImage} /> */}
+                <LogoIcon />
+              </View>
+              <View style={styles.cardView} >
+                <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
+                  <Text style={styles.cardHeaderText}>Welcome</Text>
                 </View>
-                <View style={styles.cardView} >
-                  <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
-                    <Text style={styles.cardHeaderText}>Welcome</Text>
-                  </View>
-                  <View style={{ ...styles.cardHeader, marginTop: 0 }}>
-                    <Text style={styles.cardHeaderText}>Create your Account</Text>
-                  </View>
-                  {/* <View style={styles.inputGroupStyle}>
+                <View style={{ ...styles.cardHeader, marginTop: 0 }}>
+                  <Text style={styles.cardHeaderText}>Create your Account</Text>
+                </View>
+                {/* <View style={styles.inputGroupStyle}>
                 <View>
                   <Text style={styles.inputLabelStyle}>{t("login.fullName")}</Text>
                 </View>
@@ -381,40 +389,25 @@ class Register extends Component {
                   />
                 </View>
               </View> */}
-                  <View style={styles.inputGroupStyle}>
-                    {/* <View>
+
+                {/* <View>
                   <Text style={styles.inputLabelStyle}>{t("login.mobileNumber")}</Text>
                 </View> */}
-                    {/* <View>
+                {/* <View>
                   <TextInput
                     value={this.state.mobileNumber}
                     onChangeText={val => this.handleField('mobileNumber', val)}
                     keyboardType={"numeric"}
                   />
                 </View> */}
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        borderColor: 'white'
-                      }}
-                    >
-                      <Image
-                        source={require("../../../assets/images/ae.png")}
-                        style={{ width: 30, height: 25, marginRight: 0, marginBottom: 15 }}
-                      />
-                      <Text
-                        style={{
-                          color: "#828E92",
-                          fontFamily: "Tajawal-Regular",
-                          fontSize: 17, fontWeight: 'bold',
-                          marginRight: 5,
-                          marginBottom: 12,
-                        }}
-                      >
-                        +971
-                      </Text>
-                      <View style={{ flex: 1 }}>
+                <View style={styles.inputGroupStyle}>
+                  <View style={styles.inputRow}>
+                  <Image
+                      source={require("../../../assets/images/ae.png")}
+                      style={styles.flagIcon}
+                    />
+                    <Text style={styles.countryCode}>+971</Text>
+                    {/* <View style={{ flex: 1 }}>
                         <TextInput
                           Style={{ width: "100%" }}
                           Placeholder={"5XX XXX XXX"}
@@ -422,10 +415,25 @@ class Register extends Component {
                           value={this.state.mobileNumber}
                           onChangeText={val => this.handleField('mobileNumber', val)}
                         />
-                      </View>
-                    </View>
+                      </View> */}
+                    <AppTextInput
+                      Placeholder="5XX XXX XXX"
+                      Value={this.state.mobileNumber}
+                      OnChange={this.handleMobileNumberField}
+                      Type="numeric"
+                      Editable={true}
+                      Style={{
+                        // backgroundColor: 'rgba(255,255,255,0.06)', // ✅ to match screenshot
+                        color: '#FFFFFF',
+                        fontSize: 15,
+                        fontWeight: "700",
+                        marginTop: 4
+                        // paddingVertical: Platform.OS === 'ios' ? 10 : 10,
+                      }}
+                    />
                   </View>
-                  {/* <View style={styles.inputGroupStyle}>
+                </View>
+                {/* <View style={styles.inputGroupStyle}>
                 <View>
                   <Text style={styles.inputLabelStyle}>{t("login.email")}</Text>
                 </View>
@@ -448,38 +456,27 @@ class Register extends Component {
                   />
                 </View>
               </View> */}
-                  <View style={styles.buttonView}>
-                    <TouchableOpacity
-                      onPress={this.handleSendOtp}
-                      style={styles.buttonStyle}
-                    >
-                      {
-                        this.state.apiCallFlags.registerCalled || this.state.apiCallFlags.registerApiCalled ?
-                          <ActivityIndicator color={"black"} size="small" /> :
-                          <Text
-                            style={styles.buttonLabelStyle}>Register</Text>
-                      }
-
-                    </TouchableOpacity>
-                  </View>
+                <View style={styles.buttonView}>
+                  <TouchableOpacity
+                    onPress={this.handleSendOtp}
+                    style={styles.buttonStyle}
+                  >
+                    {
+                      this.state.apiCallFlags.registerCalled || this.state.apiCallFlags.registerApiCalled ?
+                        <ActivityIndicator color={"black"} size="small" /> :
+                        <Text
+                          style={styles.buttonLabelStyle}>Register</Text>
+                    }
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.registerButtonStyle}>
-                  {/* <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("RegisterUser")}
-                  style={styles.registerButtonStyle}
-                > */}
-
-                  <View style={styles.registerHereView}>
-                    <Text
-                      style={styles.notCustomerText}>I have an account. </Text>
-                  </View>
-                  <View style={styles.notCustomerView}>
+              </View>
+              <View style={styles.registerButtonStyle}>
+                <View style={styles.registerHereView}>
+                  <Text style={styles.inlineRegisterText}>I have an account.
                     <TouchableOpacity
                       style={styles.payBillView}
-                      onPress={() => this.props.navigation.navigate("Login")}
-                    // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
-                    >
-                      <Text style={styles.registerHereText}>
+                      onPress={() => this.props.navigation.navigate("Login")}>
+                      <Text style={styles.registerLinkText}>
                         Login!
                       </Text>
                       {/* <Image
@@ -487,90 +484,96 @@ class Register extends Component {
                     style={styles.clickImage}
                   /> */}
                     </TouchableOpacity>
-                  </View>
-
-
-                  {/* </TouchableOpacity> */}
+                  </Text>
                 </View>
-                {
-                  this.state.UAEPASSSupported ?
-                    <View style={{
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
+              </View>
 
-                      <Text style={styles.uaepassorText}>OR</Text>
-                      <TouchableOpacity
-                        onPress={this.uaepasslogin}>
-                        {
-                          null ?
-                            <ActivityIndicator size='small' color='white' /> :
+              {/* </TouchableOpacity> */}
 
-                            <View style={styles.imageView}>
-                              <Image
-                                source={require('../../../assets/images/UAEPASS_Sign_up_Btn.png')}
-                                style={styles.buttonuaepassStyle} />
-                            </View>
-                        }
-                      </TouchableOpacity>
+              {
+                this.state.UAEPASSSupported ?
+                  <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
 
-
-
+                    {/* <Text style={styles.uaepassorText}>OR</Text> */}
+                    <View style={styles.dividerContainer}>
+                      <View style={styles.dividerLine} />
+                      <Text style={styles.dividerText}>Or Signup with</Text>
+                      <View style={styles.dividerLine} />
                     </View>
-                    : null
-                }
-              </ScrollView>
-              {this.state.showToast ? (
-                <Toast message={this.state.toastMessage} isImageShow={false} />
-              ) : null}
-              {this.state.showTermsModal ? (
-                <Modal
-                  onClose={() => this.setState({ showTermsModal: false })}
-                  visible={this.state.showTermsModal}
-                  button1={true}
-                  button2={true}
-                  onButton1={() => {
-                    this.setState({ showTermsModal: false })
-                  }}
-                  onButton2={() => {
-                    this.setState({ showTermsModal: false })
-                    this.setState({
-                      apiCallFlags: { ...this.state.apiCallFlags, ...{ updateTermsCalled: true } }
-                    }, () => {
-                      this.props.updateTerms({ "MobileNumber": "971" + this.state.mobileNumber })
-                    })
-                  }}
-                  data={{
-                    title: "Accept terms & conditions",
-                    // message: "Test",
-                    message: TermsAndConditions,
-                    button1Text: "Close",
-                    button2Text: "Accept",
-                    uri: this.state.helpImageUrl
-                  }}
-                  titleText={{ alignItems: 'center' }}
-                />
-              ) : null}
-              {this.state.showUAEPASSCancelModal ? (
-                <Modal
-                  onClose={() => this.setState({ showUAEPASSCancelModal: false })}
-                  close={false}
-                  visible={this.state.showUAEPASSCancelModal}
-                  button2={true}
-                  onButton2={() => {
-                    this.setState({ showUAEPASSCancelModal: false })
-                  }}
+                    <TouchableOpacity
+                      onPress={this.uaepasslogin}>
+                      {
+                        null ?
+                          <ActivityIndicator size='small' color='white' /> :
 
-                  data={{
+                          <View style={styles.imageView}>
+                            <Image
+                              source={require('../../../assets/images/UAEPASS_Sign_up_Btn.png')}
+                              style={styles.buttonuaepassStyle} />
+                          </View>
+                      }
+                    </TouchableOpacity>
 
-                    message: 'User cancelled the login',
-                    button2Text: "Ok",
-                    uri: this.state.helpImageUrl,
-                  }}
-                  titleText={{ alignItems: 'center' }}
-                />
-              ) : null}
-              {/* <Image
+
+
+                  </View>
+                  : null
+              }
+            </ScrollView>
+            {this.state.showToast ? (
+              <Toast message={this.state.toastMessage} isImageShow={false} />
+            ) : null}
+            {this.state.showTermsModal ? (
+              <Modal
+                onClose={() => this.setState({ showTermsModal: false })}
+                visible={this.state.showTermsModal}
+                button1={true}
+                button2={true}
+                onButton1={() => {
+                  this.setState({ showTermsModal: false })
+                }}
+                onButton2={() => {
+                  this.setState({ showTermsModal: false })
+                  this.setState({
+                    apiCallFlags: { ...this.state.apiCallFlags, ...{ updateTermsCalled: true } }
+                  }, () => {
+                    this.props.updateTerms({ "MobileNumber": "971" + this.state.mobileNumber })
+                  })
+                }}
+                data={{
+                  title: "Accept terms & conditions",
+                  // message: "Test",
+                  message: TermsAndConditions,
+                  button1Text: "Close",
+                  button2Text: "Accept",
+                  uri: this.state.helpImageUrl
+                }}
+                titleText={{ alignItems: 'center' }}
+              />
+            ) : null}
+            {this.state.showUAEPASSCancelModal ? (
+              <Modal
+                onClose={() => this.setState({ showUAEPASSCancelModal: false })}
+                close={false}
+                visible={this.state.showUAEPASSCancelModal}
+                button2={true}
+                onButton2={() => {
+                  this.setState({ showUAEPASSCancelModal: false })
+                }}
+
+                data={{
+
+                  message: 'User cancelled the login',
+                  button2Text: "Ok",
+                  uri: this.state.helpImageUrl,
+                }}
+                titleText={{ alignItems: 'center' }}
+              />
+            ) : null}
+            {/* <Image
                     source={require('../../../assets/images/footerBg.png')}
                     style={{
                       height: 192.35,
@@ -581,10 +584,9 @@ class Register extends Component {
                       zIndex: -1
                     }}
                     /> */}
-            </KeyboardAvoidingView>
-          </InfoContainer>
-        </ImageBackground>
-      </SafeAreaView>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </LinearGradient>
     )
   }
 

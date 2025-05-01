@@ -668,9 +668,6 @@ class Login extends Component {
                         // paddingVertical: Platform.OS === 'ios' ? 10 : 10,
                       }}
                     />
-
-
-
                   </View>
                 </View>
 
@@ -693,7 +690,18 @@ class Login extends Component {
               <View style={styles.registerButtonStyle}>
                 <View style={styles.registerHereView}>
                   <Text style={styles.inlineRegisterText}>
-                    Don’t have an account? <Text style={styles.registerLinkText}>REGISTER</Text>
+                  {t("login.notCustomer")}
+                    <TouchableOpacity
+                      style={styles.payBillView}
+                      // onPress={() => this.props.navigation.navigate("RegisterUser")}
+                      onPress={() => this.props.navigation.navigate("ECPLOption")}
+                    // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
+                    >
+                    <Text style={styles.registerLinkText}>
+                      {/* {t("login.registerHere")}! */}
+                      REGISTER
+                    </Text>
+                    </TouchableOpacity>
                   </Text>
                 </View>
               </View>

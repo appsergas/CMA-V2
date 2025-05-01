@@ -360,7 +360,36 @@ payBillText: {
     resizeMode: 'stretch',
     marginLeft: 6
 
-  }
+  },
+
+  containerr: {
+    position: 'relative',
+    width: '100%',
+    borderColor: '#848484',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingRight: 40, // space for the icon
+    marginVertical: 10,
+  },
+  textInput: {
+    padding: 12,
+    paddingRight: 40,
+    fontSize: 16,
+    color: '#000',
+  },
+  iconWrapper: {
+    position: 'absolute',
+    right: 10,
+    top: '50%',
+    transform: [{ translateY: -12 }],
+  },
+  iconn: {
+    width: 20,
+    height: 20,
+    tintColor: '#003366', // Optional, if you want to color it like the screenshot
+  },
+
+
 })
 
 export default styles

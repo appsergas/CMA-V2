@@ -1273,7 +1273,7 @@ class RequestNewConnection extends Component {
                                 showsVerticalScrollIndicator={false}
                                 contentContainerStyle={styles.scrollView}>
 
-                                <View style={{...Mainstyles.bodyview, paddingHorizontal:20, }}>
+                                <View style={{ ...Mainstyles.bodyview, paddingHorizontal: 20, }}>
                                     <View style={{ flexDirection: "row", justifyContent: 'space-between', marginTop: 20, marginBottom: 40 }}>
 
                                         <Image source={require("../../../assets/images/Rectangle.png")} style={{ resizeMode: 'stretch', position: 'absolute', alignSelf: 'center', width: "100%" }} />
@@ -1328,6 +1328,7 @@ class RequestNewConnection extends Component {
                                                 </View> */}
                                                 <View>
                                                     <Picker
+                                                        style={{ color: "red" }}
                                                         placeholder="Select Emirate"
                                                         selectedValue={this.state.emirate}
                                                         onValueChange={(itemValue, key) => {
@@ -1573,11 +1574,12 @@ class RequestNewConnection extends Component {
                                                             </TouchableOpacity>
                                                         </View>
                                                         : <View style={styles.inputGroupStyle}>
-                                                            <View style={{ flexDirection: 'row' }}>
+                                                            {/* <View style={{ flexDirection: 'row' }}>
                                                                 <Text style={styles.inputLabelStyle}>Plot Number</Text>
-                                                            </View>
+                                                            </View> */}
                                                             <View style={{ flexDirection: "row", display: "flex", alignItems: 'center' }}>
                                                                 <View style={(this.state.emirate == "DUBAI") || (this.state.emirate == "ABUDHABI") || (this.state.emirate == "FUJAIRAH") ? { width: "90%", marginRight: 5 } : { width: "100%" }}>
+                                                                <View style={styles.containerr}>
                                                                     <TextInput
                                                                         // editable={this.state.noQR}
                                                                         Value={this.state.plotNo}
@@ -1602,7 +1604,15 @@ class RequestNewConnection extends Component {
                                                                             }
                                                                         }}
                                                                         Style={{ borderColor: "#848484" }}
+                                                                        placeholder="Enter Plot Number here..."
                                                                     />
+                                                                    <TouchableOpacity  style={styles.iconWrapper}>
+                                                                        <Image
+                                                                            source={require('../../../assets/images/icon-feather-help-circle-2.png')} 
+                                                                            style={styles.icon}
+                                                                        />
+                                                                    </TouchableOpacity>
+                                                                    </View>
                                                                 </View>
                                                                 {
                                                                     (this.state.emirate === "DUBAI" || this.state.emirate === "ABUDHABI" || this.state.emirate === "FUJAIRAH") ? (
@@ -1721,7 +1731,7 @@ class RequestNewConnection extends Component {
                                             </View>
 
                                             <TouchableOpacity
-                                                style={{ ...Mainstyles.buttonStyle, marginTop: 20}}
+                                                style={{ ...Mainstyles.buttonStyle, marginTop: 20 }}
                                                 onPress={() => {
 
                                                     if ((this.state.emirate.trim() == "") ||

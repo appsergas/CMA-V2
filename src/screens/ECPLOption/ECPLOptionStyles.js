@@ -8,10 +8,7 @@ const styles = StyleSheet.create({
     // display: "flex",
     
   },
-  imageView: {
-    width: "100%",
-    alignItems: "center",
-  },
+
   goodieeLogoImage: {
     backgroundColor: "transparent",
     resizeMode: "stretch",
@@ -20,31 +17,21 @@ const styles = StyleSheet.create({
     // marginTop: -125,
   },
   scrollView: {
-    // flex: 1,
-    // display: "flex",
     flexGrow: 1,
-    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingTop: 40,
+  },
+  imageView: {
     alignItems: 'center',
-    // height: "100%",
-    // overflow: "scroll"
+    marginBottom: 30,
   },
   cardView: {
-    width: "95%",
-    minHeight: 100,
-    // borderRadius: 8,
-    // borderStyle: "solid",
-    // borderColor: "rgba(0, 0, 0, 1)",
-    // // borderWidth: 0.1,
-    // shadowColor: 'rgba(0,0,0, .4)',
-    // shadowOffset: { height: 25, width: 25 }, // IOS
-    // shadowOpacity: 1, // IOS
-    // shadowRadius: 1, //IOS
-    // backgroundColor: '#fff',
-    // elevation: 10,  // Android
-    // paddingVertical: 20,
+    backgroundColor: 'transparent',
+    marginTop: 10,
+    paddingHorizontal: 0,
   },
   cardHeader: {
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
     alignItems: "center",
     height: 35,
     marginVertical: 25
@@ -52,12 +39,14 @@ const styles = StyleSheet.create({
   cardHeaderText: {
     fontFamily: "Tajawal-Bold",
     fontSize: 15,
-    color: "#4A5E9C",
+    // color: "#4A5E9C",
+    color: "#ffffff",
   },
   cardPerText: {
     fontFamily: "Tajawal",
     fontSize: 11,
-    color: "#4A5E9C",
+    // color: "#4A5E9C",
+    color: "#ffffff",
   },
   inputGroupStyle: {
     paddingHorizontal: 15,
@@ -91,7 +80,7 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 2, width: 2 }, // IOS
     shadowOpacity: 0, // IOS
     shadowRadius: 1, //IOS
-    backgroundColor: '#102D4F',
+    backgroundColor: '#FF8D00',
     elevation: 5,  // Android
   },
   buttonLabelStyle: {
@@ -190,7 +179,7 @@ const styles = StyleSheet.create({
   bulletPointText: {
     fontSize: 10,
     marginLeft: 10,
-    color: "#2D395A",
+    color: "#ffffff",
     
   },
   TitleIconT: {

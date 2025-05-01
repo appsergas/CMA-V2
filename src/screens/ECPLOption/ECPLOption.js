@@ -30,6 +30,9 @@ import { UAEPassConfig } from '../../utils/permissions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { login, logout, register, getUserDetails, getAccessToken, postLoginDeviceLog } from '../../utils/uaePassService';
 import DeviceInfo from 'react-native-device-info';
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { LogoIcon, XIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
 var qs = require('qs');
 
 
@@ -244,7 +247,7 @@ class ECPLOption extends React.Component {
   onclickNO = async () => {
     try {
       const { LoginDeviceLog } = this.props.route.params;
-      
+
       LoginDeviceLog.user_id = await AsyncStorage.getItem("sergas_customer_user_id");
       LoginDeviceLog.browser = 'UAEPASS';
       LoginDeviceLog.login_type = 'SIGNUP';
@@ -252,7 +255,7 @@ class ECPLOption extends React.Component {
       await postLoginDeviceLog(LoginDeviceLog);
       await AsyncStorage.setItem("sergas_customer_login_flag", "true");
       this.props.navigation.navigate("HomeBase");
-      
+
     } catch (e) {
       this.setState({
         showToast: true,
@@ -285,7 +288,7 @@ class ECPLOption extends React.Component {
       this.props.navigation.navigate("ECPLinking", { LoginDeviceLog });
       //await AsyncStorage.setItem("sergas_customer_login_flag", "true");
       //this.props.navigation.navigate("ECPLinking");
-      
+
     } catch (e) {
       this.setState({
         showToast: true,
@@ -297,7 +300,7 @@ class ECPLOption extends React.Component {
       console.log('error', e);
     }
   };
-  
+
 
   handleMobileNumberField = (value) => {
     this.setState({
@@ -379,96 +382,112 @@ class ECPLOption extends React.Component {
   }
 
   render() {
-    
+
     const { getAllContractsCalled, checkTermsCalled, registerCalled, updateTermsCalled, loginCalled } = this.state.apiCallFlags
 
     return (
-      <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
+      <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+        <SafeAreaView style={{ height: "100%", flex: 1 }} >
+          <View style={{ flexDirection: "row", }}>
+            <View style={styles.headerCol1}>
+              <TouchableOpacity style={{ margin: 20 }} onPress={() => {
+                if (this.state.step > 1) {
+                  this.setState({ step: this.state.step - 1 })
+                } else {
+                  this.props.navigation.goBack()
+                }
+              }}>
+                <XIcon color={"#FFFFFF"} />
+              </TouchableOpacity>
 
+            </View>
+          </View>
+
+          {/* <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
         <ImageBackground source={Images.TransparentBackground} style={{ height: Dimensions.HP_100, width: Dimensions.WP_100 }} resizeMode={'cover'}>
-
           <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Dimensions.HP_90, }}>
-            <KeyboardAwareScrollView
-              behavior={Platform.OS === 'ios' ? 'padding' : null}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-              style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
-              enabled
+          */}
+          <KeyboardAwareScrollView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+            style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
+            enabled
+          >
+            <ScrollView
+              ref={(ref) => (this.scrollView = ref)}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollView}
             >
-              <ScrollView
-                ref={(ref) => (this.scrollView = ref)}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollView}
-              >
-                <View style={styles.imageView}>
-                  <Image
-                    source={require("../../../assets/images/sergas_logo.png")}
-                    style={styles.goodieeLogoImage} />
+              <View style={styles.imageView}>
+                {/* <Image
+                  source={require("../../../assets/images/sergas_logo.png")}
+                  style={styles.goodieeLogoImage} /> */}
+                   <LogoIcon />
+              </View>
+              <View style={styles.cardView} >
+                <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
+                  <Text style={styles.cardHeaderText}>UAE PASS - SERGAS Customer Profile Linking</Text>
                 </View>
-                <View style={styles.cardView} >
-                  <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
-                    <Text style={styles.cardHeaderText}>UAE PASS - SERGAS Customer Profile Linking</Text>
-                  </View>
-                  <View style={{ ...styles.cardHeader, marginTop: 0 }}>
-                    <Text style={styles.cardPerText}>Do you have an online account with SERGAS Customer ?</Text>
-                  </View>
-
-                  <View style={styles.buttonView}>
-                    <TouchableOpacity
-                      disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
-                      onPress={this.onclickYES}
-                      style={styles.buttonStyle}
-                    >
-                      {
-                        (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
-                          <ActivityIndicator size='small' color='white' /> :
-
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {/* <Icon name="checkmark-circle" style={styles.TitleIconT} /> */}
-                            <Text style={styles.buttonLabelStyle}>Yes *</Text>
-                          </View>
-                      }
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
-                      onPress={this.onclickNO}
-                      style={styles.buttonStyle}
-                    >
-                      {
-                        (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
-                          <ActivityIndicator size='small' color='white' /> :
-                          
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {/* <Icon name="close-circle" style={styles.TitleIconF} /> */}
-                            <Text style={styles.buttonLabelStyle}>No **</Text>
-                          </View>
-                      }
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View style={styles.container}>
-
-                  <View style={styles.instructionsContainer}>
-                    
-                    <View style={styles.bulletPointView}>
-                      <Text style={styles.bulletPointText}>* Your UAE PASS account will be linked to your existing SERGAS Customer Profile</Text>
-                      <Text style={styles.bulletPointText}>** Your SERGAS Customer Profile will be established based on the UAE PASS account</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.noteContainer}>
-                    <View style={styles.bulletPointView}>
-                      <Text style={styles.bulletPointText}>Note: This is a one time process, your future login's through UAE PASS will be seamless</Text>
-                    </View>
-                  </View>
-
+                <View style={{ ...styles.cardHeader, marginTop: 0 }}>
+                  <Text style={styles.cardPerText}>Do you have an online account with SERGAS Customer ?</Text>
                 </View>
 
-              </ScrollView>
+                <View style={styles.buttonView}>
+                  <TouchableOpacity
+                    disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
+                    onPress={this.onclickYES}
+                    style={styles.buttonStyle}
+                  >
+                    {
+                      (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
+                        <ActivityIndicator size='small' color='white' /> :
 
-            </KeyboardAwareScrollView>
-          </InfoContainer>
-        </ImageBackground>
-      </SafeAreaView>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          {/* <Icon name="checkmark-circle" style={styles.TitleIconT} /> */}
+                          <Text style={styles.buttonLabelStyle}>Yes *</Text>
+                        </View>
+                    }
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
+                    onPress={this.onclickNO}
+                    style={styles.buttonStyle}
+                  >
+                    {
+                      (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
+                        <ActivityIndicator size='small' color='white' /> :
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          {/* <Icon name="close-circle" style={styles.TitleIconF} /> */}
+                          <Text style={styles.buttonLabelStyle}>No **</Text>
+                        </View>
+                    }
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.container}>
+
+                <View style={styles.instructionsContainer}>
+
+                  <View style={styles.bulletPointView}>
+                    <Text style={styles.bulletPointText}>* Your UAE PASS account will be linked to your existing SERGAS Customer Profile</Text>
+                    <Text style={styles.bulletPointText}>** Your SERGAS Customer Profile will be established based on the UAE PASS account</Text>
+                  </View>
+                </View>
+
+                <View style={styles.noteContainer}>
+                  <View style={styles.bulletPointView}>
+                    <Text style={styles.bulletPointText}>Note: This is a one time process, your future login's through UAE PASS will be seamless</Text>
+                  </View>
+                </View>
+
+              </View>
+
+            </ScrollView>
+
+          </KeyboardAwareScrollView>
+        </SafeAreaView>
+      </LinearGradient>
     )
   }
 

@@ -8,10 +8,7 @@ const styles = StyleSheet.create({
     // display: "flex",
     
   },
-  imageView: {
-    width: "100%",
-    alignItems: "center",
-  },
+
   goodieeLogoImage: {
     backgroundColor: "transparent",
     resizeMode: "stretch",
