@@ -1,0 +1,10 @@
+{   
+  "AppName" :  "Sergas",
+  "login": {
+    "loginUsing": "Log in using",
+    "mobileNumber": "Mobile/Account Number",
+    "sendOtp": "Send OTP",
+    "notCustomer": "Not a customer yet?",
+    "registerHere": "REGISTER HERE"
+  }
+ }
