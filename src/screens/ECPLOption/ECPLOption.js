@@ -397,7 +397,7 @@ class ECPLOption extends React.Component {
                   this.props.navigation.goBack()
                 }
               }}>
-                <XIcon color={"#FFFFFF"} />
+                {/* <XIcon color={"#FFFFFF"} /> */}
               </TouchableOpacity>
 
             </View>

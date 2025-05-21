@@ -62,6 +62,8 @@ import {
 } from '@network-international/react-native-ngenius';
 import axios from 'axios'
 import { API_PATH } from '../../services/api/data/data/api-utils';
+import { faInfo, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import DeviceInfo from 'react-native-device-info';
 
 var validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
@@ -140,6 +142,11 @@ class RequestNewConnection extends Component {
             paidConnection: true,
             showPaidModal: false,
             date: new Date().getHours() > 10 ? new Date(new Date().getTime() + (1 * 86400000)) : new Date(),
+            showPaidModal: false,
+            date: new Date(),
+            selectedPeriod: null,
+            selectedTime: null,
+            step: 1,
             feeDetails: {
                 // "company": null,
                 // "contractNo": null,
@@ -1465,10 +1472,13 @@ class RequestNewConnection extends Component {
                                                             {/* <View style={{ alignSelf: 'flex-start' }}>
                                             <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
                                         </View> */}
+                                        
                                                             <TouchableOpacity
                                                                 style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row' } }}
                                                                 onPress={() => {
+                                                                    
                                                                     if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                        showPickerModal: true
                                                                         this.toastIt("Select Emirate to scan the QR Code", false)
                                                                     } else {
                                                                         this.setState({ buildingCode: "", apartmentCode: "", openQrScanner: true })
@@ -1565,92 +1575,102 @@ class RequestNewConnection extends Component {
 
                                                                 onPress={() => this.setState({ noMeterNo: false, noQR: false, buildingCode: "", apartmentCode: "", meterNo: "", meterBrand: "" })}
                                                             >
-                                                                {/* <Image
-                                                source={require('../../../assets/images/noQr.png')}
-                                                style={{ ...styles.clickImage, marginRight: 5 }}
-                                            /> */}
+
                                                                 <Text
                                                                     style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have Meter Serial Number</Text>
                                                             </TouchableOpacity>
                                                         </View>
                                                         : <View style={styles.inputGroupStyle}>
-                                                            {/* <View style={{ flexDirection: 'row' }}>
-                                                                <Text style={styles.inputLabelStyle}>Plot Number</Text>
-                                                            </View> */}
-                                                            <View style={{ flexDirection: "row", display: "flex", alignItems: 'center' }}>
-                                                                <View style={(this.state.emirate == "DUBAI") || (this.state.emirate == "ABUDHABI") || (this.state.emirate == "FUJAIRAH") ? { width: "90%", marginRight: 5 } : { width: "100%" }}>
-                                                                <View style={styles.containerr}>
+
+                                                            <View style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                borderWidth: 1,
+                                                                borderColor: '#102D4F',
+                                                                borderRadius: 10,
+                                                                paddingHorizontal: 5,
+                                                                height: 50,
+                                                                width: '100%',
+                                                                paddingTop: 15,
+                                                            }}>
+                                                                <View style={{ flex: 1 }}>
                                                                     <TextInput
-                                                                        // editable={this.state.noQR}
-                                                                        Value={this.state.plotNo}
-                                                                        OnChange={(value) => {
-                                                                            this.setState({ plotNo: value })
+                                                                        style={{
+                                                                            fontSize: 16,
+                                                                            width: '100%',
                                                                         }}
-                                                                        OnBlur={() => {
-                                                                            if ((this.state.emirate == "") || (this.state.emirate == null)) {
-                                                                                this.toastIt("Select Emirate to search Building code and Apartment code", false)
-                                                                            } else if ((this.state.plotNo == "") || (this.state.plotNo == null)) {
-                                                                                this.toastIt("Enter Plot No. to search Building code and Apartment code", false)
+                                                                        placeholder="Enter Plot Number here..."
+                                                                        placeholderTextColor="#7D8B9A"
+                                                                        value={this.state.plotNo}
+                                                                        onChangeText={(value) => this.setState({ plotNo: value })}
+                                                                        onBlur={() => {
+                                                                            if (!this.state.emirate) {
+                                                                                this.toastIt("Select Emirate to search Building code and Apartment code", false);
+                                                                            } else if (!this.state.plotNo) {
+                                                                                this.toastIt("Enter Plot No. to search Building code and Apartment code", false);
                                                                             } else {
-                                                                                this.setState({
-                                                                                    getBuildingFromPlotNoCalled: true
-                                                                                }, () => {
-                                                                                    let req = {
-                                                                                        "COMPANY": this.state.pickerCompanyData[this.state.companyCode].id,
-                                                                                        "QUERY": this.state.plotNo
-                                                                                    }
-                                                                                    this.props.getBuildingFromPlotNo(req)
-                                                                                })
+                                                                                this.setState({ getBuildingFromPlotNoCalled: true }, () => {
+                                                                                    const req = {
+                                                                                        COMPANY: this.state.pickerCompanyData[this.state.companyCode].id,
+                                                                                        QUERY: this.state.plotNo
+                                                                                    };
+                                                                                    this.props.getBuildingFromPlotNo(req);
+                                                                                });
                                                                             }
                                                                         }}
-                                                                        Style={{ borderColor: "#848484" }}
-                                                                        placeholder="Enter Plot Number here..."
                                                                     />
-                                                                    <TouchableOpacity  style={styles.iconWrapper}>
-                                                                        <Image
-                                                                            source={require('../../../assets/images/icon-feather-help-circle-2.png')} 
-                                                                            style={styles.icon}
-                                                                        />
-                                                                    </TouchableOpacity>
-                                                                    </View>
                                                                 </View>
-                                                                {
-                                                                    (this.state.emirate === "DUBAI" || this.state.emirate === "ABUDHABI" || this.state.emirate === "FUJAIRAH") ? (
-                                                                        <View style={{ width: "10%", alignItems: 'center', justifyContent: 'center' }}>
-                                                                            <TouchableOpacity
-                                                                                onPress={() => {
-                                                                                    const helpImageUrl =
-                                                                                        this.state.emirate === "DUBAI" ? require("../../../assets/images/dubai_plot_no.jpg") :
-                                                                                            this.state.emirate === "ABUDHABI" ? require("../../../assets/images/abudhabi_plot_no.jpg") :
-                                                                                                require("../../../assets/images/fujairah_tenancy_no.jpg");
 
-                                                                                    this.setState({
-                                                                                        showHelpModal: true,
-                                                                                        helpImageUrl: helpImageUrl
-                                                                                    });
-                                                                                }}
-                                                                            >
-                                                                                <Image
-                                                                                    style={{ width: 22, height: 22, resizeMode: "stretch" }}
-                                                                                    source={require("../../../assets/images/icon-feather-help-circle-2.png")}
-                                                                                />
-                                                                            </TouchableOpacity>
-                                                                        </View>
-                                                                    ) : null
-                                                                }
+                                                                {(this.state.emirate === "DUBAI" || this.state.emirate === "ABUDHABI" || this.state.emirate === "FUJAIRAH") && (
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            const helpImageUrl =
+                                                                                this.state.emirate === "DUBAI" ? require("../../../assets/images/dubai_plot_no.jpg") :
+                                                                                    this.state.emirate === "ABUDHABI" ? require("../../../assets/images/abudhabi_plot_no.jpg") :
+                                                                                        require("../../../assets/images/fujairah_tenancy_no.jpg");
 
+                                                                            this.setState({
+                                                                                showHelpModal: true,
+                                                                                helpImageUrl
+                                                                            });
+                                                                        }}
+                                                                        style={{
+                                                                            marginLeft: 10,
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            marginBottom: 15,
+                                                                        }}
+                                                                    >
+                                                                        <FontAwesomeIcon icon={faInfoCircle} size={22} />
+                                                                    </TouchableOpacity>
+                                                                )}
                                                             </View>
+
                                                             <TouchableOpacity
-                                                                style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row', backgroundColor: "#F7F9FB", marginTop: 5 } }}
-                                                                onPress={() => this.setState({ noMeterNo: true, buildingCode: "", apartmentCode: "", pickerBuildingData: [], plotNo: "" })}
+                                                                style={{
+                                                                    ...styles.buttonStyle,
+                                                                    width: "100%",
+                                                                    flexDirection: 'row',
+                                                                    backgroundColor: "#F7F9FB",
+                                                                    marginTop: 5,
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                }}
+                                                                onPress={() =>
+                                                                    this.setState({
+                                                                        noMeterNo: true,
+                                                                        buildingCode: "",
+                                                                        apartmentCode: "",
+                                                                        pickerBuildingData: [],
+                                                                        plotNo: "",
+                                                                    })
+                                                                }
                                                             >
-                                                                {/* <Image
-                                                source={require('../../../assets/images/noQr.png')}
-                                                style={{ ...styles.clickImage, marginRight: 5 }}
-                                            /> */}
-                                                                <Text
-                                                                    style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Don't have Plot Number</Text>
+                                                                <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F", textAlign: 'center' }}>
+                                                                    Don't have Plot Number
+                                                                </Text>
                                                             </TouchableOpacity>
+
                                                         </View>
                                                 // : null
                                             }
@@ -1792,84 +1812,102 @@ class RequestNewConnection extends Component {
                                         </> :
                                         this.state.step == 2 ?
                                             <>
-                                                <View style={styles.inputGroupStyle}>
-                                                    <View style={{ flexDirection: 'row' }}>
-                                                        <Text style={styles.inputLabelStyle}>Tenancy Contract / Ejari / Title deed / Initial sales agreement</Text>
-                                                    </View>
-                                                    <View>
-                                                        <View style={{ alignItems: 'center', marginVertical: 15 }}>
-                                                            <TouchableOpacity onPress={() => {
+                                            
+                                                <View style={{ padding: 20, backgroundColor: '#fff' }}>
+                                                    <Text style={{ fontWeight: '500', fontSize: 14, color: '#000', marginBottom: 20 }}>
+                                                        Tenancy Contract / Ejari / Title deed / Initial sales agreement
+                                                    </Text>
+                                                    <Text style={{ fontWeight: '700', fontSize: 14, color: '#000', marginBottom: 10 }}>
+                                                        Attach image here
+                                                    </Text>
+                                                    <View style={{ alignItems: 'center', marginBottom: 30 }}>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
                                                                 if (this.state.tenancyContractFront == null) {
-                                                                    // this.handleAttachImages("capture", "tenancyContract")
                                                                     this.setState({
                                                                         showPickerModal: true,
-                                                                        currentImageType: "tenancyContract"
-                                                                    })
+                                                                        currentImageType: "tenancyContract",
+                                                                    });
                                                                 } else {
                                                                     this.setState({
                                                                         showImageModal: true,
                                                                         currentImageUri: this.state.tenancyContractFront.assets[0].uri,
-                                                                        currentImageType: "tenancyContract"
-                                                                    })
+                                                                        currentImageType: "tenancyContract",
+                                                                    });
                                                                 }
-                                                            }}>
-                                                                {this.state.tenancyContractFront != null ?
-                                                                    <Image style={{ ...styles.addImage, borderRadius: 4 }} source={{ uri: this.state.tenancyContractFront.assets[0].uri }} />
-                                                                    : <Image style={{ ...styles.addImage, resizeMode: 'contain' }} source={require("../../../assets/images/camera2.png")} />
-                                                                }
-                                                            </TouchableOpacity>
-                                                            <Text style={styles.frontBackText}>Attach image here</Text>
-                                                        </View>
+                                                            }}
+                                                            style={{
+                                                                width: 280,
+                                                                height: 140,
+                                                                borderWidth: 1,
+                                                                borderColor: '#D9D9D9',
+                                                                borderRadius: 10,
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                backgroundColor: '#FAFAFA',
+                                                            }}
+                                                        >
+                                                            {this.state.tenancyContractFront != null ? (
+                                                                <Image
+                                                                    style={{ width: '100%', height: '100%', borderRadius: 2 }}
+                                                                    source={{ uri: this.state.tenancyContractFront.assets[0].uri }}
+                                                                    resizeMode="contain"
+                                                                />
+
+                                                            ) : (
+                                                                <Image
+                                                                    style={{ width: 30, height: 30, resizeMode: 'contain' }}
+                                                                    source={require("../../../assets/images/camera2.png")}
+                                                                />
+                                                                
+                                                            )}
+                                                        </TouchableOpacity>
+
+                                                        {/* <Text style={{ marginTop: 10, fontSize: 12, color: '#888' }}>
+                                                            Image should be clearly visible.
+                                                        </Text> */}
                                                     </View>
-                                                </View>
-                                                <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
-                                                    <TouchableOpacity
-                                                        style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
-                                                        onPress={() => {
-                                                            this.setState({
-                                                                step: 1
-                                                            })
-                                                        }}
-                                                        disabled={apiCallFlags.requestConnectionApiCalled}
-                                                    >
-                                                        <View style={{ ...styles.paymentDueRow2 }}
+                                                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: '#778195',
+                                                                paddingVertical: 10,
+                                                                borderRadius: 8,
+                                                                alignItems: 'center',
+                                                                width: '48%', // 50% minus gap
+                                                            }}
+                                                            onPress={() => {
+                                                                this.setState({ step: 1 });
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
                                                         >
-                                                            <Image
-                                                                source={require('../../../assets/images/backBlue.png')}
-                                                                style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
-                                                            />
-                                                            <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
-                                                        </View>
-                                                        {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
+                                                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>Back</Text>
+                                                        </TouchableOpacity>
 
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity
-                                                        style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
-                                                        onPress={() => {
-                                                            if (tenancyContractFront == null) {
-                                                                this.toastIt("Add tenancy contract image")
-                                                            } else {
-                                                                this.setState({
-                                                                    step: 3
-                                                                })
-                                                            }
-                                                        }}
-                                                        disabled={apiCallFlags.requestConnectionApiCalled}
-                                                    >
-                                                        <View style={{ ...styles.paymentDueRow2 }}
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: '#0057A2',
+                                                                paddingVertical: 10,
+                                                                borderRadius: 8,
+                                                                alignItems: 'center',
+                                                                width: '48%', // 50% minus gap
+                                                            }}
+                                                            onPress={() => {
+                                                                if (tenancyContractFront == null) {
+                                                                    this.toastIt("Add tenancy contract image");
+                                                                } else {
+                                                                    this.setState({ step: 3 });
+                                                                }
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
                                                         >
-                                                            <Text style={styles.buttonLabelStyle}>Next</Text>
-                                                            <Image
-                                                                source={require('../../../assets/images/clickWhite.png')}
-                                                                style={styles.clickImage}
-                                                            />
-                                                        </View>
-                                                        {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
+                                                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>Next</Text>
+                                                        </TouchableOpacity>
+                                                    </View>
 
-                                                    </TouchableOpacity>
                                                 </View>
+
+
                                             </> :
                                             this.state.step == 3 ?
                                                 <>
@@ -1914,31 +1952,34 @@ class RequestNewConnection extends Component {
                                                         </View> : null
                                                     }
 
-
-                                                    <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
+                                                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
                                                         <TouchableOpacity
-                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
+                                                            style={{
+                                                                backgroundColor: '#778195',
+                                                                paddingVertical: 10,
+                                                                borderRadius: 8,
+                                                                alignItems: 'center',
+                                                                width: '48%', // 50% minus gap
+                                                            }}
                                                             onPress={() => {
                                                                 this.setState({
                                                                     step: 2
                                                                 })
                                                             }}
                                                             disabled={apiCallFlags.requestConnectionApiCalled}
-                                                        >
-                                                            <View style={{ ...styles.paymentDueRow2 }}
-                                                            >
-                                                                <Image
-                                                                    source={require('../../../assets/images/backBlue.png')}
-                                                                    style={{ ...styles.clickImage, marginRight: 6, marginLeft: 0 }}
-                                                                />
-                                                                <Text style={{ ...styles.buttonLabelStyle, color: "#102D4F" }}>Back</Text>
-                                                            </View>
-                                                            {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
 
+                                                        >
+                                                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>Back</Text>
                                                         </TouchableOpacity>
+
                                                         <TouchableOpacity
-                                                            style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-end' }}
+                                                            style={{
+                                                                backgroundColor: '#0057A2',
+                                                                paddingVertical: 10,
+                                                                borderRadius: 8,
+                                                                alignItems: 'center',
+                                                                width: '48%', // 50% minus gap
+                                                            }}
                                                             onPress={() => {
                                                                 if (this.state.paidConnection) {
                                                                     this.setState({
@@ -1952,19 +1993,12 @@ class RequestNewConnection extends Component {
                                                             }}
                                                             disabled={apiCallFlags.requestConnectionApiCalled}
                                                         >
-                                                            <View style={{ ...styles.paymentDueRow2 }}
-                                                            >
-                                                                <Text style={styles.buttonLabelStyle}>Next</Text>
-                                                                <Image
-                                                                    source={require('../../../assets/images/clickWhite.png')}
-                                                                    style={styles.clickImage}
-                                                                />
-                                                            </View>
-                                                            {/* <Text
-                                            style={styles.buttonLabelStyle}>Next</Text> */}
-
+                                                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>Next</Text>
                                                         </TouchableOpacity>
                                                     </View>
+
+
+
                                                 </> :
                                                 <>
                                                     <View style={styles.inputGroupStyle}>
@@ -2135,6 +2169,58 @@ class RequestNewConnection extends Component {
                                                         </View>
                                                     </View>
 
+                                                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: '#778195',
+                                                                paddingVertical: 10,
+                                                                borderRadius: 8,
+                                                                alignItems: 'center',
+                                                                width: '48%', // 50% minus gap
+                                                            }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    step: 3
+                                                                })
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
+                                                        >
+                                                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>Back</Text>
+                                                        </TouchableOpacity>
+
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: '#0057A2',
+                                                                paddingVertical: 10,
+                                                                borderRadius: 8,
+                                                                alignItems: 'center',
+                                                                width: '48%', // 50% minus gap
+                                                            }}
+                                                            onPress={() => {
+                                                                if (this.state.terms) {
+                                                                    this.setState({
+                                                                        showPayModal: true
+                                                                    })
+                                                                } else {
+                                                                    this.toastIt("Accept terms and conditions", false)
+                                                                }
+                                                            }}
+                                                            disabled={apiCallFlags.requestConnectionApiCalled}
+                                                        >
+                                                            <View style={{ ...styles.paymentDueRow2 }}
+                                                            >
+                                                                {
+                                                                    (this.state.makepaymentcalled || this.state.apiCallFlags.requestConnectionApiCalled) ?
+                                                                        <ActivityIndicator size={"small"} color={"#FFFFFF"} /> :
+                                                                        <Text style={styles.buttonLabelStyle}>Pay {this.state.paidConnection ? (parseFloat(this.state.feeDetails.totalAmt) + 105).toFixed(2) : parseFloat(this.state.feeDetails.totalAmt).toFixed(2)} AED</Text>
+                                                                }
+
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    </View>
+
+
+
                                                     <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-around' }}>
                                                         <TouchableOpacity
                                                             style={{ ...styles.buttonStyle, width: "40%", alignSelf: 'flex-start', backgroundColor: "#FFFFFF" }}
@@ -2235,7 +2321,7 @@ class RequestNewConnection extends Component {
                                         }, 1000)
                                     }}
                                     data={{
-                                        title: "Test",
+                                        title: "Attach image from?",
                                         message: "Test",
                                         button1Text: "Camera",
                                         button2Text: "Gallery",
@@ -2267,50 +2353,127 @@ class RequestNewConnection extends Component {
                                 />
                             ) : null}
 
-                            {this.state.showPaidModal ? <Modal
-                                onClose={() => this.setState({ showPaidModal: false })}
-                                visible={this.state.showPaidModal}
-                                button1={true}
-                                button2={true}
-                                onButton1={() => {
-                                    this.setState({ showPaidModal: false })
-                                }}
-                                onButton2={() => {
-                                    this.setState({ showPaidModal: false, step: 4 })
-                                    // this.makePayment()
+                            {this.state.showPaidModal ? (
+                                <Modal
+                                    onClose={() => this.setState({ showPaidModal: false })}
+                                    visible={this.state.showPaidModal}
+                                    button1={false}
+                                    button2={false}
+                                    data={{
+                                        view: (
+                                            <View style={{ width: "100%", alignItems: 'center', padding: 20 }}>
+                                                {/* Title with close icon */}
+                                                <View style={{
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}>
+                                                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#001848' }}>Choose Date & Time</Text>
 
-                                }}
-                                data={{
-                                    // title: "Immediate Disconnection",
-                                    // message: "Test",
-                                    button1Text: "Close",
-                                    button2Text: "Next",
-                                    // uri: this.state.helpImageUrl,
-                                    view: <View style={{ width: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                                        {/* <View style={{ ...styles.cardView, marginBottom: 0 }}> */}
-                                        {/* <View style={styles.inputGroupStyle}> */}
-                                        <View>
-                                            <Text style={styles.inputLabelStyle}>{t("myLinks.preferredDateAndTime")}</Text>
-                                        </View>
-                                        <View>
-                                            <DatePicker
-                                                mode="date"
-                                                minimumDate={new Date().getHours() > 10 ? new Date(new Date().getTime() + (1 * 86400000)) : new Date()}
-                                                maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
-                                                minuteInterval={30}
-                                                date={this.state.date}
-                                                onDateChange={(date) => {
-                                                    this.setState({
-                                                        date: date
-                                                    })
-                                                }} />
-                                        </View>
-                                    </View>
-                                }}
-                                titleText={{ alignItems: 'center' }}
-                            /> :
-                                null
-                            }
+                                                </View>
+
+                                                {/* Label */}
+                                                <View style={{
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}>
+                                                    <Text style={{ fontWeight: '600', fontSize: 14, marginBottom: 10 }}>Select Preferred date</Text>
+                                                </View>
+                                                {/* Date Picker */}
+                                                <View style={{ marginBottom: 20, width: '100%' }}>
+                                                    <DatePicker
+                                                        mode="date"
+                                                        date={this.state.date}
+                                                        minimumDate={
+                                                            new Date().getHours() > 10
+                                                                ? new Date(new Date().getTime() + 1 * 86400000)
+                                                                : new Date()
+                                                        }
+                                                        maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
+                                                        onDateChange={(date) => this.setState({ date })}
+                                                    />
+                                                </View>
+                                                <View style={{
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    marginBottom: 20
+                                                }}>
+                                                    <Text style={{ fontWeight: '600', fontSize: 14, marginBottom: 10 }}>Pick Time</Text>
+                                                </View>
+                                                {/* Time category chips */}
+                                                <View style={{ flexDirection: 'row', gap: 10, marginBottom: 10, }}>
+                                                    {["Afternoon", "Late Morning"].map((label, index) => (
+                                                        <TouchableOpacity
+                                                            key={index}
+                                                            onPress={() => this.setState({ selectedPeriod: label })}
+                                                            style={{
+                                                                paddingVertical: 8,
+                                                                paddingHorizontal: 10,
+                                                                borderRadius: 10,
+                                                                backgroundColor: this.state.selectedPeriod === label ? '#001848' : '#fff',
+                                                                borderWidth: 1,
+                                                                borderColor: '#001848',
+                                                                margin: 5,
+                                                            }}
+                                                        >
+                                                            <Text style={{
+                                                                color: this.state.selectedPeriod === label ? '#fff' : '#001848',
+                                                                fontWeight: '600', fontSize: 10,
+                                                            }}>{label}</Text>
+                                                        </TouchableOpacity>
+                                                    ))}
+                                                </View>
+
+                                                {/* Time slots */}
+                                                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10, }}>
+                                                    {["07:00 AM", "11:00 AM", "12:00 PM"].map((time, index) => (
+                                                        <TouchableOpacity
+                                                            key={index}
+                                                            onPress={() => this.setState({ selectedTime: time })}
+                                                            style={{
+                                                                paddingVertical: 10,
+                                                                paddingHorizontal: 10,
+                                                                borderRadius: 10,
+                                                                borderWidth: 1,
+                                                                borderColor: '#001848',
+                                                                backgroundColor: this.state.selectedTime === time ? '#001848' : '#fff',
+                                                                margin: 5,
+                                                            }}
+                                                        >
+                                                            <Text style={{
+                                                                color: this.state.selectedTime === time ? '#fff' : '#001848',
+                                                                fontWeight: '600', fontSize: 10,
+                                                            }}>{time}</Text>
+                                                        </TouchableOpacity>
+                                                    ))}
+                                                </View>
+
+                                                {/* Next Button */}
+                                                <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: '#001848',
+                                                        width: '100%',
+                                                        paddingVertical: 15,
+                                                        borderRadius: 8,
+                                                        alignItems: 'center',
+                                                    }}
+                                                    onPress={() => {
+                                                        this.setState({ showPaidModal: false, step: 4 });
+                                                    }}
+                                                >
+                                                    <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>Next</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }}
+                                />
+                            ) : null}
+
                             {
                                 this.state.showPayModal ?
                                     <Modal

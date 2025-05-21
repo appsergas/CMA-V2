@@ -151,6 +151,7 @@ class SplashScreen extends Component {
       this.setState({
         getUserDetailsCalled: false
       }, () => {
+        console.log('AAA', getUserDetailsResult);
         if (getUserDetailsResult && getUserDetailsResult.content && getUserDetailsResult.content.USER_ID) {
           this.props.updateUserDetails(getUserDetailsResult.content)
         } else {

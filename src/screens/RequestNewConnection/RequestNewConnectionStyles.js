@@ -309,6 +309,7 @@ payBillText: {
     fontSize: 16,
     fontWeight:"500",
     fontFamily: "Tajawal-Medium"
+    
   },
   registerButtonViewStyle: {
     width: "95%",

@@ -97,6 +97,7 @@ class RaiseComplaint extends Component {
 
                     })
                 } else {
+                    console.log("postComplaintResult", postComplaintResult)
                     this.toastIt("Something went wrong, please try again later")
                 }
             })
@@ -158,7 +159,7 @@ class RaiseComplaint extends Component {
                 "COMMENTS": this.state.complaintDescription,
                 "FILE_ATTACHMENTS": attachments
             }
-
+console.log("reqBody", reqBody)
             this.setState({
                 apiCallFlags: { ...this.state.apiCallFlags, ...{ postComplaintApiCalled: true } }
             }, () => this.props.postComplaint(reqBody))

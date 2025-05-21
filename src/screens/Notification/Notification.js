@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { XIcon, LogooIcon } from '../../../assets/icons'
 import LinearGradient from 'react-native-linear-gradient';
+import  StatusBar  from 'react-native/Libraries/Components/StatusBar/StatusBar';
 
 
 export default class Notification extends Component {

@@ -115,31 +115,39 @@ class MyLinksMain extends Component {
             const deviceId = await DeviceInfo.getUniqueId();
             const deviceIp = await DeviceInfo.getIpAddress();
             const deviceName = await DeviceInfo.getDeviceName();
-            const logoutDeviceLog = {
-                user_id: userId,
-                device_id: deviceId,
-                device_ip: deviceIp,
-                device_name: deviceName,
-            };
-            await logout(logoutDeviceLog);
-            await AsyncStorage.multiRemove([
-                'sergas_customer_mobile_number',
-                'contract_list',
-                'sergas_customer_access_token',
-                'sergas_customer_login_flag',
-                'sergas_customer_user_id'
-            ]);
-
-
-            this.props.updateContracts([]);
-            this.props.navigation.reset({
-                index: 0,
-                routes: [{ name: 'Login' }],
+    
+            this.setState({
+                LogoutDeviceLog: {
+                    user_id: userId,
+                    device_id: deviceId,
+                    device_ip: deviceIp,
+                    device_name: deviceName,
+                }
+            }, () => {
+                // Perform the logout operation
+                logout(this.state.LogoutDeviceLog);
+                 //AsyncStorage.setItem('loginThroughUaePass',"false")
+                 //AsyncStorage.setItem('extuuid',"")
+                // Clear AsyncStorage items
+                AsyncStorage.multiRemove([
+                    'sergas_customer_mobile_number', 
+                    'contract_list', 
+                    'sergas_customer_access_token', 
+                    'sergas_customer_login_flag',
+                    'sergas_customer_user_id'
+                    ,'extuuid'
+                    ,'loginThroughUaePass'
+                ], () => {
+                    // Update the contracts and navigate to Login screen
+                    this.props.updateContracts([]);
+                    this.props.navigation.navigate('Login');
+                });
             });
         } catch (error) {
-            //console.error("Error during logout process: ", error);
+            console.error("Error during logout process: ", error);
         }
     }
+    
     truncateText = (text, maxLength) => {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     };

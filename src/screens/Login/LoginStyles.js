@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   imageView: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   goodieeLogoImage: {
     width: 90,
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   buttonLabelStyle: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   registerButtonStyle: {
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonuaepassStyle: {
-    width: 250,
-    height: 50,
+    width: 380,
+    height: 61,
     resizeMode: 'contain',
   },
 
@@ -110,6 +110,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#0057A2',
     opacity: 0.3,
   },
+  dividerLineV: {
+    width: 1,        
+    height: '100%',
+    backgroundColor: '#0057A2',
+    opacity: 0.3,
+  },
+  
   dividerText: {
     color: '#FFFFFF',
     marginHorizontal: 12,
@@ -131,16 +138,21 @@ const styles = StyleSheet.create({
   },
   
   registerLinkText: {
-    fontWeight: '700',
+    fontWeight: '600',
     textDecorationLine: 'underline',
     color: '#FFFFFF',
+    fontSize: 14,
   },
 
 
 
 
 
-
+  flagEmoji: {
+    fontSize: 24,
+    marginRight: 8,
+  },
+  
   inputGroupStyle: {
     // backgroundColor: 'rgba(255, 255, 255, 0.06)', // ✅ Subtle frosted look
     borderColor: '#0057A2',

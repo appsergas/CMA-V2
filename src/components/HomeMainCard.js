@@ -3,6 +3,10 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, ActivityIn
 import Carousel from 'react-native-snap-carousel';
 import { t } from '../services/translate/i18n'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBuildingUser, faBuilding, faFileSignature } from '@fortawesome/free-regular-svg-icons';
+import { faDoorClosed, faDoorOpen, faFileContract } from '@fortawesome/free-solid-svg-icons';
 
 class HomeMainCard extends Component {
     constructor(props) {
@@ -16,7 +20,7 @@ class HomeMainCard extends Component {
     }
 
 
-    async componentDidMount () {
+    async componentDidMount() {
         let activeIndex = await AsyncStorage.getItem("sergas_customer_active_contract_index")
         this.setState({
             currentIndex: parseInt(activeIndex)
@@ -26,154 +30,168 @@ class HomeMainCard extends Component {
                     this.carousel.snapToItem(this.state.currentIndex)
                 }
             }, 250)
-            
+
             this.props.currentIndex(this.state.currentIndex)
         })
     }
 
     renderItem = ({ item, index }) => {
+        const isSelected = index === this.state.currentIndex;
+
         return (
-            this.props.contracts.length ?
-            (<View style={ index == this.state.currentIndex ? {
-                borderColor: "#102D4F", borderWidth: 2, borderRadius: 4,padding: 5,        
-                // shadowColor: '#577ABD',
-            //     shadowOffset: { height: 0, width: 0 }, // IOS
-            //     shadowOpacity: 1, // IOS
-            //     shadowRadius: 5, //IOS
-            // backgroundColor: '#fff',
-            // elevation: 15,  // Android,
-            marginBottom: 8
-            } : {borderColor: "#8E9093", borderWidth: 0.4, borderRadius: 4,padding: 5}}>
-                <View style={styles.cardBodyTitleView}>
-                    {/* <TouchableOpacity
-                        style={styles.clickButton}
-                        onPress={() => this.carousel.snapToPrev()}>
-                        <Image
-                            source={require('../../assets/images/clickBack.png')}
-                            style={styles.clickImage}
-                        />
-                    </TouchableOpacity> */}
-                    <Text style={styles.cardBodyTitleText}>{item.CONTRACT_NO}</Text>
-                    {/* <TouchableOpacity
-                        style={styles.clickButton}
-                        onPress={() => this.carousel.snapToNext()}>
-                        <Image
-                            source={require('../../assets/images/click.png')}
-                            style={styles.clickImage}
-                        />
-                    </TouchableOpacity> */}
-                </View>
-
-                <View style={styles.cardBodyRow}>
-                    <View style={styles.cardBodyColumnLeft}>
-                        <Image source={require("../../assets/images/Bno.png")}
-                    style={{height: 16,width: 16,marginRight: 5}} />
-                        <Text style={styles.cardBodyText}>{t("home.buildingName")}</Text>
-                    </View>
-                    <View style={styles.cardBodyColumnRight}>
-                        <Text style={styles.cardBodyText1}>{item.BUILDING_NAME}</Text>
-                    </View>
-                </View>
-
-                <View style={styles.cardBodyRow}>
-                    <View style={styles.cardBodyColumnLeft}>
-                    <Image source={require("../../assets/images/Ano.png")}
-                    style={{height: 16,width: 16,marginRight: 5}} />
-                        <Text style={styles.cardBodyText}>{t("home.flatNo")}</Text>
-                    </View>
-                    <View style={styles.cardBodyColumnRight}>
-                        <Text style={styles.cardBodyText1}>{item.APARTMENT_CODE}</Text>
-                    </View>
-                </View>
-
-                {/* <View style={styles.cardBodyRow}>
-                    <View style={styles.cardBodyColumnLeft}>
-                        <Text style={styles.cardBodyText}>{t("home.lastReading")}</Text>
-                    </View>
-                    <View style={styles.cardBodyColumnRight}>
-                        <Text style={styles.cardBodyText1}>{item.PREVIOUS_READING}</Text>
-                    </View>
+            <View>
+                {/* Floating Label ABOVE the card */}
+                {/* <View style={styles.cardFloatingLabel}>
+                    <Text style={styles.cardFloatingLabelText}>
+                        {item.CONTRACT_NO}
+                    </Text>
                 </View> */}
 
-                <View style={styles.cardBodyRow}>
-                    <View style={styles.cardBodyColumnLeft}>
-                    <Image source={require("../../assets/images/Reading.png")}
-                    style={{height: 16,width: 16,marginRight: 5}} />
-                        <Text style={styles.cardBodyText}>{t("home.lastReading")}</Text>
+                <View style={[
+                    styles.cardContainer,
+                    {
+                        borderColor: isSelected ? "#102D4F1F" : "#E2E8F0",
+                        borderWidth: isSelected ? 2 : 1,
+                        marginTop: 10, // Add margin below label
+                    }
+                ]}>
+                    {/* Header Row */}
+
+                    <View style={styles.grid}>
+                        <View style={styles.gridItem}>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <FontAwesomeIcon icon={faFileContract} size={10} style={{ fontWeight: 'normal' }} />
+
+                                <Text style={styles.label}> Contract No.</Text>
+                            </View>
+                            <Text style={styles.value}>{item.CONTRACT_NO}</Text>
+                        </View>
+
+                        <View style={styles.gridItem}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <FontAwesomeIcon icon={faDoorOpen} size={10} style={{ fontWeight: 'normal' }} />
+                                <Text style={styles.label}> Flat No.</Text>
+                            </View>
+                            <Text style={styles.value}>{item.APARTMENT_CODE}</Text>
+                        </View>
+
                     </View>
-                    <View style={styles.cardBodyColumnRight}>
-                        <Text style={styles.cardBodyText1}>{item.LAST_READING}</Text>
+
+                    <View style={styles.headerRow}>
+                        {/* Building Name */}
+
+
+                        <View style={styles.headerBox}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                {/* <Icon name="business-outline" style={styles.TitleIcon} /> */}
+                                <FontAwesomeIcon icon={faBuilding} size={10} style={{ fontWeight: 'normal' }} />
+                                <Text style={styles.label}> Building Name</Text>
+                            </View>
+                            {/* <Text style={styles.value}>{item.BUILDING_NAME}</Text> */}
+                            <Text style={styles.value}>AL MASKAN BUILDING-AL GHANDI </Text>
+
+                        </View>
+
+                    </View>
+
+                    {/* 2x2 Grid of Details */}
+                    <View style={styles.grid}>
+                        {/* <View style={styles.gridItem}>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <FontAwesomeIcon icon={faFileContract} size={10} style={{ fontWeight: 'normal' }} />
+
+                                <Text style={styles.label}> Building No.</Text>
+                            </View>
+                            <Text style={styles.value}>{item.BUILDING_NAME}</Text>
+                        </View>
+
+                        <View style={styles.gridItem}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <FontAwesomeIcon icon={faDoorOpen} size={10} style={{ fontWeight: 'normal' }} />
+                                <Text style={styles.label}> Flat No.</Text>
+                            </View>
+                            <Text style={styles.value}>{item.APARTMENT_CODE}</Text>
+                        </View> */}
+
+                        <View style={styles.gridItem}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Icon name="speedometer-outline" style={styles.TitleIcon} />
+                                <Text style={styles.label}> Last Meter Reading</Text>
+                            </View>
+
+                            <Text style={styles.value}>{item.LAST_READING}</Text>
+                        </View>
+
+                        {/* Last Consumption */}
+                        <View style={styles.gridItem}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Icon name="pulse-outline" style={styles.TitleIcon} />
+                                {/* <FontAwesomeIcon icon={faBuilding} style={{fontSize:50}} /> */}
+                                <Text style={styles.label}> Last Consumption</Text>
+                            </View>
+                            <Text style={styles.value}>
+                                {Math.round((item.LAST_READING - item.PREVIOUS_READING) * 100) / 100}
+                            </Text>
+                        </View>
                     </View>
                 </View>
-
-                <View style={styles.cardBodyRow}>
-                    <View style={styles.cardBodyColumnLeft}>
-                    <Image source={require("../../assets/images/consumption.png")}
-                    style={{height: 16,width: 16,marginRight: 5}} />
-                        <Text style={styles.cardBodyText}>{t("home.consumption")}</Text>
-                    </View>
-                    <View style={styles.cardBodyColumnRight}>
-                        <Text style={styles.cardBodyText1}>{Math.round((item.LAST_READING - item.PREVIOUS_READING) * 100) / 100 }</Text>
-                    </View>
-                </View>
-
-            </View>) :
-            (<View style={styles.cardBodyTitleView}>
-                <Text style={styles.cardBodyText}>No Accounts Yet</Text>
-            </View>)
+            </View>
         );
-    }
+    };
+
 
     render() {
-        const {height,width} = Dimensions.get("screen")
+        const { height, width } = Dimensions.get("screen")
         return (
             <View style={styles.cardView} >
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                {this.props.contracts.length ? (this.props.from == "home" || this.props.from == "profile")
-                    ? 
-                    null
-                    // <View style={styles.cardHeader}>
-                    //     <Image
-                    //         source={require("../../assets/images/HomeProfile.png")}
-                    //         style={styles.HomeProfileImage} />
-                    //     <View style={styles.profileLabelView}>
-                    //         <Text style={styles.cardHeaderText}>{this.props.contracts.length ? this.props.contracts[0].PARTYNAME : ''}</Text>
-                    //         <Text style={styles.accountNumberText}>{this.props.contracts.length ? this.props.contracts[0].USER_ID : ''}</Text>
-                    //     </View>
-                    // </View>
-                    : this.props.from == "payment"
-                        ? null
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    {this.props.contracts.length ? (this.props.from == "home" || this.props.from == "profile")
+                        ?
+                        null
                         // <View style={styles.cardHeader}>
-                        //     <View style={styles.paymentDueRow1}>
-                        //         <Text style={styles.accountNumberText}>{t("payment.totalAmountDue")}</Text>
-                        //     </View>
-                        //     <View style={styles.paymentDueRow2}>
-                        //         <View style={styles.amountView}>
-                        //             <Text style={styles.paymentAmountText}>{this.props.contracts.length ? 
-                        //             this.props.contracts[this.state.currentIndex].OUTSTANDING_AMT > 0 ? this.props.contracts[this.state.currentIndex].OUTSTANDING_AMT  : 0 
-                        //             : 0}</Text>
-                        //             <Text style={styles.aedText}>{t("home.aed")}</Text>
-                        //         </View>
+                        //     <Image
+                        //         source={require("../../assets/images/HomeProfile.png")}
+                        //         style={styles.HomeProfileImage} />
+                        //     <View style={styles.profileLabelView}>
+                        //         <Text style={styles.cardHeaderText}>{this.props.contracts.length ? this.props.contracts[0].PARTYNAME : ''}</Text>
+                        //         <Text style={styles.accountNumberText}>{this.props.contracts.length ? this.props.contracts[0].USER_ID : ''}</Text>
                         //     </View>
                         // </View>
-                        : null : null}
+                        : this.props.from == "payment"
+                            ? null
+                            // <View style={styles.cardHeader}>
+                            //     <View style={styles.paymentDueRow1}>
+                            //         <Text style={styles.accountNumberText}>{t("payment.totalAmountDue")}</Text>
+                            //     </View>
+                            //     <View style={styles.paymentDueRow2}>
+                            //         <View style={styles.amountView}>
+                            //             <Text style={styles.paymentAmountText}>{this.props.contracts.length ? 
+                            //             this.props.contracts[this.state.currentIndex].OUTSTANDING_AMT > 0 ? this.props.contracts[this.state.currentIndex].OUTSTANDING_AMT  : 0 
+                            //             : 0}</Text>
+                            //             <Text style={styles.aedText}>{t("home.aed")}</Text>
+                            //         </View>
+                            //     </View>
+                            // </View>
+                            : null : null}
                 </View>
 
-                <View style={(this.props.from == "profile" || this.props.from ==  "raiseComplaint") ? {...styles.cardBodyView,...{borderBottomWidth: 0}} : styles.cardBodyView}>
+                <View style={(this.props.from == "profile" || this.props.from == "raiseComplaint") ? { ...styles.cardBodyView, ...{ borderBottomWidth: 0 } } : styles.cardBodyView}>
                     <Carousel
-                    // layout='stack'
+                        // layout='stack'
                         removeClippedSubviews={false}
                         ref={(c) => { this.carousel = c; }}
                         data={this.props.contracts}
                         renderItem={this.renderItem}
-                        sliderWidth={width*(100/100)}
-                        itemWidth={width*(85/100)}
-                        onSnapToItem={async(index) => {
+                        sliderWidth={width * (100 / 100)}
+                        itemWidth={width * (85 / 100)}
+                        onSnapToItem={async (index) => {
                             await AsyncStorage.setItem("sergas_customer_active_contract_index", this.carousel.currentIndex.toString())
-                            this.setState({currentIndex: this.carousel.currentIndex}, () => this.props.currentIndex(this.carousel.currentIndex))
+                            this.setState({ currentIndex: this.carousel.currentIndex }, () => this.props.currentIndex(this.carousel.currentIndex))
                         }}
                         enableSnap={true}
-                        
+
                     />
                 </View>
 
@@ -261,11 +279,11 @@ const styles = StyleSheet.create({
         // backgroundColor: '#fff',
         // elevation: 15,  // Android,
         // paddingVertical: 20,
-        marginBottom: 30,
+        marginBottom: 10,
     },
     cardHeader: {
         // paddingHorizontal: "10%",
-        width: Dimensions.get('screen').width*(90/100),
+        width: Dimensions.get('screen').width * (90 / 100),
         alignItems: "center",
         flexDirection: "row",
         justifyContent: 'flex-start',
@@ -308,12 +326,12 @@ const styles = StyleSheet.create({
     cardBodyView: {
         // paddingHorizontal: "10%",
         // marginBottom: 10,
-        marginTop: 10,
-        paddingBottom: 10,
+        marginTop: 5,
+        paddingBottom: 0,
         // borderBottomWidth: 1,
         // borderBottomColor: "rgba(232, 226, 226, 1)",
         justifyContent: 'center',
-        alignItems: 'center', 
+        alignItems: 'center',
     },
     inputLabelStyle: {
         color: "rgba(134, 120, 120, 1)",
@@ -432,7 +450,68 @@ const styles = StyleSheet.create({
     amountView: {
         flexDirection: "row",
         alignItems: 'flex-end',
-    }
+    },
+
+
+    cardContainer: {
+        borderRadius: 15,
+        padding: 7,
+        marginBottom: 2,
+        backgroundColor: "#FFFFFF",
+    },
+    headerRow: {
+        justifyContent: 'space-between',
+        marginBottom: 3,
+        marginTop: 3,
+    },
+    headerBox: {
+        backgroundColor: '#F7FAFC',
+        borderRadius: 10,
+        padding: 5,
+        borderWidth: 1,
+        borderColor: '#E2E8F0',
+        marginBottom: 2,
+    },
+    label: {
+        fontSize: 9,
+        color: '#4A5563',
+        fontWeight: '300',
+    },
+    value: {
+        fontSize: 11,
+        fontWeight: '800',
+        color: '#0058a2',
+    },
+    grid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between'
+    },
+    gridItem: {
+        width: '48%',
+        backgroundColor: '#F7FAFC',
+        borderRadius: 10,
+        padding: 7,
+        borderWidth: 1,
+        borderColor: '#E2E8F0',
+        marginBottom: 2,
+    },
+    cardFloatingLabel: {
+        position: 'absolute',
+        top: 0,
+        left: 15,
+        backgroundColor: '#F7FAFC',
+        paddingHorizontal: 2,
+        zIndex: 2,
+        borderRadius: 5,
+    },
+    cardFloatingLabelText: {
+        fontSize: 14,
+        color: '#0058a2',
+        fontWeight: '900',
+        paddingBottom: 0,
+    },
+
 })
 
 export default HomeMainCard

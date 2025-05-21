@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import PickerControl from '../../controls/Picker';
-import { LogooIcon, ArrowIcon } from '../../../assets/icons';
+import { LogooIcon, ArrowIcon, FlagUAEIcon, FlagKSAIcon, FlagOMANIcon } from '../../../assets/icons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -77,14 +77,35 @@ export default class Walkthrough extends Component {
     });
   };
 
+
   renderItem = ({ item, index }) => {
     const { selectedCountry } = this.state;
 
     const countryItems = [
-      { id: 1, label: '🇦🇪 UAE', value: 'UAE' },
-      { id: 2, label: '🇸🇦 Saudi Arabia', value: 'Saudi Arabia' },
-      { id: 3, label: '🇴🇲 Oman', value: 'Oman' },
+      {
+        id: 1,
+        label: '🇦🇪 UAE',
+        value: 'UAE',
+        code: '+971',
+        flagEmoji: <FlagUAEIcon />,
+      },
+      {
+        id: 2,
+        label: '🇸🇦 Saudi Arabia',
+        value: 'Saudi Arabia',
+        code: '+966',
+        flagEmoji: <FlagKSAIcon />,
+      },
+      {
+        id: 3,
+        label: '🇴🇲 Oman',
+        value: 'Oman',
+        code: '+968',
+        flagEmoji: <FlagOMANIcon />,
+      },
+      // Add more countries here easily
     ];
+
 
     return (
       <ImageBackground source={item.background} resizeMode="cover" style={styles.background}>
@@ -112,9 +133,10 @@ export default class Walkthrough extends Component {
               <View style={styles.pickerWrapper}>
                 <PickerControl
                   placeholder="Select Country"
-                  selectedValue={selectedCountry}
+                  selectedValue={selectedCountry?.value} // ✅ Fix here
                   onValueChange={(value) => {
-                    this.setState({ selectedCountry: value });
+                    const selected = countryItems.find(item => item.value === value);
+                    this.setState({ selectedCountry: selected });
                   }}
                   items={countryItems}
                   mode="dropdown"
@@ -122,12 +144,27 @@ export default class Walkthrough extends Component {
 
                 {!!selectedCountry && (
                   <TouchableOpacity
-                    style={styles.getStartedButton}
-                    onPress={() => this.props.navigation.navigate('Login')}
+                    style={[
+                      styles.getStartedButton,
+                      selectedCountry.code !== '+971' && styles.disabledButton
+                    ]}
+                    onPress={() => {
+                      if (selectedCountry.code === '+971') {
+                        this.props.navigation.navigate('Login', {
+                          countryCode: selectedCountry.code,
+                          countryFlagEmoji: selectedCountry.flagEmoji,
+                        });
+                      }
+                    }}
+                    disabled={selectedCountry.code !== '+971'}
                   >
-                    <Text style={styles.getStartedText}>Continue</Text>
+                    <Text style={styles.getStartedText}>
+                      {selectedCountry.code === '+971' ? 'Continue' : 'Coming Soon'}
+                    </Text>
                   </TouchableOpacity>
                 )}
+
+
               </View>
             )}
 

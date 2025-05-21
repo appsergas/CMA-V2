@@ -7,7 +7,7 @@ import { Alert, AppState, BackHandler, Linking, Platform } from 'react-native'
 import { LogBox } from "react-native";
 import withApiConnector from './services/api/data/data/api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import crashlytics  from '@react-native-firebase/crashlytics'
+//import crashlytics  from '@react-native-firebase/crashlytics'
 
 
 
@@ -72,7 +72,7 @@ class App extends Component {
           this.setState({
             versionCheckCalled: true
           }, () => {
-            crashlytics().log('crash');
+            //crashlytics().log('crash');
             this.props.getAppVersion({"app_name": "sergas_customer"})
           })
         }

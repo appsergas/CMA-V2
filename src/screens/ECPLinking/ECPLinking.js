@@ -26,9 +26,14 @@ import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import { UAEPass } from 'react-native-uaepass';
-import  { UAEPassConfig }  from '../../utils/permissions';
+import { UAEPassConfig } from '../../utils/permissions';
 import { postLoginDeviceLog } from '../../utils/uaePassService';
 
+import AppTextInput from '../../controls/AppTextInput';
+
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { LogoIcon, XIcon } from '../../../assets/icons'
+import LinearGradient from 'react-native-linear-gradient';
 var qs = require('qs');
 
 
@@ -395,7 +400,7 @@ class ECPLinking extends Component {
     //   onMessage={msg => {}}
     //   onNavigationStateChange={test => {
     //     // Linking.openURL(test.url)
-    //   originWhitelist={["https://*","uaepass://*"]}
+    //   originWhitelist={["https://","uaepass://"]}
     //   allowFileAccess={true}
     // domStorageEnabled={true}
     // javaScriptEnabled={true}
@@ -408,35 +413,49 @@ class ECPLinking extends Component {
     //   style={{flex: 1}} />
     // )
     return (
-      <SafeAreaView style={{ backgroundColor: '#102D4F', height: "100%", flex: 1 }} >
+      <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
+        <SafeAreaView style={{ height: "100%", flex: 1 }} >
+          <View style={{ flexDirection: "row", }}>
+            <View style={styles.headerCol1}>
+              <TouchableOpacity style={{ margin: 20 }} onPress={() => {
+                if (this.state.step > 1) {
+                  this.setState({ step: this.state.step - 1 })
+                } else {
+                  this.props.navigation.goBack()
+                }
+              }}>
+                {/* <XIcon color={"#FFFFFF"} /> */}
+              </TouchableOpacity>
 
-        <ImageBackground source={Images.TransparentBackground} style={{ height: Dimensions.HP_100, width: Dimensions.WP_100 }} resizeMode={'cover'}>
-          <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Dimensions.HP_90, }}>
-            <KeyboardAwareScrollView
-              behavior={Platform.OS === 'ios' ? 'padding' : null}
-              // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-              style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
-              enabled
+            </View>
+          </View>
+
+          <KeyboardAwareScrollView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+            style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
+            enabled
+          >
+            <ScrollView
+              ref={(ref) => (this.scrollView = ref)}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollView}
             >
-              <ScrollView
-                ref={(ref) => (this.scrollView = ref)}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollView}
-              >
-                <View style={styles.imageView}>
-                  <Image
+              <View style={styles.imageView}>
+                {/* <Image
                     source={require("../../../assets/images/sergas_logo.png")}
-                    style={styles.goodieeLogoImage} />
+                    style={styles.goodieeLogoImage} /> */}
+                <LogoIcon />
+              </View>
+              <View style={styles.cardView} >
+                <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
+                  <Text style={styles.cardHeaderText}>UAE PASS - SERGAS Customer Profile Linking</Text>
                 </View>
-                <View style={styles.cardView} >
-                  <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
-                    <Text style={styles.cardHeaderText}>UAE PASS - SERGAS Customer Profile Linking</Text>
-                  </View>
-                  <View style={{ ...styles.cardHeader, marginTop: 0 }}>
-                    <Text style={styles.cardPerText}>( Login with your SERGAS Customer credentials )</Text>
-                  </View>
-                  <View style={styles.inputGroupStyle}>
+                <View style={{ ...styles.cardHeader, marginTop: 0 }}>
+                  <Text style={styles.cardPerText}>( Login with your SERGAS Customer credentials )</Text>
+                </View>
+                {/* <View style={styles.inputGroupStyle}>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Text style={{
@@ -458,56 +477,88 @@ class ECPLinking extends Component {
                       </View>
 
                     </View>
-                  </View>
-                  <View style={styles.buttonView}>
-                    <TouchableOpacity
-                      disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
-                      onPress={this.handleSendOtp}
-                      style={styles.buttonStyle}
-                    >
-                      {
-                        (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
-                          <ActivityIndicator size='small' color='white' /> :
-                          <Text
-                            style={styles.buttonLabelStyle}>Link above account with UAE PASS</Text>
-                      }
-                    </TouchableOpacity>
+                  </View> */}
+                <View style={styles.inputGroupStyle}>
+                  <View style={styles.inputRow}>
+                    <Image
+                      source={require("../../../assets/images/ae.png")}
+                      style={styles.flagIcon}
+                    />
+
+                    <Text style={styles.countryCode}>+971</Text>
+                    {/* <TextInput
+                      style={styles.textInput}
+                      placeholder={"50 1234567"}
+                      placeholderTextColor="#828E92"
+                      keyboardType={"numeric"}
+                      value={this.state.mobileNumber}
+                      onChangeText={this.handleMobileNumberField}
+                      underlineColorAndroid="transparent" // ⬅️ This line is critical on Android
+                    /> */}
+
+                    <AppTextInput
+                      Placeholder="50 1234567"
+                      Value={this.state.mobileNumber}
+                      OnChange={this.handleMobileNumberField}
+                      Type="numeric"
+                      Editable={true}
+                      Style={{
+                        // backgroundColor: 'rgba(255,255,255,0.06)', // ✅ to match screenshot
+                        color: '#FFFFFF',
+                        fontSize: 15,
+                        fontWeight: "700",
+                        marginTop: 4
+                        // paddingVertical: Platform.OS === 'ios' ? 10 : 10,
+                      }}
+                    />
                   </View>
                 </View>
-                <View style={styles.registerButtonStyle}>
 
-                  <View style={styles.registerHereView}>
-                    <Text
-                      style={styles.notCustomerText}>{t("login.notCustomer")}</Text>
-                  </View>
-                  <View style={styles.notCustomerView}>
+                <View style={styles.buttonView}>
+                  <TouchableOpacity
+                    disabled={getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled}
+                    onPress={this.handleSendOtp}
+                    style={styles.buttonStyle}
+                  >
+                    {
+                      (getAllContractsCalled || registerCalled || checkTermsCalled || updateTermsCalled || loginCalled) ?
+                        <ActivityIndicator size='small' color='white' /> :
+                        <Text
+                          style={styles.buttonLabelStyle}>Link above account with UAE PASS</Text>
+                    }
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.registerButtonStyle}>
+                <View style={styles.registerHereView}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={styles.inlineRegisterText}>
+                      {t("login.notCustomer")}{" "}
+                    </Text>
                     <TouchableOpacity
                       style={styles.payBillView}
                       onPress={() => this.props.navigation.navigate("RegisterUser")}
-
                     >
-                      <Text style={styles.registerHereText}>
-                        {t("login.registerHere")}!
+                      <Text style={styles.registerLinkText}>
+                        {t("login.registerHere") || "REGISTER"}
                       </Text>
-
                     </TouchableOpacity>
                   </View>
-
                 </View>
-                <View style={styles.noteContainer}>
-                  <View style={styles.bulletPointView}>
-                    <Text style={styles.bulletPointText}>Note: This is a one time process, your future login's through UAE PASS will be seamless</Text>
-                  </View>
+              </View>
+              <View style={styles.noteContainer}>
+                <View style={styles.bulletPointView}>
+                  <Text style={styles.bulletPointText}>Note: This is a one time process, your future login's through UAE PASS will be seamless</Text>
                 </View>
+              </View>
 
 
-              </ScrollView>
+            </ScrollView>
 
 
-            </KeyboardAwareScrollView>
-          </InfoContainer>
-        </ImageBackground>
-      </SafeAreaView>
+          </KeyboardAwareScrollView>
+        </SafeAreaView>
+      </LinearGradient>
     )
   }
 
@@ -572,6 +623,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(withApiConnector(ECP
     },
   }
 }))
-
-
-

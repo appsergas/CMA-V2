@@ -31,4 +31,8 @@ export { default as XIcon } from "./XIcon";
 export { default as ArrowIcon } from "./ArrowIcon";
 export { default as CameraIcon } from "./CameraIcon";
 export { default as CircleRadioIcon } from "./CircleRadioIcon";
+export { default as RegInfoIcon } from "./RegInfoIcon";
+export { default as FlagUAEIcon } from "./FlagUAEIcon";
+export { default as FlagKSAIcon } from "./FlagKSAIcon";
+export { default as FlagOMANIcon } from "./FlagOMANIcon";
 

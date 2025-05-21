@@ -63,7 +63,7 @@ function MainTabs() {
           backgroundColor: "#102D4F",
           paddingBottom: 5,
           // height: 64,
-          height: 84,
+          height: 70,
           position: "absolute",
           left: 0,
           right: 0,

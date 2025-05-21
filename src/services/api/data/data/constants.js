@@ -27,6 +27,43 @@ const HTTP = {
   request_timeout: 5000000
 }
 
+const getPaymentGatewayConfig = (companyCode, apiPath) => {
+  const isTestEnv = apiPath.includes("cmaapiuat.sergas.com");
+
+  switch (companyCode) {
+    case "01": // Abu Dhabi
+      return {
+        outletReference: isTestEnv ? abudhabiTestOutletReference : abudhabiOutletReference,
+        apiKey: isTestEnv ? paymentApiKeyTest : paymentApiKeyAUH,
+        tokenApiUrl: isTestEnv ? paymentGatewayTokenApiUrlTest : paymentGatewayTokenApiUrl,
+        orderApiUrl: isTestEnv ? paymentGatewayCreateOrderUrlTest : paymentGatewayCreateOrderUrl
+      };
+    case "02": // Dubai
+      return {
+        outletReference: isTestEnv ? dubaiTestOutletReference : dubaiOutletReference,
+        apiKey: isTestEnv ? paymentApiKeyTest : paymentApiKeyDXB,
+        tokenApiUrl: isTestEnv ? paymentGatewayTokenApiUrlTest : paymentGatewayTokenApiUrl,
+        orderApiUrl: isTestEnv ? paymentGatewayCreateOrderUrlTest : paymentGatewayCreateOrderUrl
+      };
+    case "03": // Fujairah
+      return {
+        outletReference: isTestEnv ? fujairahTestOutletReference : fujairahOutletReference,
+        apiKey: paymentApiKeyTest, // Same for both environments
+        tokenApiUrl: isTestEnv ? paymentGatewayTokenApiUrlTest : paymentGatewayTokenApiUrl,
+        orderApiUrl: isTestEnv ? paymentGatewayCreateOrderUrlTest : paymentGatewayCreateOrderUrl
+      };
+    case "05": // Al Ain
+      return {
+        outletReference: isTestEnv ? alainTestOutletReference : alainOutletReference,
+        apiKey: isTestEnv ? paymentApiKeyTest : paymentApiKeyALN,
+        tokenApiUrl: isTestEnv ? paymentGatewayTokenApiUrlTest : paymentGatewayTokenApiUrl,
+        orderApiUrl: isTestEnv ? paymentGatewayCreateOrderUrlTest : paymentGatewayCreateOrderUrl
+      };
+    default:
+      return null;
+  }
+};
+
 
 module.exports = {
   paymentApiKeyAUH,
@@ -45,5 +82,6 @@ module.exports = {
   paymentGatewayCreateOrderUrl,
   paymentGatewayTokenApiUrlTest,
   paymentGatewayCreateOrderUrlTest,
-  paymentApiKeyTest
+  paymentApiKeyTest,
+  getPaymentGatewayConfig 
 };

@@ -38,29 +38,45 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: 'center',
-    paddingBottom: 80,
-    paddingTop: 30,
+    paddingBottom: 0,
+    paddingTop: 25,
     // backgroundColor: "red"
     // height: "100%",
     // overflow: "scroll",
   },
-  accountsLabelView: {
-      backgroundColor: "#FF8D00",
+  accountsLabelViewMain: {
       paddingVertical:2,
       paddingHorizontal:12,
       borderRadius:8,
       alignSelf:"flex-start",
-      marginBottom:10,
   },
-  accountsLabel: {
+  accountsLabelMain: {
       fontFamily: "Tajawal-Bold",
       fontSize: 16,
-      color: "#FFFFFF",
+      color: "#102C4E",
       fontWeight:"bold",
       textAlign:"center",
-      paddingTop:5
+      paddingTop:5,
       
   },
+  accountsLabelView: {
+    backgroundColor: "#FF8D00",
+    paddingVertical:0,
+    paddingHorizontal:10,
+    borderRadius:12,
+    alignSelf:"flex-start",
+    marginBottom:5,
+},
+accountsLabel: {
+    fontFamily: "Tajawal-Bold",
+    fontSize: 14,
+    color: "#FFFFFF",
+    fontWeight:"bold",
+    textAlign:"center",
+    paddingTop:5,
+    paddingBottom:5,
+    
+},
   welcomeLabel: {
     fontFamily: "Tajawal-Medium",
     fontSize: 18,
@@ -167,7 +183,7 @@ payBillText: {
     width: "100%",
     // alignItems: "flex-start",
     // padding: 8,
-    marginBottom: 20
+    marginBottom: 0
 
   },
   homeOption: {
@@ -177,12 +193,13 @@ payBillText: {
     paddingHorizontal: 0,
     alignItems: "center",
     justifyContent: "space-between",
-    width: 106, // Adjust width based on UI
-    height: 106, // Keeps a balanced height
-    elevation: 4, // Shadow for Android
+    width: 100, // Adjust width based on UI
+    height: 100, // Keeps a balanced height
+    elevation: 2, // Shadow for Android
     borderWidth: 1,
     borderColor: "#E0E6ED", // Light border for structure
-    marginRight:5,
+    margin:5,
+    marginBottom:5,
 },
 iconContainer: {
     alignItems: "center",
@@ -305,15 +322,15 @@ homeOptionText: {
     width: '100%'
   },
   bodyview:{
-    backgroundColor: "#FFFFFF",padding: 10,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3
+    backgroundColor: "#FFFFFF",padding: 10,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,marginBottom: 10,
   },
   headerView: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical: 15,
-    marginVertical: Platform.OS === 'ios' ? null : 20,
+    paddingVertical: 10,
+    marginVertical: Platform.OS === 'ios' ? null : 10,
 },
 headerLeft: {
     flexDirection: "row",
@@ -368,7 +385,7 @@ notificationDot: {
 },
 banner: {
     paddingHorizontal: 20,
-    marginTop: 15,
+    marginTop: 0,
     marginBottom: 35,
 
 
@@ -448,7 +465,7 @@ tabActiveText: {
 
 
   contentContainer: {
-    padding: 20,
+    padding: 10,
     alignItems: "center",
   },
   contentText: {

@@ -343,7 +343,7 @@ payBillText: {
     shadowOpacity: 0.05,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
-    elevation: 2,
+    // elevation: 2,
   },
   rowItem: {
     flexDirection: "row",

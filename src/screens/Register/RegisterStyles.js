@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
   imageView: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   goodieeLogoImage: {
     backgroundColor: "transparent",
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   buttonLabelStyle: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   registerButtonViewStyle: {
@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonuaepassStyle: {
-    width: 250,
-    height: 50,
+    width: 380,
+    height: 61,
     resizeMode: 'contain',
   },
 
@@ -142,6 +142,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
     justifyContent: 'center',
+  },
+  dividerLineV: {
+    width: 1,        
+    height: '100%',
+    backgroundColor: '#0057A2',
+    opacity: 0.3,
   },
   dividerLine: {
     flex: 1,
@@ -170,11 +176,11 @@ const styles = StyleSheet.create({
   },
   
   registerLinkText: {
-    fontWeight: '700',
+    fontWeight: '600',
     textDecorationLine: 'underline',
     color: '#FFFFFF',
+    fontSize: 14,
   },
-
 
 
 
@@ -219,6 +225,42 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 15,
   },
+
+  tooltipBubble: {
+    position: 'absolute',
+    bottom: 60, // adjust as needed
+    backgroundColor: 'rgba(255, 255, 255, 0.4)', // 40% opaque black
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    zIndex: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  
+  tooltipText: {
+    color: '#fff',
+    fontSize: 11,
+    textAlign: 'center',
+  },
+  
+  tooltipArrow: {
+    position: 'absolute',
+    top: '100%',
+    left: '100%',
+    marginLeft: -5,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 6,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: 'white',
+  },
+  
+  
 })
 
 export default styles

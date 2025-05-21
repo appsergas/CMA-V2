@@ -33,8 +33,8 @@ import { login, logout, register, getUserDetails, getAccessToken, postLoginDevic
 import DeviceInfo from 'react-native-device-info';
 
 import AppTextInput from '../../controls/AppTextInput';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
-import { LogoIcon, XIcon} from '../../../assets/icons'
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { LogoIcon, XIcon } from '../../../assets/icons'
 import LinearGradient from 'react-native-linear-gradient';
 
 var qs = require('qs');
@@ -43,6 +43,7 @@ var qs = require('qs');
 class Login extends Component {
   constructor(props) {
     super(props)
+    const { countryCode, countryFlagEmoji } = this.props.route.params || {};
     AsyncStorage.getItem('language', (err, res) => {
       if (res != null) {
         if (res == "ar") {
@@ -78,7 +79,9 @@ class Login extends Component {
       showUAEPASSCancelModal: false,
       scanEid: false,
       LoginDeviceLog: "",
-      loginThroughUaePass: false
+      loginThroughUaePass: false,
+      countryCode: countryCode || '+971',
+      countryFlagEmoji: countryFlagEmoji || '🇦🇪',
     }
     this.UAEPASSVisible();
     this.scrollView = React.createRef()
@@ -199,6 +202,7 @@ class Login extends Component {
             // console.log('uaepassmobileNumber  ', this.state.uaepassmobileNumber);
             // console.log('mobile  ', this.state.extuserdetails.mobile);
             // console.log('devicelog   ', this.state.LoginDeviceLog);
+
             if (this.state.uaepassmobileNumber === this.state.extuserdetails.mobile && this.state.newuuid === this.state.extuserdetails.extuuid) {
               // Direct login process here
               await postLoginDeviceLog(this.state.LoginDeviceLog);
@@ -206,8 +210,6 @@ class Login extends Component {
               this.setState({
                 mobileNumber: ''
               })
-              //console.log('B',this.state.LoginDeviceLog)
-              console.log('A')
 
               this.props.navigation.navigate("HomeBase");
             } else {
@@ -254,24 +256,16 @@ class Login extends Component {
             await AsyncStorage.setItem(
               'sergas_customer_mobile_number',
               "971" + this.state.mobileNumber
-            );
-
-            if (this.state.mobileNumber == "507867747" || this.state.mobileNumber == "506327735") {
-
-              await AsyncStorage.setItem("sergas_customer_login_flag", "true");
-              if (this.state.scanEid) {
-                this.props.navigation.navigate("OcrTest", { fromOtp: true });
-              } else {
-                this.props.navigation.navigate("HomeBase");
-              }
-            } else if (this.state.loginThroughUaePass) {
-              this.handleUaePassLoginSuccess();
+            )
+            if (this.state.loginThroughUaePass) {
+              this.handleUaePassLoginSuccess()
             } else {
-              this.props.navigation.navigate("Otp", { mobileNumber: "971" + this.state.mobileNumber, scanEid: this.state.scanEid });
+              this.props.navigation.navigate("Otp", { mobileNumber: "971" + this.state.mobileNumber, scanEid: this.state.scanEid })
             }
 
+
           } else {
-            this.setState({ showTermsModal: true });
+            this.setState({ showTermsModal: true })
           }
         } else {
           this.setState({
@@ -282,7 +276,7 @@ class Login extends Component {
             this.setState({ showToast: false, toastMessage: "" });
           }, 5000);
         }
-      });
+      })
     }
 
 
@@ -295,21 +289,12 @@ class Login extends Component {
           await AsyncStorage.setItem(
             'sergas_customer_mobile_number',
             "971" + this.state.mobileNumber
-          );
-
-          if (this.state.mobileNumber == "507867747" || this.state.mobileNumber == "506327735") {
-            await AsyncStorage.setItem("sergas_customer_login_flag", "true");
-            if (this.state.scanEid) {
-              this.props.navigation.navigate("OcrTest", { fromOtp: true });
-            } else {
-              this.props.navigation.navigate("HomeBase");
-            }
-          } else if (this.state.loginThroughUaePass) {
-            this.handleUaePassLoginSuccess();
+          )
+          if (this.state.loginThroughUaePass) {
+            this.handleUaePassLoginSuccess()
           } else {
-            this.props.navigation.navigate("Otp", { mobileNumber: "971" + this.state.mobileNumber, scanEid: this.state.scanEid });
+            this.props.navigation.navigate("Otp", { mobileNumber: "971" + this.state.mobileNumber, scanEid: this.state.scanEid })
           }
-
         } else {
           this.setState({
             showToast: true,
@@ -319,7 +304,7 @@ class Login extends Component {
             this.setState({ showToast: false, toastMessage: "" });
           }, 5000);
         }
-      });
+      })
     }
 
 
@@ -548,21 +533,21 @@ class Login extends Component {
     // )
     return (
       <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
-      <SafeAreaView style={{ height: "100%", flex: 1 }} >
+        <SafeAreaView style={{ height: "100%", flex: 1 }} >
 
-      <View style={{ flexDirection: "row", }}>
-              <View style={styles.headerCol1}>
-                  <TouchableOpacity style={{ margin: 20 }} onPress={() => {
-                      if (this.state.step > 1) {
-                          this.setState({ step: this.state.step - 1 })
-                      } else {
-                          this.props.navigation.goBack()
-                      }
-                  }}>
-                       <XIcon color={"#FFFFFF"}/>
-                  </TouchableOpacity>
-                 
-              </View>
+          <View style={{ flexDirection: "row", }}>
+            <View style={styles.headerCol1}>
+              <TouchableOpacity style={{ margin: 20 }} onPress={() => {
+                if (this.state.step > 1) {
+                  this.setState({ step: this.state.step - 1 })
+                } else {
+                  this.props.navigation.goBack()
+                }
+              }}>
+                <XIcon color={"#FFFFFF"} />
+              </TouchableOpacity>
+
+            </View>
           </View>
 
           <KeyboardAwareScrollView
@@ -581,7 +566,7 @@ class Login extends Component {
                 {/* <Image
                   source={require("../../../assets/images/sergas_logo.png")}
                   style={styles.goodieeLogoImage} /> */}
-                  <LogoIcon />
+                <LogoIcon />
               </View>
               <View style={styles.cardView} >
                 <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
@@ -637,38 +622,25 @@ class Login extends Component {
 
                 <View style={styles.inputGroupStyle}>
                   <View style={styles.inputRow}>
-                    <Image
-                      source={require("../../../assets/images/ae.png")}
-                      style={styles.flagIcon}
-                    />
-                    
-                    <Text style={styles.countryCode}>+971</Text>
-                    {/* <TextInput
-                      style={styles.textInput}
-                      placeholder={"50 1234567"}
-                      placeholderTextColor="#828E92"
-                      keyboardType={"numeric"}
-                      value={this.state.mobileNumber}
-                      onChangeText={this.handleMobileNumberField}
-                      underlineColorAndroid="transparent" // ⬅️ This line is critical on Android
-                    /> */}
+                    <Text style={styles.flagEmoji}>{this.state.countryFlagEmoji}</Text>
+                    <Text style={styles.countryCode}>{this.state.countryCode}</Text>
+                    <View style={styles.dividerLineV} />
 
                     <AppTextInput
-                      Placeholder="50 1234567"
+                      Placeholder="Enter your number"
                       Value={this.state.mobileNumber}
                       OnChange={this.handleMobileNumberField}
                       Type="numeric"
                       Editable={true}
                       Style={{
-                        // backgroundColor: 'rgba(255,255,255,0.06)', // ✅ to match screenshot
                         color: '#FFFFFF',
                         fontSize: 15,
                         fontWeight: "700",
-                        marginTop:4
-                        // paddingVertical: Platform.OS === 'ios' ? 10 : 10,
+                        marginTop: 4,
                       }}
                     />
                   </View>
+
                 </View>
 
 
@@ -689,25 +661,24 @@ class Login extends Component {
               </View>
               <View style={styles.registerButtonStyle}>
                 <View style={styles.registerHereView}>
-                  <Text style={styles.inlineRegisterText}>
-                  {t("login.notCustomer")}
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={styles.inlineRegisterText}>
+                      {t("login.notCustomer")}{" "}
+                    </Text>
                     <TouchableOpacity
                       style={styles.payBillView}
-                      // onPress={() => this.props.navigation.navigate("RegisterUser")}
-                      onPress={() => this.props.navigation.navigate("ECPLOption")}
-                    // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
+                      onPress={() => this.props.navigation.navigate("RegisterUser")}
                     >
-                    <Text style={styles.registerLinkText}>
-                      {/* {t("login.registerHere")}! */}
-                      REGISTER
-                    </Text>
+                      <Text style={styles.registerLinkText}>
+                        {t("login.registerHere") || "REGISTER"}
+                      </Text>
                     </TouchableOpacity>
-                  </Text>
+                  </View>
                 </View>
               </View>
 
               {
-                this.state.UAEPASSSupported ?
+                this.state.UAEPASSSupported && this.state.countryCode === '+971' ?
                   <View style={{
                     justifyContent: 'center',
                     alignItems: 'center'
@@ -716,7 +687,7 @@ class Login extends Component {
                     {/* <Text style={styles.uaepassorText}>OR</Text> */}
                     <View style={styles.dividerContainer}>
                       <View style={styles.dividerLine} />
-                      <Text style={styles.dividerText}>Or Login with</Text>
+                      <Text style={styles.dividerText}>OR</Text>
                       <View style={styles.dividerLine} />
                     </View>
                     <TouchableOpacity
@@ -805,10 +776,10 @@ class Login extends Component {
             ) : null}
           </KeyboardAwareScrollView>
           {/* </InfoContainer> */}
-        {/* </ImageBackground> */}
+          {/* </ImageBackground> */}
         </SafeAreaView>
-        </LinearGradient>
-      
+      </LinearGradient>
+
     )
   }
 

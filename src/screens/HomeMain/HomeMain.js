@@ -154,6 +154,7 @@ class HomeMain extends Component {
                         'contract_list',
                         JSON.stringify(getAllContractsResult.content.DETAIL)
                     )
+                    console.log("getAllContractsResult.content.DETAIL", getAllContractsResult.content.DETAIL)
                     this.props.updateContracts(getAllContractsResult.content.DETAIL)
                     this.setState({
                         contractList: getAllContractsResult.content.DETAIL
@@ -429,7 +430,7 @@ class HomeMain extends Component {
     truncateText = (text, maxLength) => {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     };
-  
+
 
     render() {
         let totalAmt = 0;
@@ -456,8 +457,8 @@ class HomeMain extends Component {
                                 <Image
                                     source={
                                         this.props.userDetails.profilePicture
-                                            ? { uri: this.props.userDetails.profilePicture } // Load remote image
-                                            : require("../../../assets/images/logo2.png")  // Load local image correctly
+                                            ? { uri: this.props.userDetails.profilePicture }
+                                            : require("../../../assets/images/logo2.png")
                                     }
                                     style={styles.profileImage}
                                 />
@@ -487,17 +488,13 @@ class HomeMain extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    {/* Banner Section */}
                     <View style={styles.banner}>
                         <Text style={styles.bannerText}>
                             Pay Your Gas Bills, Monitor Your Gas Usage, Manage Your Gas Service.
                         </Text>
                     </View>
 
-                    {/* <View style={{ ...styles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
 
-                    </View> */}
-                    {/* Tabs */}
                     <View>
                         <View style={styles.tabWrapper}>
                             <TouchableOpacity
@@ -532,11 +529,10 @@ class HomeMain extends Component {
 
                         <View style={{
                             ...styles.body,
-                            height: Platform.OS == 'ios' ? "85%" : "85%"
+                            height: Platform.OS == 'ios' ? "90%" : "85%"
                         }} >
                             <KeyboardAwareScrollView
                                 behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
-                                // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
                                 contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_30 }}
                                 style={{ flex: 1, paddingBottom: 60 }}
                                 enabled
@@ -551,12 +547,8 @@ class HomeMain extends Component {
                                         (
                                             <>
 
-                                                {/* Services */}
-                                                {/* <View style={styles.accountsLabelView}><Text style={styles.accountsLabel}>Services</Text></View> */}
-
-
-                                                <View style={{ ...styles.accountsLabelView, marginLeft: 20 }}>
-                                                    <Text style={styles.accountsLabel} >
+                                                <View style={{ ...styles.accountsLabelViewMain, marginLeft: 20 }}>
+                                                    <Text style={styles.accountsLabelMain} >
                                                         {t("home.accounts")}
                                                     </Text>
                                                 </View>
@@ -577,185 +569,162 @@ class HomeMain extends Component {
                                             </>
                                         ) : null}
                                     <>
-                                        <View style={styles.bodyview}>
-
-                                            {(selectedTab === 'all' || selectedTab === 'services') && (
-                                                <>
-                                                    {selectedTab === 'all' && (
-                                                        <View style={styles.accountsLabelView}>
-                                                            <Text style={styles.accountsLabel} >
-                                                                Services
-                                                            </Text>
+                                        {/* ========== Services Section ========== */}
+                                        {(selectedTab === 'all' || selectedTab === 'services') && (
+                                            <View style={styles.bodyview}>
+                                                {selectedTab === 'all' && (
+                                                    <View style={styles.accountsLabelView}>
+                                                        <Text style={styles.accountsLabel}>Services</Text>
+                                                    </View>
+                                                )}
+                                                <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true} showsHorizontalScrollIndicator={true}>
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => {
+                                                            if (this.props.contracts.length) {
+                                                                this.props.navigation.navigate("submitReading")
+                                                            } else {
+                                                                this.toastIt("No Contract Available")
+                                                            }
+                                                        }}
+                                                    >
+                                                        <View style={styles.iconContainer}>
+                                                            <MeterIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
                                                         </View>
-                                                    )}
-                                                    <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true} showsHorizontalScrollIndicator={true}>
-                                                        <TouchableOpacity style={styles.homeOption}
-
-                                                            onPress={() => {
-                                                                if (this.props.contracts.length) {
-                                                                    this.props.navigation.navigate("submitReading")
-                                                                } else {
-                                                                    this.toastIt("No Contract Available")
-                                                                }
-                                                            }}
-                                                        >
-
-                                                            {/* <Image
-                                                source={require('../../../assets/images/SelfMeterReadingHome1.png')}
-                                                style={{...styles.homeOptionIcon, opacity: this.props.contracts.length ? 1 : 0.5}}
-                                            /> */}
-                                                            <View style={styles.iconContainer}>
-                                                                <MeterIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700", opacity: this.props.contracts.length ? 1 : 0.5 }}>Meter Reading</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-
-
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={this.handleRequestNewConnection}>
-                                                            <View style={styles.iconContainer}>
-                                                                <NewConIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#0057A2"} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "700" }}>New Connection</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={() => {
-                                                                if (this.props.contracts.length) {
-                                                                    this.props.navigation.navigate("disconnection")
-                                                                } else {
-                                                                    this.toastIt("No Contract Available")
-                                                                }
-                                                            }}>
-                                                            <View style={styles.iconContainer}>
-                                                                <DisConIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700", opacity: this.props.contracts.length ? 1 : 0.5 }}>Disconnection</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-
-                                                    </ScrollView>
-
-                                                </>
-                                            )}
-
-                                            {/* Payment Section */}
-                                            {(selectedTab === 'all' || selectedTab === 'payment') && (
-                                                <>
-                                                    {selectedTab === 'all' && (
-                                                        <View style={styles.accountsLabelView}>
-                                                            <Text style={styles.accountsLabel} >
-                                                                Payment
-                                                            </Text>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 9, fontWeight: "900", opacity: this.props.contracts.length ? 1 : 0.5 }}>Meter Reading</Text>
                                                         </View>
-                                                    )}
+                                                    </TouchableOpacity>
 
-                                                    <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true} showsHorizontalScrollIndicator={true}>
-
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={() => {
-                                                                if (this.props.contracts.length) {
-                                                                    this.props.navigation.navigate("Payment")
-                                                                } else {
-                                                                    this.toastIt("No Contract Available")
-                                                                }
-                                                            }}>
-                                                            <View style={styles.iconContainer}>
-                                                                <MakePaymentIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700", opacity: this.props.contracts.length ? 1 : 0.5 }}>Make Payment</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={() => {
-                                                                if (this.props.contracts.length) {
-                                                                    this.props.navigation.navigate("statement")
-                                                                } else {
-                                                                    this.toastIt("No Contract Available")
-                                                                }
-                                                            }}>
-                                                            <View style={styles.iconContainer}>
-                                                                {/* <StatementIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} /> */}
-                                                                <StatementIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700", opacity: this.props.contracts.length ? 1 : 0.5 }}>Statement</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-
-                                                    </ScrollView>
-                                                </>
-                                            )}
-
-                                            {/* Support Section */}
-                                            {(selectedTab === 'all' || selectedTab === 'support') && (
-                                                <>
-                                                    {selectedTab === 'all' && (
-                                                        <View style={styles.accountsLabelView}>
-                                                            <Text style={styles.accountsLabel} >
-                                                                Support
-                                                            </Text>
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={this.handleRequestNewConnection}>
+                                                        <View style={styles.iconContainer}>
+                                                            <NewConIcon width={50} height={50} color="#FFFFFF" fill="#0057A2" />
                                                         </View>
-                                                    )}
-                                                    <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true} showsHorizontalScrollIndicator={true}>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 9, fontWeight: "900" }}>New Connection</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
 
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={() => Linking.openURL(`tel:600565657`)}>
-                                                            <View style={styles.iconContainer}>
-                                                                <EmergencyIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700" }}>Emergency</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => {
+                                                            if (this.props.contracts.length) {
+                                                                this.props.navigation.navigate("disconnection")
+                                                            } else {
+                                                                this.toastIt("No Contract Available")
+                                                            }
+                                                        }}>
+                                                        <View style={styles.iconContainer}>
+                                                            <DisConIcon width={50} height={50} color={this.props.contracts.length ? "#FFFFFF" : "#E6E6E6"} fill={this.props.contracts.length ? "#0057A2" : "#A7A7A7"} />
+                                                        </View>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 9, fontWeight: "800", opacity: this.props.contracts.length ? 1 : 0.5 }}>Disconnection</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </ScrollView>
+                                            </View>
+                                        )}
 
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={() => { this.props.navigation.navigate("raiseComplaint") }}>
-                                                            <View style={styles.iconContainer}>
-                                                                <CustomerCareIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700" }}>Customer Care</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
+                                        {/* ========== Payment Section ========== */}
+                                        {(selectedTab === 'all' || selectedTab === 'payment') && (
+                                            <View style={styles.bodyview}>
+                                                {selectedTab === 'all' && (
+                                                    <View style={styles.accountsLabelView}>
+                                                        <Text style={styles.accountsLabel}>Payment</Text>
+                                                    </View>
+                                                )}
+                                                <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true} showsHorizontalScrollIndicator={true}>
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => {
+                                                            if (this.props.contracts.length) {
+                                                                this.props.navigation.navigate("Payment")
+                                                            } else {
+                                                                this.toastIt("No Contract Available")
+                                                            }
+                                                        }}>
+                                                        <View style={styles.iconContainer}>
+                                                            <MakePaymentIcon width={50} height={50} color="#FFFFFF" fill="#0057A2" />
+                                                        </View>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "800", opacity: this.props.contracts.length ? 1 : 0.5 }}>Make Payment</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
 
-                                                        <TouchableOpacity style={styles.homeOption}
-                                                            onPress={() => { this.props.navigation.navigate("feedback") }}>
-                                                            <View style={styles.iconContainer}>
-                                                                <FeedBackIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} />
-                                                            </View>
-                                                            <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 11, fontWeight: "700" }}>Feedback</Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-                                                    </ScrollView>
-                                                </>
-                                            )}
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => {
+                                                            if (this.props.contracts.length) {
+                                                                this.props.navigation.navigate("statement")
+                                                            } else {
+                                                                this.toastIt("No Contract Available")
+                                                            }
+                                                        }}>
+                                                        <View style={styles.iconContainer}>
+                                                            <StatementIcon width={50} height={50} color="#FFFFFF" fill="#0057A2" />
+                                                        </View>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "800", opacity: this.props.contracts.length ? 1 : 0.5 }}>Statement</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </ScrollView>
+                                            </View>
+                                        )}
 
-                                            {/* Extra Section (Only for non-iPads on iOS) */}
-                                            {(selectedTab === 'all' || selectedTab === 'support') &&
-                                                !(Platform.OS === 'ios' && Platform.isPad) && (
+                                        {/* ========== Support Section ========== */}
+                                        {(selectedTab === 'all' || selectedTab === 'support') && (
+                                            <View style={styles.bodyview}>
+                                                {selectedTab === 'all' && (
+                                                    <View style={styles.accountsLabelView}>
+                                                        <Text style={styles.accountsLabel}>Support</Text>
+                                                    </View>
+                                                )}
+                                                <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true} showsHorizontalScrollIndicator={true}>
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => Linking.openURL(`tel:600565657`)}>
+                                                        <View style={styles.iconContainer}>
+                                                            <EmergencyIcon width={50} height={50} />
+                                                        </View>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "800" }}>Emergency</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
 
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => this.props.navigation.navigate("raiseComplaint")}>
+                                                        <View style={styles.iconContainer}>
+                                                            <CustomerCareIcon width={50} height={50} />
+                                                        </View>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "800" }}>Customer Care</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+
+                                                    <TouchableOpacity style={styles.homeOption}
+                                                        onPress={() => this.props.navigation.navigate("feedback")}>
+                                                        <View style={styles.iconContainer}>
+                                                            <FeedBackIcon width={50} height={50} />
+                                                        </View>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "800" }}>Feedback</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </ScrollView>
+
+                                                {/* Safety Tips (not on iPad) */}
+                                                {!(Platform.OS === 'ios' && Platform.isPad) && (
                                                     <ScrollView contentContainerStyle={styles.homeOptionRow} horizontal={true}>
                                                         <TouchableOpacity style={styles.homeOption} onPress={() => this.props.navigation.navigate("HelpMain")}>
                                                             <View style={styles.iconContainer}>
-                                                                <SafetyTipsIcon width={50} height={50} opacity={this.props.contracts.length ? 1 : 0.5} />
+                                                                <SafetyTipsIcon width={50} height={50} />
                                                             </View>
                                                             <View style={styles.labelContainer}>
-                                                                <Text style={{ ...styles.homeoptionText, fontSize: 12, fontWeight: "700" }}>Safety Tips</Text>
+                                                                <Text style={{ ...styles.homeoptionText, fontSize: 10, fontWeight: "800" }}>Safety Tips</Text>
                                                             </View>
                                                         </TouchableOpacity>
                                                     </ScrollView>
                                                 )}
+                                            </View>
+                                        )}
 
-                                        </View>
+
                                     </>
                                 </ScrollView>
                             </KeyboardAwareScrollView>

@@ -271,12 +271,14 @@ class SubmitReading extends Component {
             this.setState({
                 apiCallFlags: { ...this.state.apiCallFlags, ...{ updateReadingCorrectionApiCalled: true } }
             }, () => {
+                console.log("Correction", reqBody)
                 this.props.updateReadingCorrection(reqBody)
             })
         } else {
             this.setState({
                 apiCallFlags: { ...this.state.apiCallFlags, ...{ updateReadingApiCalled: true } }
             }, () => {
+                console.log("Standard ", reqBody)
                 this.props.updateReading(reqBody)
             })
         }

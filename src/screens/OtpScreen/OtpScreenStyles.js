@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: Platform.OS === 'ios' ? null : 10,
     minHeight: Platform.OS === 'ios' ? null : 60,
+    
     // zIndex: 2
   },
   headerCol1: {
@@ -65,16 +66,16 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   cardHeader: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 5,
     alignItems: "center",
     justifyContent: "center",
-    height: 35,
-    marginVertical: 25
+    height: 50,
+    marginVertical: 20,
   },
   cardHeaderText: {
     fontFamily: "Tajawal-Bold",
     fontSize: 24,
-    fontWeight:"500",
+    fontWeight:"500", 
     color: "#102C4E",
   },
   inputGroupStyle: {
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   inputLabelStyle: {
     color: "#102C4EB3",
     fontFamily: "Tajawal-Medium",
-    fontSize: 18,
+    fontSize: 16,
   },
   resendOtpViewStyle: {
     alignItems: "center",
@@ -153,8 +154,8 @@ const styles = StyleSheet.create({
     // shadowColor: 'rgba(0,0,0, .4)',
     // shadowOffset: { height: 2, width: 2 }, // IOS
     // shadowOpacity: 1, // IOS
-    // shadowRadius: 1, //IOS
-    elevation: 5,  // Android
+    // // shadowRadius: 1, //IOS
+    // elevation: 5,  // Android
     
 
   },

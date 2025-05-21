@@ -32,7 +32,7 @@ import DeviceInfo from 'react-native-device-info';
 
 import AppTextInput from '../../controls/AppTextInput';
 import { commonGradient } from '../../components/molecules/gradientStyles';
-import { LogoIcon, XIcon } from '../../../assets/icons'
+import { LogoIcon, XIcon, FlagUAEIcon, RegInfoIcon } from '../../../assets/icons'
 import LinearGradient from 'react-native-linear-gradient';
 
 class Register extends Component {
@@ -53,6 +53,7 @@ class Register extends Component {
       }
     })
     this.state = {
+      showTooltip: false,
       fullName: "",
       mobileNumber: "",
       email: "",
@@ -335,6 +336,15 @@ class Register extends Component {
     }, 5000);
   }
 
+  showTooltipTemporarily = () => {
+    this.setState({ showTooltip: true }, () => {
+      setTimeout(() => {
+        this.setState({ showTooltip: false });
+      }, 2000); // 2 seconds
+    });
+  };
+
+
   render() {
     return (
       <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
@@ -349,14 +359,12 @@ class Register extends Component {
                   this.props.navigation.goBack()
                 }
               }}>
-                <XIcon color={"#FFFFFF"} />
               </TouchableOpacity>
 
             </View>
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : null}
-            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
             contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
             style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
             enabled
@@ -366,9 +374,6 @@ class Register extends Component {
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.scrollView}>
               <View style={styles.imageView}>
-                {/* <Image
-                    source={require("../../../assets/images/sergas_logo.png")}
-                    style={styles.goodieeLogoImage} /> */}
                 <LogoIcon />
               </View>
               <View style={styles.cardView} >
@@ -378,84 +383,41 @@ class Register extends Component {
                 <View style={{ ...styles.cardHeader, marginTop: 0 }}>
                   <Text style={styles.cardHeaderText}>Create your Account</Text>
                 </View>
-                {/* <View style={styles.inputGroupStyle}>
-                <View>
-                  <Text style={styles.inputLabelStyle}>{t("login.fullName")}</Text>
-                </View>
-                <View>
-                  <TextInput
-                    value={this.state.fullName}
-                    onChangeText={val => this.handleField('fullName', val)}
-                  />
-                </View>
-              </View> */}
 
-                {/* <View>
-                  <Text style={styles.inputLabelStyle}>{t("login.mobileNumber")}</Text>
-                </View> */}
-                {/* <View>
-                  <TextInput
-                    value={this.state.mobileNumber}
-                    onChangeText={val => this.handleField('mobileNumber', val)}
-                    keyboardType={"numeric"}
-                  />
-                </View> */}
                 <View style={styles.inputGroupStyle}>
                   <View style={styles.inputRow}>
-                  <Image
-                      source={require("../../../assets/images/ae.png")}
-                      style={styles.flagIcon}
-                    />
-                    <Text style={styles.countryCode}>+971</Text>
-                    {/* <View style={{ flex: 1 }}>
-                        <TextInput
-                          Style={{ width: "100%" }}
-                          Placeholder={"5XX XXX XXX"}
-                          keyboardType={"numeric"}
-                          value={this.state.mobileNumber}
-                          onChangeText={val => this.handleField('mobileNumber', val)}
-                        />
-                      </View> */}
+                    <FlagUAEIcon />
+                    <Text style={styles.countryCode}> +971</Text>
+                    <View style={styles.dividerLineV} />
+
                     <AppTextInput
-                      Placeholder="5XX XXX XXX"
+                      Placeholder="Enter your number      "
                       Value={this.state.mobileNumber}
                       OnChange={this.handleMobileNumberField}
                       Type="numeric"
                       Editable={true}
                       Style={{
-                        // backgroundColor: 'rgba(255,255,255,0.06)', // ✅ to match screenshot
                         color: '#FFFFFF',
                         fontSize: 15,
                         fontWeight: "700",
                         marginTop: 4
-                        // paddingVertical: Platform.OS === 'ios' ? 10 : 10,
                       }}
                     />
+
+                    <TouchableOpacity onPress={this.showTooltipTemporarily}>
+                      <RegInfoIcon color="#FFFFFF99" />
+                    </TouchableOpacity>
                   </View>
+
+                  {this.state.showTooltip && (
+                    <View style={styles.tooltipBubble}>
+                      <Text style={styles.tooltipText}>Please use the phone number previously registered with Sergas.</Text>
+                      <View style={styles.tooltipArrow} />
+                    </View>
+                  )}
+
                 </View>
-                {/* <View style={styles.inputGroupStyle}>
-                <View>
-                  <Text style={styles.inputLabelStyle}>{t("login.email")}</Text>
-                </View>
-                <View>
-                  <TextInput
-                    value={this.state.email}
-                    onChangeText={val => this.handleField('email', val)}
-                  />
-                </View>
-              </View>
-              <View style={styles.inputGroupStyle}>
-                <View>
-                  <Text style={styles.inputLabelStyle}>{t("home.eIdNumber")}</Text>
-                </View>
-                <View>
-                  <TextInput
-                    value={this.state.eid}
-                    onChangeText={val => this.handleField('eid', val)}
-                    keyboardType={"numeric"}
-                  />
-                </View>
-              </View> */}
+
                 <View style={styles.buttonView}>
                   <TouchableOpacity
                     onPress={this.handleSendOtp}
@@ -472,24 +434,17 @@ class Register extends Component {
               </View>
               <View style={styles.registerButtonStyle}>
                 <View style={styles.registerHereView}>
-                  <Text style={styles.inlineRegisterText}>I have an account.
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                    <Text style={styles.inlineRegisterText}>I have an account. </Text>
                     <TouchableOpacity
-                      style={styles.payBillView}
-                      onPress={() => this.props.navigation.navigate("Login")}>
-                      <Text style={styles.registerLinkText}>
-                        Login!
-                      </Text>
-                      {/* <Image
-                    source={require('../../../assets/images/click.png')}
-                    style={styles.clickImage}
-                  /> */}
+                      style={[styles.payBillView, { marginBottom: 1 }]} // Adjust vertical position here
+                      onPress={() => this.props.navigation.navigate("Login")}
+                    >
+                      <Text style={styles.registerLinkText}>Login</Text>
                     </TouchableOpacity>
-                  </Text>
+                  </View>
                 </View>
               </View>
-
-              {/* </TouchableOpacity> */}
-
               {
                 this.state.UAEPASSSupported ?
                   <View style={{
@@ -500,7 +455,7 @@ class Register extends Component {
                     {/* <Text style={styles.uaepassorText}>OR</Text> */}
                     <View style={styles.dividerContainer}>
                       <View style={styles.dividerLine} />
-                      <Text style={styles.dividerText}>Or Signup with</Text>
+                      <Text style={styles.dividerText}>OR</Text>
                       <View style={styles.dividerLine} />
                     </View>
                     <TouchableOpacity
@@ -573,17 +528,7 @@ class Register extends Component {
                 titleText={{ alignItems: 'center' }}
               />
             ) : null}
-            {/* <Image
-                    source={require('../../../assets/images/footerBg.png')}
-                    style={{
-                      height: 192.35,
-                      width: 216.28,
-                      position: 'absolute',
-                      alignSelf: 'flex-end',
-                      bottom: 0,
-                      zIndex: -1
-                    }}
-                    /> */}
+
           </KeyboardAvoidingView>
         </SafeAreaView>
       </LinearGradient>
@@ -608,7 +553,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withApiConnector(Reg
   methods: {
     registerNewUser: {
       type: 'post',
-      moduleName: 'api',// 'goodiee-cataloguecore',
+      moduleName: 'api',
       url: 'registerNewUser',
       authenticate: false,
     },
@@ -620,13 +565,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(withApiConnector(Reg
     },
     checkTerms: {
       type: 'get',
-      moduleName: 'api',// 'goodiee-cataloguecore',
+      moduleName: 'api',
       url: 'checkTerms',
       authenticate: false,
     },
     updateTerms: {
       type: 'get',
-      moduleName: 'api',// 'goodiee-cataloguecore',
+      moduleName: 'api',
       url: 'updateTerms',
       authenticate: false,
     },

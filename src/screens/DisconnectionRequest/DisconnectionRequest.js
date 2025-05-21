@@ -52,9 +52,9 @@ import { Images } from '../../utils/ImageSource/imageSource';
 import { API_PATH } from '../../services/api/data/data/api-utils';
 import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { commonGradient } from '../../components/molecules/gradientStyles';
 import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
-
+import * as PaymentService from '../../services/paymentService'
 class DisconnectionRequest extends Component {
     constructor(props) {
         super(props)
@@ -295,6 +295,24 @@ class DisconnectionRequest extends Component {
         })
         this.forceUpdate();
     }
+    handleSaveCard = async () => {
+        this.setState({ showSaveCardModal: false });
+        console.log("AAAA");
+        const { orderReference, paymentMethod, token } = this.savedCardContext;
+        console.log("Saved Card Context:", this.savedCardContext);
+        try {
+            const response = await PaymentService.saveCardDetails(orderReference, paymentMethod, token);
+            console.log("BBB");
+            if (response.success) {
+                this.toastIt("Card saved successfully!", true);
+            } else {
+                throw new Error("Card save failed");
+            }
+        } catch (error) {
+            console.error("Card Save Error:", error);
+            this.toastIt("Failed to save card", false);
+        }
+    };
 
     handleSubmit = () => {
         let reqBody = {
@@ -338,498 +356,206 @@ class DisconnectionRequest extends Component {
         // }, 5000);
     }
 
-    getTraceId = async () => {
-        var pattern = "xxxx-yxxx-4xxx-xxxxxxxxxxxx"
-        var date = new Date().getTime();
 
-        var uuid = pattern.replace(/[xy]/g, function (c) {
-            var r = (date + Math.random() * 16) % 16 | 0;
-            date = Math.floor(date / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-        return uuid.toString()
-    }
+    makePayment = async (paymentType, contract, otherAmount) => {
+        const currentGasContract = this.props.contracts[this.state.activeItemIndex];
+        const currDate = new Date().toLocaleDateString('en-US');
+        const currentDate = new Date();
 
-    makePayment = async (type) => {
-        this.setState({ makePaymentClicked: true }, async () => {
-
-            let outLetReference = "", apiKey = "", tokenApiUrl = "", orderApiUrl = ""
-            let currentGasContract = this.props.contracts[this.state.activeItemIndex]
-            if (currentGasContract.COMPANY == "97") {
-                outLetReference = abudhabiTestOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrlTest
-                orderApiUrl = paymentGatewayCreateOrderUrlTest
-            } else if (currentGasContract.COMPANY == "91") {
-                outLetReference = dubaiTestOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrlTest
-                orderApiUrl = paymentGatewayCreateOrderUrlTest
-            } else if (currentGasContract.COMPANY == "92") {
-                outLetReference = fujairahTestOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrlTest
-                orderApiUrl = paymentGatewayCreateOrderUrlTest
-            } else if (currentGasContract.COMPANY == "01") {
-                outLetReference = abudhabiOutletReference
-                apiKey = paymentApiKeyAUH
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
-            } else if (currentGasContract.COMPANY == "02") {
-                outLetReference = dubaiOutletReference
-                apiKey = paymentApiKeyDXB
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
-            } else if (currentGasContract.COMPANY == "03") {
-                outLetReference = fujairahOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
-            } else if (currentGasContract.COMPANY == "05") {
-                outLetReference = alainOutletReference
-                apiKey = paymentApiKeyALN
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
+        const extractErrorMessage = (error) => {
+            if (error?.response?.data?.message) {
+                return error.response.data.message;
             }
-
-            let currDate = new Date().toLocaleDateString('en-US');
-            let currentDate = new Date()
-
-            if (await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl) != null) {
-                let paidCardDetails = {
-                    name: "MASTER",
-                    cardType: "DEBIT"
-                }
-                let token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
-                let createOrderHeader = {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/vnd.ni-payment.v2+json',
-                    'Accept': 'application/vnd.ni-payment.v2+json'
-                };
-                let createOrderReq = {
-                    "action": "SALE",
-                    "amount": {
-                        "currencyCode": "AED",
-                        "value": 10500
-                    },
-                    "emailAddress": (currentGasContract.EMAIL != "") && (currentGasContract.EMAIL != null) ? currentGasContract.EMAIL : "accounts@sergas.com",
-                    "merchantDefinedData": {
-                        "ContractId": currentGasContract.CONTRACT_NO + " for Preferred DISCONNECTION",
-                        "CustomerName": currentGasContract.PARTY_NAME
-                    },
-                    "MerchantOrderReference": `${(await this.getTraceId()).replace(/-/g, '').substring(0, 7).toUpperCase()}-MP`
-                }
-
-                axios.post(orderApiUrl + outLetReference + "/orders", createOrderReq, { headers: createOrderHeader })
-                    .then(async createOrderRes => {
-                        if (createOrderRes.reference != undefined) {
-
-                            if ((type == "applepay") || (type == "samsungpay")) {
-                                try {
-                                    const payResponse = type == "samsungpay" ?
-                                        await initiateSamsungPay(createOrderRes,
-                                            currentGasContract.COMPANY == "01" ? 'SERGAS Customer AUH' :
-                                                currentGasContract.COMPANY == "02" ? 'SERGAS Customer DXB' :
-                                                    currentGasContract.COMPANY == "05" ? 'SERGAS Customer ALN' :
-                                                        'SERGAS Customer',
-                                            currentGasContract.COMPANY == "01" ? '7b41f6ef17874fc3bf4ccb' :
-                                                currentGasContract.COMPANY == "02" ? '44f457d4b8da4a8bbe2dfe' :
-                                                    currentGasContract.COMPANY == "05" ? 'c084781e34924bf7b13927' :
-                                                        'aa1080513289421082caa1') :
-                                        type == "applepay" ? await initiateApplePay(createOrderRes, {
-                                            merchantIdentifier: currentGasContract.COMPANY == "01" ? 'merchant.sergas.sergascustomerauh' : currentGasContract.COMPANY == "02" ? 'merchant.sergas.sergascustomerdxb' : currentGasContract.COMPANY == "05" ? 'merchant.sergas.sergascustomeralain' : 'merchant.sergas.sergascustomer', // Merchant ID created in Apple's portal
-                                            countryCode: 'AE', // Country code of the order
-                                            merchantName: currentGasContract.COMPANY == "01" ? 'SERGAS Customer AUH' : currentGasContract.COMPANY == "02" ? 'SERGAS Customer DXB' : currentGasContract.COMPANY == "05" ? 'SERGAS Customer ALN' : 'SERGAS Customer', // name of the merchant to be shown in Apple Pay button
-                                        }) : null;
-                                    if (payResponse.status == "Success") {
-
-                                        token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
-                                        createOrderHeader.Authorization = 'Bearer ' + token
-                                        await axios.get(orderApiUrl + outLetReference + "/orders/" + createOrderRes.reference, { headers: createOrderHeader })
-                                            .then(getOrderDetailsRes => {
-
-                                                if (getOrderDetailsRes &&
-                                                    (getOrderDetailsRes._embedded.length != 0) &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
-                                                    if (type == "samsungpay") {
-                                                        paidCardDetails = {
-                                                            name: "SAMSUNG_PAY",
-                                                            cardType: "DEBIT"
-                                                        }
-                                                    }
-                                                    else {
-                                                        paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
-                                                    }
-                                                    let disconnectionReqBody = {
-                                                        "USER_ID": this.props.contracts[this.state.activeItemIndex].USER_ID,
-                                                        "CONTRACT_NO": this.props.contracts[this.state.activeItemIndex].CONTRACT_NO,
-                                                        "COMPANY": this.props.contracts[this.state.activeItemIndex].COMPANY,
-                                                        "DATE": new Date(new Date().getTime()),
-                                                        "PAYMENT_STATUS": "PAID",
-                                                        "PAYMENT_TXN_ID": createOrderRes.reference,
-                                                        "BUILDING_CODE": this.props.contracts[this.state.activeItemIndex].BUILDING_CODE,
-                                                        "APARTMENT_CODE": this.props.contracts[this.state.activeItemIndex].APARTMENT_CODE,
-                                                        "PREFERRED_DATE_TIME": this.state.date,
-                                                        "PARTY_NAME": this.props.contracts[this.state.activeItemIndex].PARTYNAME,
-                                                        "EID": this.props.contracts[this.state.activeItemIndex].EID
-                                                    }
-
-                                                    let updatePaymentReqBody = {
-                                                        "COMPANY": currentGasContract.COMPANY,
-                                                        "CONTRACT_NO": currentGasContract.CONTRACT_NO,
-                                                        "YEARCODE": currentDate.getFullYear(),
-                                                        "REC_DOC_TYPE": "GREC",
-                                                        "INV_NO": currentGasContract.LAST_INVDOCNO,
-                                                        "INV_DOC_TYPE": "GINC",
-                                                        "INV_DATE": this.formatDate(currentDate.toDateString()),
-                                                        "INV_YEAR_CODE": currentDate.getFullYear(),
-                                                        "INV_AMT": "105",
-                                                        "REC_AMT": "105",
-                                                        "DATE": currDate,
-                                                        "USER_ID": currentGasContract.USER_ID,
-                                                        "DEVICE_ID": "12345"
-                                                    }
-
-
-                                                    let reqBody = {
-                                                        "COMPANY": currentGasContract.COMPANY,
-                                                        "CONTRACT_NO": currentGasContract.CONTRACT_NO,
-                                                        "DEVICE_ID": "12345",
-                                                        "DATE": currDate,
-                                                        "AMOUNT": "100",
-                                                        "REMARKS": "URGENT DISCONNECTION - MOBILE APP",
-                                                        "USER_ID": currentGasContract.USER_ID,
-                                                        "YEAR_CODE": currentDate.getFullYear(),
-                                                        "CHARGE_TYPE": "UDF",
-                                                        "CHARGE_DESCP": "URGENT DISCONNECTION FEE",
-                                                        "YEARCODE": currentDate.getFullYear()
-                                                    }
-
-                                                    this.setState({
-                                                        // apiCallFlags: { ...this.state.apiCallFlags, ...{ createCollectionInvoiceCalled: true } },
-                                                        updatePaymentReqBody: updatePaymentReqBody,
-                                                        createCollectionReqBody: reqBody,
-                                                        paidDisconnection: true
-                                                    }, () => {
-                                                        // this.props.createCollectionInvoice(reqBody)
-                                                    })
-                                                    this.setState({
-                                                        apiCallFlags: { ...this.state.apiCallFlags, ...{ requestDisconnectionApiCalled: true } }
-                                                    }, () => {
-                                                        this.props.requestDisconnection(disconnectionReqBody)
-                                                    })
-                                                    this.props.updatePaymentLog({
-                                                        "OrderId": createOrderRes.reference,
-                                                        "TotalAmount": 105,
-                                                        "ReceivedAmount": 105,
-                                                        "OnlineDocDate": new Date(),
-                                                        "Status": "SUCCESS",
-                                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                                        "Company": currentGasContract.COMPANY,
-                                                        "TransactionId": createOrderRes.reference,
-                                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentType": "DISCONNECTION"
-                                                    })
-                                                } else {
-                                                    this.setState({ makePaymentClicked: false })
-                                                    this.toastIt("Payment Failed", false)
-
-                                                    const paidCardDetails =
-                                                        type === "samsungpay"
-                                                            ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
-                                                            : type === "applepay"
-                                                                ? { name: "APPLE_PAY", cardType: "DEBIT" }
-                                                                : { name: "", cardType: "" };
-
-                                                    this.props.updatePaymentLog({
-                                                        "OrderId": createOrderRes.reference,
-                                                        "TotalAmount": 105,
-                                                        "ReceivedAmount": 105,
-                                                        "OnlineDocDate": new Date(),
-                                                        "Status": "FAILED",
-                                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                                        "Company": currentGasContract.COMPANY,
-                                                        "TransactionId": createOrderRes.reference,
-                                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentType": "DISCONNECTION"
-                                                    })
-                                                }
-
-                                            })
-                                            .catch(getOrderDetailsErr => {
-                                                clg("getOrderDetailsErr >> ", getOrderDetailsErr)
-                                            })
-
-
-
-                                    } else {
-                                        const paidCardDetails =
-                                            type === "samsungpay"
-                                                ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
-                                                : type === "applepay"
-                                                    ? { name: "APPLE_PAY", cardType: "DEBIT" }
-                                                    : { name: "", cardType: "" };
-
-                                        this.props.updatePaymentLog({
-                                            "OrderId": createOrderRes.reference,
-                                            "TotalAmount": 105,
-                                            "ReceivedAmount": 105,
-                                            "OnlineDocDate": new Date(),
-                                            "Status": "FAILED",
-                                            "ContractNo": currentGasContract.CONTRACT_NO,
-                                            "Company": currentGasContract.COMPANY,
-                                            "TransactionId": createOrderRes.reference,
-                                            "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                            "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                            "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                            "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                            "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                            "PaymentType": "DISCONNECTION"
-                                        })
-                                    }
-
-                                } catch (err) {
-                                    this.setState({ makePaymentClicked: false })
-                                    this.toastIt("Payment Failed", false)
-
-                                    const paidCardDetails =
-                                        type === "samsungpay"
-                                            ? { name: "SAMSUNG_PAY", cardType: "DEBIT" }
-                                            : type === "applepay"
-                                                ? { name: "APPLE_PAY", cardType: "DEBIT" }
-                                                : { name: "", cardType: "" };
-
-                                    this.props.updatePaymentLog({
-                                        "OrderId": createOrderRes.reference,
-                                        "TotalAmount": 105,
-                                        "ReceivedAmount": 105,
-                                        "OnlineDocDate": new Date(),
-                                        "Status": "FAILED",
-                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                        "Company": currentGasContract.COMPANY,
-                                        "TransactionId": createOrderRes.reference,
-                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentType": "DISCONNECTION"
-                                    })
-                                }
-                            } else {
-                                try {
-                                    const initiateCardPaymentResponse = await initiateCardPayment(createOrderRes);
-                                    if (initiateCardPaymentResponse.status == "Success") {
-
-
-                                        token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
-                                        createOrderHeader.Authorization = 'Bearer ' + token
-                                        await axios.get(orderApiUrl + outLetReference + "/orders/" + createOrderRes.reference, { headers: createOrderHeader })
-                                            .then(getOrderDetailsRes => {
-
-                                                if (getOrderDetailsRes &&
-                                                    (getOrderDetailsRes._embedded.length != 0) &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod && getOrderDetailsRes._embedded.payment[0].state == "CAPTURED" &&
-                                                    getOrderDetailsRes._embedded.payment[0].paymentMethod.name) {
-
-                                                    paidCardDetails = getOrderDetailsRes._embedded.payment[0].paymentMethod
-                                                    let disconnectionReqBody = {
-                                                        "USER_ID": this.props.contracts[this.state.activeItemIndex].USER_ID,
-                                                        "CONTRACT_NO": this.props.contracts[this.state.activeItemIndex].CONTRACT_NO,
-                                                        "COMPANY": this.props.contracts[this.state.activeItemIndex].COMPANY,
-                                                        "DATE": new Date(new Date().getTime()),
-                                                        "PAYMENT_STATUS": "PAID",
-                                                        "PAYMENT_TXN_ID": createOrderRes.reference,
-                                                        "BUILDING_CODE": this.props.contracts[this.state.activeItemIndex].BUILDING_CODE,
-                                                        "APARTMENT_CODE": this.props.contracts[this.state.activeItemIndex].APARTMENT_CODE,
-                                                        "PREFERRED_DATE_TIME": this.state.date,
-                                                        "PARTY_NAME": this.props.contracts[this.state.activeItemIndex].PARTYNAME,
-                                                        "EID": this.props.contracts[this.state.activeItemIndex].EID
-                                                    }
-
-                                                    let updatePaymentReqBody = {
-                                                        "COMPANY": currentGasContract.COMPANY,
-                                                        "CONTRACT_NO": currentGasContract.CONTRACT_NO,
-                                                        "YEARCODE": currentDate.getFullYear(),
-                                                        "REC_DOC_TYPE": "GREC",
-                                                        "INV_NO": currentGasContract.LAST_INVDOCNO,
-                                                        "INV_DOC_TYPE": "GINC",
-                                                        "INV_DATE": this.formatDate(currentDate.toDateString()),
-                                                        "INV_YEAR_CODE": currentDate.getFullYear(),
-                                                        "INV_AMT": "105",
-                                                        "REC_AMT": "105",
-                                                        "DATE": currDate,
-                                                        "USER_ID": currentGasContract.USER_ID,
-                                                        "DEVICE_ID": "12345"
-                                                    }
-
-
-                                                    let reqBody = {
-                                                        "COMPANY": currentGasContract.COMPANY,
-                                                        "CONTRACT_NO": currentGasContract.CONTRACT_NO,
-                                                        "DEVICE_ID": "12345",
-                                                        "DATE": currDate,
-                                                        "AMOUNT": "100",
-                                                        "REMARKS": "URGENT DISCONNECTION - MOBILE APP",
-                                                        "USER_ID": currentGasContract.USER_ID,
-                                                        "YEAR_CODE": currentDate.getFullYear(),
-                                                        "CHARGE_TYPE": "UDF",
-                                                        "CHARGE_DESCP": "URGENT DISCONNECTION FEE",
-                                                        "YEARCODE": currentDate.getFullYear()
-                                                    }
-
-                                                    this.setState({
-                                                        // apiCallFlags: { ...this.state.apiCallFlags, ...{ createCollectionInvoiceCalled: true } },
-                                                        updatePaymentReqBody: updatePaymentReqBody,
-                                                        createCollectionReqBody: reqBody,
-                                                        paidDisconnection: true
-                                                    }, () => {
-                                                        // this.props.createCollectionInvoice(reqBody)
-                                                    })
-                                                    this.setState({
-                                                        apiCallFlags: { ...this.state.apiCallFlags, ...{ requestDisconnectionApiCalled: true } }
-                                                    }, () => {
-                                                        this.props.requestDisconnection(disconnectionReqBody)
-                                                    })
-                                                    this.props.updatePaymentLog({
-                                                        "OrderId": createOrderRes.reference,
-                                                        "TotalAmount": 105,
-                                                        "ReceivedAmount": 105,
-                                                        "OnlineDocDate": new Date(),
-                                                        "Status": "SUCCESS",
-                                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                                        "Company": currentGasContract.COMPANY,
-                                                        "TransactionId": createOrderRes.reference,
-                                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentType": "DISCONNECTION"
-                                                    })
-                                                } else {
-                                                    if (initiatePaymentErr.status == "Failed") {
-                                                        this.setState({ makePaymentClicked: false })
-                                                        this.toastIt("Payment Failed", false)
-                                                    }
-                                                    if (initiatePaymentErr.status == "Aborted") {
-                                                        this.setState({ makePaymentClicked: false })
-                                                        this.toastIt("Payment Aborted", false)
-                                                    }
-                                                    this.props.updatePaymentLog({
-                                                        "OrderId": createOrderRes.reference,
-                                                        "TotalAmount": 105,
-                                                        "ReceivedAmount": 105,
-                                                        "OnlineDocDate": new Date(),
-                                                        "Status": initiatePaymentErr.status,
-                                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                                        "Company": currentGasContract.COMPANY,
-                                                        "TransactionId": createOrderRes.reference,
-                                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                                        "PaymentType": "DISCONNECTION"
-                                                    })
-                                                }
-
-                                            })
-                                            .catch(getOrderDetailsErr => {
-                                                clg("getOrderDetailsErr >> ", getOrderDetailsErr)
-                                            })
-
-
-
-                                    } else {
-                                        this.props.updatePaymentLog({
-                                            "OrderId": createOrderRes.reference,
-                                            "TotalAmount": 105,
-                                            "ReceivedAmount": 105,
-                                            "OnlineDocDate": new Date(),
-                                            "Status": "FAILED",
-                                            "ContractNo": currentGasContract.CONTRACT_NO,
-                                            "Company": currentGasContract.COMPANY,
-                                            "TransactionId": createOrderRes.reference,
-                                            "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                            "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                            "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                            "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                            "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                            "PaymentType": "DISCONNECTION"
-                                        })
-                                    }
-                                } catch (initiatePaymentErr) {
-                                    if (initiatePaymentErr.status == "Failed") {
-                                        this.setState({ makePaymentClicked: false })
-                                        this.toastIt("Payment Failed", false)
-                                    }
-                                    if (initiatePaymentErr.status == "Aborted") {
-                                        this.setState({ makePaymentClicked: false })
-                                        this.toastIt("Payment Aborted", false)
-                                    }
-                                    this.props.updatePaymentLog({
-                                        "OrderId": createOrderRes.reference,
-                                        "TotalAmount": 105,
-                                        "ReceivedAmount": 105,
-                                        "OnlineDocDate": new Date(),
-                                        "Status": initiatePaymentErr.status,
-                                        "ContractNo": currentGasContract.CONTRACT_NO,
-                                        "Company": currentGasContract.COMPANY,
-                                        "TransactionId": createOrderRes.reference,
-                                        "InvoiceDocNo": currentGasContract.LAST_INVDOCNO,
-                                        "InvoiceDocType": currentGasContract.LAST_INVDOCTYPE,
-                                        "InvoiceYearCode": currentGasContract.LAST_YEARCODE,
-                                        "CreditCard": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentMode": paidCardDetails.name != null ? paidCardDetails.name : "",
-                                        "PaymentType": "DISCONNECTION"
-                                    })
-                                }
-                            }
-                        } else {
-                            this.setState({ makePaymentClicked: false })
-                            this.toastIt("Something went wrong. Try again later.", false)
-                        }
-                    })
-                    .catch(createOrderErr => {
-                        this.setState({ makePaymentClicked: false })
-                        this.toastIt("Something went wrong. Try again later.", false)
-                    })
-            } else {
-                this.setState({ makePaymentClicked: false })
-                this.toastIt("Something went wrong. Try again later.", false)
+            if (error?.message) {
+                return error.message;
             }
-        })
-    }
-
-    getPaymentGatewayAccessToken = async (apiKey, tokenApiUrl) => {
-        const reqBody = {};
-        const headers = {
-            'Authorization': 'Basic ' + apiKey,
-            'Content-Type': 'application/vnd.ni-identity.v1+json'
+            if (error?.response?._response) {
+                try {
+                    const parsed = JSON.parse(error.response._response);
+                    return parsed.Message || parsed.message || "Unknown gateway error";
+                } catch {
+                    return error.response._response;
+                }
+            }
+            return "Payment initiation failed due to unknown error";
         };
-        let token = null
-        await axios.post(tokenApiUrl, reqBody, { headers })
-            .then(res => {
-                if ((res.access_token != undefined) || (res.access_token != null)) {
-                    token = res.access_token
-                }
-            })
-            .catch(err => {
-                this.setState({ makePaymentClicked: false })
-                this.toastIt("Something went wrong. Try again later.", false)
-            })
-        return token
-    }
+
+        try {
+            const { outletReference, apiKey, tokenApiUrl, orderApiUrl } =
+                PaymentService.getCompanyDetails(currentGasContract.COMPANY, API_PATH);
+
+            let token = await PaymentService.getPaymentGatewayAccessToken(apiKey, tokenApiUrl);
+            if (!token) throw new Error("Access token missing");
+
+            const traceId = await PaymentService.generateTraceId();
+            const amount = PaymentService.getPaymentAmount(currentGasContract, 105);
+            const orderPayload = PaymentService.buildCreateOrderRequest(currentGasContract, amount, traceId);
+            const orderResponse = await PaymentService.createPaymentOrder(orderApiUrl, outletReference, orderPayload, token);
+            console.log("Payment State:", orderPayload);
+            console.log("Payment Method:", orderResponse);
+            const paidAmountFils = orderResponse?._embedded?.payment?.[0]?.amount?.value || 0;
+            const paidAmount = paidAmountFils / 100;
+            if (!orderResponse) throw new Error("Order creation failed");
+
+            let paymentResponse = null;
+            let paymentInitiated = false;
+            let initiationErrorMessage = "";
+
+            try {
+                paymentResponse = await PaymentService.initiatePaymentFlow(paymentType, orderResponse, currentGasContract.COMPANY);
+                paymentInitiated = paymentResponse?.status === "Success";
+            } catch (err) {
+                console.error("🚨 Payment initiation error:", err);
+                initiationErrorMessage = extractErrorMessage(err);
+            }
+
+            const getCardDetails = (type) => {
+                const map = {
+                    samsungpay: { name: "SAMSUNG_PAY", cardType: "DEBIT" },
+                    applepay: { name: "APPLE_PAY", cardType: "DEBIT" },
+                };
+                return map[type] || { name: "CARD_PAYMENT", cardType: "DEBIT" };
+            };
+
+            const logPayment = (status, receivedAmount, remarks, orderStatus = {}) => {
+                const card = orderStatus?.paymentMethod || getCardDetails(paymentType);
+                this.props.updatePaymentLog({
+                    OrderId: orderResponse.reference,
+                    TotalAmount: paidAmount,
+                    ReceivedAmount: receivedAmount,
+                    OnlineDocDate: new Date(),
+                    Status: status,
+                    ContractNo: currentGasContract.CONTRACT_NO,
+                    Company: currentGasContract.COMPANY,
+                    TransactionId: orderResponse.reference,
+                    InvoiceDocNo: currentGasContract.LAST_INVDOCNO,
+                    InvoiceDocType: currentGasContract.LAST_INVDOCTYPE,
+                    InvoiceYearCode: currentGasContract.LAST_YEARCODE,
+                    CreditCard: card.cardType || card.name || "",
+                    PaymentMode: card.name || "",
+                    PaymentType: "DISCONNECTION",
+                    Remarks: remarks
+                });
+            };
+
+            if (!paymentInitiated) {
+                this.setState({ makePaymentClicked: false });
+                const reason = initiationErrorMessage || "Payment not initiated or cancelled by user";
+                this.toastIt(reason, false);
+                logPayment("CANCELLED", 0, reason);
+                return { status: "CANCELLED", reason };
+            }
+
+            token = await PaymentService.getPaymentGatewayAccessToken(apiKey, tokenApiUrl);
+            const orderStatus = await PaymentService.fetchOrderStatus(orderApiUrl, outletReference, orderResponse.reference, token);
+            const paymentState = orderStatus?._embedded?.payment?.[0]?.state;
+            const paymentMethod = orderStatus?._embedded?.payment?.[0]?.paymentMethod;
+
+            let status, reason;
+
+            switch (paymentState) {
+                case "CAPTURED":
+                    const paidAmountFils = orderStatus?._embedded?.payment?.[0]?.amount?.value || 0;
+                    const paidAmount = paidAmountFils / 100;
+                    const updatePaymentReqBody = {
+                        COMPANY: currentGasContract.COMPANY,
+                        CONTRACT_NO: currentGasContract.CONTRACT_NO,
+                        YEARCODE: currentDate.getFullYear(),
+                        REC_DOC_TYPE: "GREC",
+                        INV_NO: currentGasContract.LAST_INVDOCNO,
+                        INV_DOC_TYPE: "GINC",
+                        INV_DATE: this.formatDate(currentDate.toDateString()),
+                        INV_YEAR_CODE: currentDate.getFullYear(),
+                        INV_AMT: String(paidAmount),
+                        REC_AMT: String(paidAmount),
+                        DATE: currDate,
+                        USER_ID: currentGasContract.USER_ID,
+                        DEVICE_ID: await DeviceInfo.getUniqueId(),
+                    };
+
+                    const createCollectionReqBody = {
+                        COMPANY: currentGasContract.COMPANY,
+                        CONTRACT_NO: currentGasContract.CONTRACT_NO,
+                        DEVICE_ID: await DeviceInfo.getUniqueId(),
+                        DATE: currDate,
+                        AMOUNT: 100,
+                        REMARKS: "URGENT DISCONNECTION - MOBILE APP",
+                        USER_ID: currentGasContract.USER_ID,
+                        YEAR_CODE: currentDate.getFullYear(),
+                        CHARGE_TYPE: "UDF",
+                        CHARGE_DESCP: "URGENT DISCONNECTION FEE",
+                        YEARCODE: currentDate.getFullYear()
+                    };
+
+                    const disconnectionReqBody = {
+                        USER_ID: currentGasContract.USER_ID,
+                        CONTRACT_NO: currentGasContract.CONTRACT_NO,
+                        COMPANY: currentGasContract.COMPANY,
+                        DATE: new Date(),
+                        PAYMENT_STATUS: "PAID",
+                        PAYMENT_TXN_ID: orderResponse.reference,
+                        BUILDING_CODE: currentGasContract.BUILDING_CODE,
+                        APARTMENT_CODE: currentGasContract.APARTMENT_CODE,
+                        PREFERRED_DATE_TIME: this.state.date,
+                        PARTY_NAME: currentGasContract.PARTYNAME,
+                        EID: currentGasContract.EID
+                    };
+
+                    this.setState({
+                        updatePaymentReqBody,
+                        createCollectionReqBody,
+                        paidDisconnection: true,
+                        apiCallFlags: { ...this.state.apiCallFlags, requestDisconnectionApiCalled: true }
+                    }, () => {
+                        this.props.requestDisconnection(disconnectionReqBody);
+                    });
+
+
+                    logPayment("CAPTURED", String(paidAmount), paymentState, paymentMethod);
+                    this.setState({ showSaveCardModal: true });
+
+                    // Store necessary info temporarily for later card saving
+                    this.savedCardContext = {
+                        orderReference: orderResponse.reference,
+                        paymentMethod,
+                        token, // Optional: for authenticated follow-up request
+                    };
+                    return { status: "SUCCESS", reason: "Payment successful" };
+
+                case "FAILED":
+                    this.setState({ makePaymentClicked: false });
+                    reason = orderStatus?._embedded?.payment?.[0]?.error?.message || "Payment failed";
+                    this.toastIt("Payment Failed at capture verification", false);
+                    logPayment("FAILED", 0, reason, paymentMethod);
+                    return { status: "FAILED", reason };
+
+                case "STARTED":
+                    this.setState({ makePaymentClicked: false });
+                    reason = "User cancelled payment";
+                    this.toastIt("Payment Cancelled or Pending", false);
+                    logPayment("CANCELLED", 0, reason, paymentMethod);
+                    return { status: "CANCELLED", reason };
+
+                default:
+                    console.warn("❓ Unknown payment status received:", paymentState);
+                    reason = `Unknown payment status: ${paymentState || 'null'}`;
+                    logPayment("UNKNOWN", 0, reason, paymentMethod);
+                    return { status: "UNKNOWN", reason };
+            }
+
+        } catch (error) {
+            this.setState({ makePaymentClicked: false });
+            const errorMsg = extractErrorMessage(error);
+            this.toastIt("FAILED", false);
+            console.error("🚨 Payment Error:", error);
+            logPayment("FAILED", 0, errorMsg);
+            return {
+                status: "FAILED",
+                reason: errorMsg
+            };
+        }
+    };
+
 
     formatDate = date => {
         var d = new Date(date),
@@ -871,7 +597,7 @@ class DisconnectionRequest extends Component {
                             Request to disconnect your gas service quickly.
                         </Text>
                     </View>
-                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
@@ -920,10 +646,10 @@ class DisconnectionRequest extends Component {
                                                         </TouchableOpacity>
 
                                                         <TouchableOpacity onPress={() => { this.setState({ paidDisconnection: true }) }} style={{ marginLeft: 10 }}>
-                                                            <Text style={{...Mainstyles.preferrenceHeader, color:this.state.paidDisconnection ? '#102C4E' : '#102C4EB3'}} >
+                                                            <Text style={{ ...Mainstyles.preferrenceHeader, color: this.state.paidDisconnection ? '#102C4E' : '#102C4EB3' }} >
                                                                 Immediate Disconnection
                                                             </Text>
-                                                            <Text style={{ ...Mainstyles.preferrenceLabel}} >
+                                                            <Text style={{ ...Mainstyles.preferrenceLabel }} >
                                                                 Additional charges apply for Immediate Disconnection + Associated Fees : 105 AED
                                                             </Text>
                                                         </TouchableOpacity>
@@ -939,7 +665,7 @@ class DisconnectionRequest extends Component {
                                                             <CircleRadioIcon width={24} height={24} fill={this.state.paidDisconnection ? '#D3D3D3' : '#0057A2'} />
                                                         </TouchableOpacity>
                                                         {/* D3D3D3 */}
-                                                        <Text style={{ ...Mainstyles.preferrenceHeader, color:this.state.paidDisconnection ? '#102C4EB3' : '#102C4E', marginLeft: 10 }} >
+                                                        <Text style={{ ...Mainstyles.preferrenceHeader, color: this.state.paidDisconnection ? '#102C4EB3' : '#102C4E', marginLeft: 10 }} >
                                                             Regular Disconnection
                                                         </Text>
                                                     </View>
@@ -1144,6 +870,46 @@ class DisconnectionRequest extends Component {
                                     /> :
                                     null
                             }
+                            {
+                                this.state.showSaveCardModal ?
+                                <Modal
+                                    close={false}
+                                    onClose={() => this.setState({ showSaveCardModal: false })}
+                                    visible={this.state.showSaveCardModal}
+                                    data={{
+                                        button1Text: "Close",
+                                        view: (
+                                            <View style={{ alignItems: 'center', width: "100%" }}>
+                                                <Image
+                                                    style={{ width: 66.34, height: 88, resizeMode: "contain", marginBottom: 20 }}
+                                                    source={require("../../../assets/images/readingSuccess.png")} // Make sure to add this image
+                                                />
+                                                <Text style={styles.inputLabelStyle}>
+                                                    Do you want to save your card for future payments?
+                                                </Text>
+
+                                                <TouchableOpacity
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%", marginTop: 20 }}
+                                                    onPress={this.handleSaveCard}
+                                                >
+                                                    <Text style={Mainstyles.buttonLabelStyle}>Yes, Save Card</Text>
+                                                </TouchableOpacity>
+
+                                                <TouchableOpacity
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%", marginTop: 10 }}
+                                                    onPress={() => this.setState({ showModal: false })}
+                                                >
+                                                    <Text style={Mainstyles.buttonLabelStyle}>No, Thanks</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }}
+                                    titleText={{ alignItems: 'center' }}
+                                    /> :
+                                    null
+                            }
+
+
                         </KeyboardAwareScrollView>
                     </InfoContainer>
                 </SafeAreaView>

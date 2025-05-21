@@ -47,8 +47,9 @@ class OtpScreen extends Component {
       showToast: false,
       toastMessage: "",
       mobileNumber: "",
-      timer: 59,
-      LoginDeviceLog:'',
+      timer: 45,
+      resendCount: 0,
+      LoginDeviceLog: '',
       enableResend: false
     }
     this.scrollView = React.createRef()
@@ -60,23 +61,24 @@ class OtpScreen extends Component {
       mobileNumber: this.props.route.params.mobileNumber
     })
     this.detonateTimer()
+    this.startResendTimer();
   }
 
-  async componentWillReceiveProps (nextProps) {
-    const {validateOtpResult, resendOtpResult} = nextProps;
+  async componentWillReceiveProps(nextProps) {
+    const { validateOtpResult, resendOtpResult } = nextProps;
     if (validateOtpResult && validateOtpResult.content && (validateOtpResult.content.STATUS == "SUCCESS")) {
       await AsyncStorage.setItem("sergas_customer_login_flag", "true")
       if (this.props.route.params.scanEid) {
         this.props.navigation.navigate("OcrTest", { fromOtp: true })
-      } else {        
-        
+      } else {
+
         await postLoginDeviceLog(this.state.LoginDeviceLog);
         this.props.navigation.navigate("HomeBase")
       }
     } else if (validateOtpResult && validateOtpResult.content && (validateOtpResult.content.STATUS == "FAILURE")) {
       await AsyncStorage.setItem("sergas_customer_login_flag", "false")
       this.toastIt("OTP is Incorrect")
-    } 
+    }
 
     if (resendOtpResult && resendOtpResult.content && (resendOtpResult.content.STATUS == "SUCCESS")) {
       this.toastIt("OTP sent successfully")
@@ -87,7 +89,34 @@ class OtpScreen extends Component {
 
   componentWillUnmount() {
     RNLocalize.removeEventListener("change", this.handleLocalizationChange);
+    if (this.resendInterval) clearInterval(this.resendInterval);
   }
+
+  startResendTimer = () => {
+    if (this.resendInterval) clearInterval(this.resendInterval);
+
+    this.resendInterval = setInterval(() => {
+      if (this.state.timer > 0) {
+        this.setState(prevState => ({ timer: prevState.timer - 1 }));
+      } else {
+        clearInterval(this.resendInterval);
+      }
+    }, 1000);
+  };
+
+  handleResend = () => {
+    const addedTime = 15;
+    const newCount = this.state.resendCount + 1;
+    const newTime = this.state.timer + (addedTime * newCount);
+
+    this.setState({
+      resendCount: newCount,
+      timer: newTime,
+    }, () => {
+      this.startResendTimer();
+      this.props.resendOtp({ mobileNumber: this.state.mobileNumber });
+    });
+  };
 
   detonateTimer = () => {
     this.setState({
@@ -96,7 +125,7 @@ class OtpScreen extends Component {
     var refreshIntervalId = setInterval(() => {
       if (this.state.timer > 0) {
         this.setState({
-          timer: this.state.timer-1
+          timer: this.state.timer - 1
         })
       } else {
         clearInterval(refreshIntervalId);
@@ -105,7 +134,7 @@ class OtpScreen extends Component {
         })
       }
     }, 1000)
-  } 
+  }
 
   handleLocalizationChange = () => {
     AsyncStorage.getItem('language', (err, res) => {
@@ -130,7 +159,7 @@ class OtpScreen extends Component {
       this.props.navigation.navigate("EmailLogin")
     } else {
       this.setState({
-        resendOtpCounter: this.state.resendOtpCounter+1
+        resendOtpCounter: this.state.resendOtpCounter + 1
       })
     }
   }
@@ -142,7 +171,7 @@ class OtpScreen extends Component {
       // })
       this.props.validateOtp({
         otp: this.state.otp,
-        mobileNumber: this.state.mobileNumber        
+        mobileNumber: this.state.mobileNumber
       })
       this.setState({
         LoginDeviceLog: {
@@ -165,7 +194,7 @@ class OtpScreen extends Component {
 
         }
       }, () => {
-        
+
       });
     } else {
       this.setState({
@@ -196,189 +225,147 @@ class OtpScreen extends Component {
   }
 
   render() {
-    
+
     return (
-      
+
       //     <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Dimensions.HP_90, }}>
       <SafeAreaView style={{ backgroundColor: '#F7FAFC', height: "100%", flex: 1 }} >
-      <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+        <View style={{ ...styles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
           <View style={{ flexDirection: "row", }}>
-              <View style={styles.headerCol1}>
-                  <TouchableOpacity style={{ marginRight: 5 }} onPress={() => {
-                      if (this.state.step > 1) {
-                          this.setState({ step: this.state.step - 1 })
-                      } else {
-                          this.props.navigation.goBack()
-                      }
-                  }}>
-                      {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
-                      <XIcon />
-                  </TouchableOpacity>
-                  {/* <Text style={styles.welcomeLabel} >
+            <View style={styles.headerCol1}>
+              <TouchableOpacity style={{ marginRight: 5 }} onPress={() => {
+                if (this.state.step > 1) {
+                  this.setState({ step: this.state.step - 1 })
+                } else {
+                  this.props.navigation.goBack()
+                }
+              }}>
+                {/* <Image source={Images.BackButton} style={{ height: 40, width: 40, }}></Image> */}
+                <XIcon />
+              </TouchableOpacity>
+              {/* <Text style={styles.welcomeLabel} >
                       New Connection request
                   </Text> */}
-              </View>
+            </View>
           </View>
           <View style={{ ...Mainstyles.accountsLabelView, ...{ alignSelf: 'center', width: "100%" } }}>
 
           </View>
-      </View>
+        </View>
 
-      {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
-      <View style={{
-          height: "100%",  overflow: 'hidden',
+        {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
+        <View style={{
+          height: "100%", overflow: 'hidden',
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           width: '100%'
-      }} >
-            <KeyboardAwareScrollView
-              behavior={Platform.OS === 'ios' ? 'padding' : null}
-              // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
-              style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
-              enabled
-            >
-          <ScrollView
-            ref={(ref) => (this.scrollView = ref)}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollView}>
-            <View style={styles.imageView}>
-              {/* <Image
+        }} >
+          <KeyboardAwareScrollView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+            style={{ paddingTop: Dimensions.HP_4, flex: 1 }}
+            enabled
+          >
+            <ScrollView
+              ref={(ref) => (this.scrollView = ref)}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollView}>
+              <View style={styles.imageView}>
+                {/* <Image
                 source={require("../../../assets/images/otp_lock.png")}
                 style={styles.goodieeLogoImage} /> */}
                 <OTPIcon />
-            </View>
-            
-            <View style={styles.cardView} >
-            <View style={{...styles.cardHeader,marginVertical: 0}}>
-                    <Text style={styles.cardHeaderText}>Almost there!</Text>
-                  </View>
-                  <View style={{...styles.cardHeader,marginTop: 0}}>
-                    <Text style={styles.inputLabelStyle}>Check your messages inbox and input
+              </View>
+
+              <View style={styles.cardView} >
+                <View style={{ ...styles.cardHeader, marginVertical: 0 }}>
+                  <Text style={styles.cardHeaderText}>Almost there!</Text>
+                </View>
+                <View style={{ ...styles.cardHeader, marginTop: 0 }}>
+                  <Text style={styles.inputLabelStyle}>Check your messages inbox and input
                     the verification code to verify your account.</Text>
-                  </View>
-              {/* <View style={styles.cardHeader}>
+                </View>
+                {/* <View style={styles.cardHeader}>
                 <Text style={styles.cardHeaderText}>{t("login.enterOtp")}</Text>
               </View> */}
-              <View style={styles.inputGroupStyle}>
-                {/* <View>
+                <View style={styles.inputGroupStyle}>
+                  {/* <View>
                   <Text style={styles.inputLabelStyle}>{t("login.mobileNumber")}</Text>
                 </View> */}
-                <View>
-                  <OtpInputs handleChange={(code) => { this.setState({ otp: code }) } } numberOfInputs={4} otp = {true} 
-                  inputContainerStyles={{borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
-                  inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
+                  <View>
+                    <OtpInputs handleChange={(code) => { this.setState({ otp: code }) }} numberOfInputs={4} otp={true}
+                      inputContainerStyles={{ borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
+                      inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
                     />
+                  </View>
+
                 </View>
-                {/* <View style={styles.resendOtpViewStyle}>
-                <TouchableOpacity
-                  onPress={this.handleResendOtp}
-                >
-                  <Text
-                    style={styles.resendOtpStyle}>{t("login.resendOtp")}</Text>
-                </TouchableOpacity>
-                </View> */}
-              </View>
-              <View style={styles.buttonView}>
-                <TouchableOpacity onPress={this.handleSubmit} style={styles.buttonStyle} >
-                  <Text style={styles.buttonLabelStyle}>Continue</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.buttonViewR}>
-                <TouchableOpacity onPress={this.handleSubmit} style={styles.buttonStyleR} >
-                  <Text style={styles.buttonLabelStyleR}>Resend Code</Text>
-                </TouchableOpacity>
-              </View>
-
-            </View>
-            <View style={styles.registerButtonStyle}>
-                  {/* <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("RegisterUser")}
-                  style={styles.registerButtonStyle}
-                > */}
-                  
-                  <View style={styles.registerHereView}>
+                <View style={styles.buttonView}>
+                  <TouchableOpacity
+                    onPress={this.handleSubmit}
+                    disabled={this.state.otp.length < 4}
+                    style={[
+                      styles.buttonStyle,
+                      this.state.otp.length < 4 && { backgroundColor: '#ccc' }
+                    ]}
+                  >
                     <Text
-                      style={styles.notCustomerText}>Resend code after: </Text>
-                  </View>
-                  <View style={styles.notCustomerView}>
-                      <Text style={styles.registerHereText}>
-                        {
-                          this.state.timer >= 10 ?
-                          "00:"+this.state.timer+" Sec":
-                          "00:0"+this.state.timer+" Sec"
-                        }
-                      </Text>
-                      {/* <Image
-                    source={require('../../../assets/images/click.png')}
-                    style={styles.clickImage}
-                  /> */}
-                  </View>
-
-
-                  {/* </TouchableOpacity> */}
-                </View>
-
-                <View style={{...styles.registerButtonStyle, paddingTop: 0}}>
-                  {/* <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("RegisterUser")}
-                  style={styles.registerButtonStyle}
-                > */}
-                  
-                  <View style={styles.registerHereView}>
-                    <Text
-                      style={styles.notCustomerText}>Didn't receive code. </Text>
-                  </View>
-                  <View style={styles.notCustomerView}>
-                    <TouchableOpacity
-                    disabled={this.state.timer}
-                      style={styles.payBillView}
-                      onPress={() => 
-                        {
-                          this.props.resendOtp({
-                          mobileNumber: this.state.mobileNumber        
-                        })
-                      }
-                      }
-                    // onPress={() => this.setState({showTermsModal: !this.state.showTermsModal})}
+                      style={[
+                        styles.buttonLabelStyle,
+                        this.state.otp.length < 4 && { color: '#888' }
+                      ]}
                     >
-                      <Text style={{
-                        fontSize: 12,
-                        color: this.state.timer == 0 ? "#102D4F" : "#E2E2E2"
-                      }}>
+                      Continue
+                    </Text>
+                  </TouchableOpacity>
+
+                </View>
+
+                {this.state.timer === 0 && (
+                  <View style={styles.buttonViewR}>
+                    <TouchableOpacity
+                      style={styles.buttonStyleR}
+                      onPress={this.handleResend}
+                    >
+                      <Text
+                        style={[
+                          styles.buttonLabelStyleR,
+                          { color: "#102D4F" }
+                        ]}
+                      >
                         Resend
                       </Text>
-                      {/* <Image
-                    source={require('../../../assets/images/click.png')}
-                    style={styles.clickImage}
-                  /> */}
                     </TouchableOpacity>
                   </View>
+                )}
 
 
-                  {/* </TouchableOpacity> */}
+              </View>
+              <View style={styles.registerButtonStyle}>
+                <View style={styles.registerHereView}>
+                  <Text style={styles.notCustomerText}>Resend code after: </Text>
                 </View>
-          </ScrollView>
-          {/* <Image
-                    source={require('../../../assets/images/footerBg.png')}
-                    style={{
-                      height: 192.35,
-                      width: 216.28,
-                      position: 'absolute',
-                      alignSelf: 'flex-end',
-                      bottom: 0,
-                      zIndex: -1
-                    }}
-                    /> */}
-          {this.state.showToast ? (
+                <View style={styles.notCustomerView}>
+                  <Text style={styles.registerHereText}>
+                    {
+                      this.state.timer >= 10
+                        ? `00:${this.state.timer} Sec`
+                        : `00:0${this.state.timer} Sec`
+                    }
+                  </Text>
+                </View>
+              </View>
+
+
+            </ScrollView>
+
+            {this.state.showToast ? (
               <Toast message={this.state.toastMessage} isImageShow={false} />
             ) : null}
-        </KeyboardAwareScrollView>
+          </KeyboardAwareScrollView>
         </View>
-        {/* </InfoContainer> */}
-        {/* </ImageBackground> */}
-        </SafeAreaView>
+      </SafeAreaView>
     )
   }
 

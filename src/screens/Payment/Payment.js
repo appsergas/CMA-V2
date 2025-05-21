@@ -145,6 +145,7 @@ class Payment extends Component {
 
     async componentWillMount() {
         let contracts = await AsyncStorage.getItem("contract_list")
+        console.log("contracts >> ", contracts)
         if (Platform.OS == 'ios') {
             this.setState({
                 applePaySupported: await isApplePaySupported(),
@@ -291,45 +292,33 @@ class Payment extends Component {
         if ((currentGasContract.LAST_INVDOCNO == "") && (this.state.currentInvoice == "")) {
             this.toastIt("Invoice not available. Please contact customer care.")
         } else {
-            let outLetReference = "", apiKey = "", tokenApiUrl = "", orderApiUrl = ""
+            const isTestEnv = API_PATH.includes("cmaapiuat.sergas.com"); // Detect test environment
 
-            if (currentGasContract.COMPANY == "97") {
-                outLetReference = abudhabiTestOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrlTest
-                orderApiUrl = paymentGatewayCreateOrderUrlTest
-            } else if (currentGasContract.COMPANY == "91") {
-                outLetReference = dubaiTestOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrlTest
-                orderApiUrl = paymentGatewayCreateOrderUrlTest
-            } else if (currentGasContract.COMPANY == "92") {
-                outLetReference = fujairahTestOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrlTest
-                orderApiUrl = paymentGatewayCreateOrderUrlTest
-            } else if (currentGasContract.COMPANY == "01") {
-                outLetReference = abudhabiOutletReference
-                apiKey = paymentApiKeyAUH
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
-            } else if (currentGasContract.COMPANY == "02") {
-                outLetReference = dubaiOutletReference
-                apiKey = paymentApiKeyDXB
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
-            } else if (currentGasContract.COMPANY == "03") {
-                outLetReference = fujairahOutletReference
-                apiKey = paymentApiKeyTest
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
-            } else if (currentGasContract.COMPANY == "05") {
-                outLetReference = alainOutletReference
-                apiKey = paymentApiKeyALN
-                tokenApiUrl = paymentGatewayTokenApiUrl
-                orderApiUrl = paymentGatewayCreateOrderUrl
+            let outLetReference = "", apiKey = "";
+            const tokenApiUrl = isTestEnv ? paymentGatewayTokenApiUrlTest : paymentGatewayTokenApiUrl;
+            const orderApiUrl = isTestEnv ? paymentGatewayCreateOrderUrlTest : paymentGatewayCreateOrderUrl;
+            
+            switch (currentGasContract.COMPANY) {
+              case "01": // Abu Dhabi
+                outLetReference = isTestEnv ? abudhabiTestOutletReference : abudhabiOutletReference;
+                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyAUH;
+                break;
+              case "02": // Dubai
+                outLetReference = isTestEnv ? dubaiTestOutletReference : dubaiOutletReference;
+                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyDXB;
+                break;
+              case "03": // Fujairah
+                outLetReference = isTestEnv ? fujairahTestOutletReference : fujairahOutletReference;
+                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyTest; // Confirm if this is correct
+                break;
+              case "05": // Al Ain
+                outLetReference = isTestEnv ? alainTestOutletReference : alainOutletReference;
+                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyALN;
+                break;
+              default:
+                this.toastIt("Payment setup not found for your company. Please contact support.");
+                return;
             }
-
             this.setState({ makePaymentClicked: true }, async () => {
                 let token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
                 if (token != null) {
@@ -513,7 +502,7 @@ class Payment extends Component {
 
                                     } catch (err) {
                                         this.setState({ makePaymentClicked: false })
-                                        this.toastIt("Payment Failed")
+                                        this.toastIt("Payment Failed",err)
 
                                         const paidCardDetails =
                                             type === "samsungpay"
