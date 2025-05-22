@@ -33,7 +33,7 @@ function MainTabs() {
   const backAction = () => {
     Alert.alert("Hold on!", "Are you sure you want to exit?", [
       {
-        text: "Cancel",
+        text: "Cancel", 
         onPress: () => null,
         style: "cancel"
       },
