@@ -51,6 +51,7 @@
     "react-native-linear-gradient": "^2.6.2",
     "react-native-localize": "^2.1.5",
     "react-native-mail": "^6.1.1",
+    "react-native-notifications": "^5.1.0",
     "react-native-otp-inputs": "^7.1.1",
     "react-native-otp-verify": "^1.1.8",
     "react-native-pager-view": "^6.3.1",
