@@ -74,3 +74,7 @@ buck-out/
 android/
 *.hprof
 "node_modules.zip" 
+package.json
+package-lock.json
+pubspec.lock
+pubspec.yaml

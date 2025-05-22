@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         backgroundColor: "white",
-        borderRadius: 4,
+        borderRadius: 20,
         justifyContent: 'center',
         alignSelf: "center",
         shadowColor: "rgba(0, 0, 0, 0.16)",
@@ -238,12 +238,13 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         elevation: 5,
         width: "100%"
+        
     },
     modalViewInnerContainer: {
         justifyContent: "center",
         alignSelf: "center",
         textAlignVertical: "center",
-        width: "100%"
+        width: "100%",padding: 10,
     },
     modalButtonContainer: {
         alignSelf: "center",

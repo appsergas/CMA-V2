@@ -209,10 +209,27 @@ payBillText: {
     marginBottom: 10
   },
   inputLabelStyle: {
-    color: "#394B62",
+    color: "#102C4EB2",
     fontFamily: "Tajawal-Medium",
     fontSize: 16,
-    fontWeight: "600"
+    fontWeight: "400"
+  },
+  inputLabelHeadOTPStyle: {
+    color: "#102C4E",
+    fontFamily: "Tajawal-Medium",
+    fontSize: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+  },
+  inputLabelOTPStyle: {
+    color: "#102C4E",
+    fontFamily: "Tajawal-Medium",
+    fontSize: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    paddingBottom: 10
   },
   buttonView: {
     paddingHorizontal: 15,
@@ -239,11 +256,78 @@ payBillText: {
     backgroundColor: '#102D4F',
     // elevation: 5,  // Android
   },
+
+  buttonViewR: {
+    width: "100%",
+    // marginVertical: 15
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  buttonStyleR: {
+    // backgroundColor: '#022D51',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: "center",
+    // backgroundColor: "rgb(79, 194, 212)",
+    borderColor: "#0057A2",
+    borderStyle: "solid",
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: 0,
+    alignSelf: "flex-end",
+    width: "100%",
+    // shadowColor: 'rgba(0,0,0, .4)',
+    // shadowOffset: { height: 2, width: 2 }, // IOS
+    // shadowOpacity: 1, // IOS
+    // // shadowRadius: 1, //IOS
+    // elevation: 5,  // Android
+    
+
+  },
+  buttonLabelStyleR: {
+    color: "#102C4E",
+    fontSize: 16,
+    fontFamily: "Tajawal-Medium",
+    fontWeight:"bold",
+    
+  },
+
+   buttonView: {
+    paddingHorizontal: 15,
+    // marginVertical: 15
+    marginTop: 15,
+  },
+  buttonStyle: {
+    backgroundColor: '#022D51',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: "center",
+    // backgroundColor: "rgb(79, 194, 212)",
+    borderColor: "rgba(110, 149, 213, 0.2)",
+    borderStyle: "solid",
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: 0,
+    alignSelf: "flex-end",
+    width: "100%",
+    shadowColor: 'rgba(0,0,0, .4)',
+    shadowOffset: { height: 2, width: 2 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 1, //IOS
+    elevation: 5,  // Android
+    
+
+  },
   buttonLabelStyle: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Tajawal-Medium"
+    fontSize: 16,
+    fontFamily: "Tajawal-Medium",
+    fontWeight:"bold",
+    
   },
+
   registerButtonViewStyle: {
     width: "95%",
   },
@@ -392,6 +476,16 @@ cardBodyText1: {
     paddingTop: 40,
     width:"95%"
   },
+  initialsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0a1f44',
+    },
+    initialsText: {
+        fontSize: 32,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
   profileImageWrapper: {
     alignItems: 'center',
     marginBottom: 30,
@@ -410,7 +504,7 @@ cardBodyText1: {
     right: 120,
     backgroundColor: '#0a1f44',
     borderRadius: 20,
-    padding: 6,
+    padding: 3,
     borderWidth: 2,
     borderColor: '#fff',
   },
@@ -444,10 +538,11 @@ elevation: 1,
     fontSize: 16,
     color: '#2d2d2d',
     paddingVertical: 0,
+    padding: 10,
   },
   icon: {
     marginRight: 10,
-    color: '#8e8e8e',
+    color: '#102C4E',
   },
   
   

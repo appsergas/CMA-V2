@@ -26,7 +26,7 @@ import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import { API_PATH } from '../../services/api/data/data/api-utils';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { commonGradient } from '../../components/molecules/gradientStyles';
 import { ArrowIcon, CameraIcon } from '../../../assets/icons'
 
 class SubmitReading extends Component {
@@ -314,32 +314,32 @@ class SubmitReading extends Component {
         return (
             <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
                 <SafeAreaView style={{ height: "100%", flex: 1 }} >
-               
-                      <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                            <View style={Mainstyles.headerLeft}>
-                                <TouchableOpacity
-                                    style={Mainstyles.backbutton}
-                                    onPress={() => this.props.navigation.goBack()} >
-                                    {/* <ArrowIcon direction={"left"} size={20} color="#FFFFFF" /> */}
-                                    <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
-                                </TouchableOpacity>
-                                <View style={Mainstyles.textContainer}>
-                                    <View style={Mainstyles.nameRow}>
-                                        <Text style={Mainstyles.welcomeLabel} >
-                                        Meter Reading
-                                        </Text>
-                                    </View>
 
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                {/* <ArrowIcon direction={"left"} size={20} color="#FFFFFF" /> */}
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
+                            </TouchableOpacity>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Meter Reading
+                                    </Text>
                                 </View>
+
                             </View>
                         </View>
-                        <View style={Mainstyles.banner}>
-                            <Text style={Mainstyles.bannerText}>
+                    </View>
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
                             Easily submit your gas meter readings to ensure accurate billing.
-                            </Text>
-                        </View>
-                         <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
-                          
+                        </Text>
+                    </View>
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
@@ -351,7 +351,7 @@ class SubmitReading extends Component {
                             <ScrollView
                                 ref={(ref) => (this.scrollView = ref)}
                                 showsVerticalScrollIndicator={false}
-                                contentContainerStyle={{...Mainstyles.containerView}}>
+                                contentContainerStyle={{ ...Mainstyles.containerView }}>
 
 
                                 <View style={{ ...Mainstyles.accountsLabelView, marginTop: 20 }}>
@@ -390,7 +390,7 @@ class SubmitReading extends Component {
                                     this.setState({ newReading: value })
                                 }}
                             /> */}
-                                                <View style={{ width: "95%", borderWidth: 2, borderColor: "#7CA8CF", paddingRight:10,paddingLeft:10, borderRadius: 14, padding: 2,  justifyContent: "center", }}>
+                                                <View style={{ width: "95%", borderWidth: 2, borderColor: "#7CA8CF", paddingRight: 10, paddingLeft: 10, borderRadius: 14, padding: 2, justifyContent: "center", }}>
                                                     <OtpInputs
                                                         // placeholder={this.props.contracts[this.state.activeItemIndex].LAST_READING.toString().split(".")[0]+this.props.contracts[this.state.activeItemIndex].LAST_READING.toString().split(".")[1]}
                                                         placeholder={this.state.newReading > 0 ? 0 : this.props.contracts[this.state.activeItemIndex].LAST_READING}
@@ -491,50 +491,38 @@ class SubmitReading extends Component {
                                 </View>
                             </View> */}
 
-                                                <TouchableOpacity style={{ ...styles.paymentDueRow1, ...{ alignItems: 'center' } }}
-                                                    onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
-                                                        (media) => {
-                                                            if (!!media && media.assets) {
-                                                                this.setState({ image1: media })
-                                                            }
-                                                        }
-                                                    )}>
-
-                                                    <View style={styles.addImageView}>
-                                                        {/* <View style={styles.addImageViewCol}>
-                                        <TouchableOpacity>
-                                            <Image style={styles.addImage} source={require("../../../assets/images/add.png")} />
-                                        </TouchableOpacity>
-                                    </View> */}
-                                                        {/* <View style={styles.addImageViewCol}>
-                                        <TouchableOpacity>
-                                            <Image style={styles.addImage} source={require("../../../assets/images/add.png")} />
-                                        </TouchableOpacity>
-                                    </View> */}
-                                                        <View style={styles.addImageViewCol}>
-                                                            <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
-                                                                (media) => {
-                                                                    if (!!media && media.assets) {
-                                                                        this.setState({ image1: media })
-                                                                    }
+                                                <TouchableOpacity
+                                                    style={{ ...styles.paymentDueRow1, alignItems: 'center' }}
+                                                    onPress={() =>
+                                                        launchCamera(
+                                                            { mediaType: "photo", maxHeight: 100, includeBase64: true, quality: 0.1 },
+                                                            (media) => {
+                                                                if (!!media && media.assets && media.assets.length > 0) {
+                                                                    this.setState({ image1: media.assets[0] });
                                                                 }
-                                                            )}>
-                                                                {/* {this.state.image1 != null ?
-                                                                    <Image style={{ ...styles.addImage }} source={{ uri: this.state.image1.assets[0].uri }} />
-                                                                    : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/camera2.png")} />
-                                                                } */}
-                                                                  <CameraIcon width={45} height={35} color="#102C4E" />
+                                                            }
+                                                        )
+                                                    }
+                                                >
+                                                    <View style={styles.addImageView}>
+                                                        <View style={styles.addImageViewCol}>
+                                                            <TouchableOpacity>
+                                                                {this.state.image1 ? (
+                                                                    <Image
+                                                                        style={styles.addImage}
+                                                                        source={{ uri: this.state.image1.uri }}
+                                                                    />
+                                                                ) : (
+                                                                    <CameraIcon width={45} height={35} color="#102C4E" />
+                                                                )}
                                                             </TouchableOpacity>
                                                         </View>
                                                     </View>
-                                                    <View style={{ ...styles.addImageView, ...{ width: "75%" } }}>
-                                                        {/* <Text style={styles.noteText}>{t("home.note")}</Text> */}
-                                                        <Text style={styles.imageClearText}>
-                                                            {/* {t("home.imageShouldBeClear")} */}
-                                                            Image should be clearly visible.
-                                                            </Text>
+                                                    <View style={{ ...styles.addImageView, width: "75%" }}>
+                                                        <Text style={styles.imageClearText}>Image should be clearly visible.</Text>
                                                     </View>
                                                 </TouchableOpacity>
+
                                             </View>
 
                                             <TouchableOpacity

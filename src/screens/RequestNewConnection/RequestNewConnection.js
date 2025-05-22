@@ -1472,10 +1472,13 @@ class RequestNewConnection extends Component {
                                                             {/* <View style={{ alignSelf: 'flex-start' }}>
                                             <Text style={styles.inputLabelStyle}>Click to scan the qr code in your meter</Text>
                                         </View> */}
+                                        
                                                             <TouchableOpacity
                                                                 style={{ ...styles.buttonStyle, ...{ width: "100%", flexDirection: 'row' } }}
                                                                 onPress={() => {
+                                                                    
                                                                     if ((this.state.emirate == "") || (this.state.emirate == null)) {
+                                                                        showPickerModal: true
                                                                         this.toastIt("Select Emirate to scan the QR Code", false)
                                                                     } else {
                                                                         this.setState({ buildingCode: "", apartmentCode: "", openQrScanner: true })
@@ -1809,6 +1812,7 @@ class RequestNewConnection extends Component {
                                         </> :
                                         this.state.step == 2 ?
                                             <>
+                                            
                                                 <View style={{ padding: 20, backgroundColor: '#fff' }}>
                                                     <Text style={{ fontWeight: '500', fontSize: 14, color: '#000', marginBottom: 20 }}>
                                                         Tenancy Contract / Ejari / Title deed / Initial sales agreement
@@ -1855,12 +1859,13 @@ class RequestNewConnection extends Component {
                                                                     style={{ width: 30, height: 30, resizeMode: 'contain' }}
                                                                     source={require("../../../assets/images/camera2.png")}
                                                                 />
+                                                                
                                                             )}
                                                         </TouchableOpacity>
 
-                                                        <Text style={{ marginTop: 10, fontSize: 12, color: '#888' }}>
+                                                        {/* <Text style={{ marginTop: 10, fontSize: 12, color: '#888' }}>
                                                             Image should be clearly visible.
-                                                        </Text>
+                                                        </Text> */}
                                                     </View>
                                                     <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
                                                         <TouchableOpacity
@@ -2316,7 +2321,7 @@ class RequestNewConnection extends Component {
                                         }, 1000)
                                     }}
                                     data={{
-                                        title: "Test",
+                                        title: "Attach image from?",
                                         message: "Test",
                                         button1Text: "Camera",
                                         button2Text: "Gallery",

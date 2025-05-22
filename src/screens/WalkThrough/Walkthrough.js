@@ -58,6 +58,49 @@ export default class Walkthrough extends Component {
     this.viewConfig = { viewAreaCoveragePercentThreshold: 50 };
   }
 
+  // export default class Walkthrough extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     scrollX: new Animated.Value(0),
+  //     currentIndex: 0,
+  //     selectedCountry: '',
+  //   };
+
+  //   this.flatListRef = React.createRef();
+  //   this.viewConfig = { viewAreaCoveragePercentThreshold: 50 };
+  // }
+
+  // componentDidMount() {
+  //   // Listen for screen focus to scroll to correct step
+  //   this.focusListener = this.props.navigation.addListener('focus', () => {
+  //     const stepIndex = this.props.route?.params?.stepIndex;
+  //     if (
+  //       typeof stepIndex === 'number' &&
+  //       this.flatListRef?.current
+  //     ) {
+  //       setTimeout(() => {
+  //         try {
+  //           this.flatListRef.current.scrollToIndex({
+  //             index: stepIndex,
+  //             animated: false,
+  //             viewPosition: 0,
+  //           });
+  //         } catch (error) {
+  //           console.warn('Failed to scroll to index:', stepIndex, error);
+  //         }
+  //       }, 200); // slight delay to ensure FlatList is rendered
+  //     }
+  //   });
+  // }
+
+  // componentWillUnmount() {
+  //   // Remove the focus listener to prevent memory leaks
+  //   if (this.focusListener) {
+  //     this.focusListener();
+  //   }
+  // }
+
   onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
       this.setState({ currentIndex: viewableItems[0].index });

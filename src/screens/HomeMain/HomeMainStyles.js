@@ -322,7 +322,10 @@ homeOptionText: {
     width: '100%'
   },
   bodyview:{
-    backgroundColor: "#FFFFFF",padding: 10,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,marginBottom: 10,
+    backgroundColor: "#FFFFFF",padding: 8,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,marginBottom: 10,
+  },
+  bodyviewSupport:{
+    backgroundColor: "#FFFFFF",marginTop:20,padding: 8,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,marginBottom: 10,
   },
   headerView: {
     flexDirection: "row",
@@ -343,6 +346,16 @@ profileImageContainer: {
     overflow: "hidden", // Ensures image stays inside rounded square
     backgroundColor: "#fff", // White background like in the screenshot
 },
+initialsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0a1f44',
+    },
+    initialsText: {
+        fontSize: 20,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
 profileImage: {
     width: "100%",
     height: "100%",

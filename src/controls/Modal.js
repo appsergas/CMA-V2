@@ -112,7 +112,7 @@ function CustomModal(props) {
                                     {/* <Image style={styles.addImage} source={{ uri: data.uri }} /> */}
                                 </View>
                                 : null}
-                            <View
+                            {/* <View
                                 pointerEvents="box-none"
                                 style={button1 && button2 ? styles.modalButtonContainer : styles.modalSingleButtonContainer}
                             >
@@ -120,7 +120,7 @@ function CustomModal(props) {
                                     onPress={handleButton1}
                                 >
                                     <View style={button1 && button2 ? styles.cancelView : styles.cancelView12}>
-                                        <Text style={styles.cancelText}>{data.button1Text}</Text>
+                                        <Text style={styles.cancelText}>{data.button1Text}en</Text>
                                     </View>
                                 </TouchableHighlight>
                                     : null}
@@ -133,7 +133,33 @@ function CustomModal(props) {
                                             style={styles.deleteText}>{data.button2Text}</Text>
                                     </View>
                                 </TouchableHighlight> : null}
+                            </View> */}
+
+                            <View
+                                pointerEvents="box-none"
+                                style={button1 && button2 ? styles.modalButtonContainer : styles.modalSingleButtonContainer}
+                            >
+                                {button1 && (
+                                    <TouchableHighlight underlayColor="none" onPress={handleButton1}>
+                                        <View style={[styles.cancelView, button2 && { marginRight: 16 }]}>
+                                            <Text style={styles.cancelText}>{data.button1Text}</Text>
+                                        </View>
+                                    </TouchableHighlight>
+                                )}
+
+                                {button2 && (
+                                    <TouchableHighlight underlayColor="none" onPress={handleButton2}>
+                                        <View style={styles.deleteView}>
+                                            <Text style={styles.deleteText}>{data.button2Text}</Text>
+                                        </View>
+                                    </TouchableHighlight>
+                                )}
                             </View>
+
+
+
+
+
                             {logOutWarningMessage ? <View><Text style={styles.logOutWarningMessage}>If you click on the logout, App will be closed for security reasons.</Text></View> : null}
                         </View>
                     </View>
@@ -146,15 +172,17 @@ function CustomModal(props) {
 const styles = StyleSheet.create({
     centeredView: {
         backgroundColor: "transparent",
-        width: "100%"
+        width: "100%",
+
     },
     modal: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.6)',
         justifyContent: "center",
         alignItems: "center",
-        paddingLeft: 15,
-        paddingRight: 15,
+        paddingLeft: 20,
+        paddingRight: 20,
+
     },
     modalLandscape: {
         flex: 1,
@@ -176,16 +204,35 @@ const styles = StyleSheet.create({
         fontStyle: "normal",
         textAlign: 'justify',
         backgroundColor: "transparent",
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: 5,
+        marginRight: 5,
         flexDirection: "column"
     },
     cancelView: {
-        backgroundColor: "#102D4F",
-        borderRadius: 4,
-        width: 95,
-        height: 25,
-        justifyContent: "center",
+        // backgroundColor: "#102D4F",
+        // borderRadius: 4,
+        // // width: 95,
+        // height: 25,
+        // justifyContent: "center",
+
+
+        // borderRadius: 12,
+        // alignItems: "center",
+        // justifyContent: "center",
+        // padding: 0,
+        //  width: "95%",
+        // height: 40,
+        // backgroundColor: '#102C4E',
+        // fontSize:14,
+        // fontWeight:"bold",
+
+        backgroundColor: '#102C4E',
+        borderRadius: 10,
+        paddingVertical: 14,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        maxWidth: 140,
     },
     cancelView12: {
         backgroundColor: "rgb(79, 194, 212)",
@@ -196,39 +243,60 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cancelText: {
+        // color: "white",
+        // fontFamily: "Tajawal-Bold",
+        // fontSize: 12,
+        // fontStyle: "normal",
+        // textAlign: "center",
+        // letterSpacing: 1,
+        // backgroundColor: "transparent",
+
         color: "white",
         fontFamily: "Tajawal-Bold",
-        fontSize: 12,
-        fontStyle: "normal",
+        fontSize: 14,
         textAlign: "center",
-        letterSpacing: 1,
-        backgroundColor: "transparent",
     },
     deleteView: {
-        backgroundColor: "transparent",
-        borderRadius: 4,
+        // backgroundColor: "transparent",
+        // borderRadius: 4,
+        // borderWidth: 1,
+        // borderColor: "#102D4F",
+        // borderStyle: "solid",
+        // width: 100,
+        // height: 25,
+        // justifyContent: "center",
+        // marginLeft: 20
+
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#102D4F",
-        borderStyle: "solid",
-        width: 100,
-        height: 25,
-        justifyContent: "center",
-        marginLeft: 20
+        // borderColor: '#102D4F',
+        borderColor: '#0057A233',
+        paddingVertical: 14,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        maxWidth: 140,
     },
     deleteText: {
+        // color: "#102D4F",
+        // fontFamily: "Tajawal-Bold",
+        // fontSize: 12,
+        // fontStyle: "normal",
+        // textAlign: "center",
+        // letterSpacing: 1.2,
+        // backgroundColor: "transparent",
+        // marginLeft: 18,
+        // marginRight: 18,
+
         color: "#102D4F",
         fontFamily: "Tajawal-Bold",
-        fontSize: 12,
-        fontStyle: "normal",
+        fontSize: 14,
         textAlign: "center",
-        letterSpacing: 1.2,
-        backgroundColor: "transparent",
-        marginLeft: 18,
-        marginRight: 18,
     },
     modalView: {
         backgroundColor: "white",
-        borderRadius: 4,
+        borderRadius: 20,
         justifyContent: 'center',
         alignSelf: "center",
         shadowColor: "rgba(0, 0, 0, 0.16)",
@@ -248,22 +316,39 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     modalButtonContainer: {
-        alignSelf: "center",
-        justifyContent: "center",
-        width: 300,
-        height: 25,
-        marginTop: 14,
-        marginBottom: 14,
-        flexDirection: "row",
+        // alignSelf: "center",
+        // justifyContent: "center",
+        // width: 60,
+        // height: 25,
+        // marginTop: 14,
+        // marginBottom: 14,
+        // flexDirection: "row",
+
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 20,
+        paddingHorizontal: 20,
     },
+    buttonWrapperLeft: {
+        flex: 1,
+        alignItems: 'flex-start',
+    },
+
+    buttonWrapperRight: {
+        flex: 1,
+        alignItems: 'flex-end',
+    },
+
     modalSingleButtonContainer: {
-        alignSelf: "center",
-        width: "90%",
+        // alignSelf: "center",
+        // width: "90%",
         height: 25,
         marginTop: 14,
         marginBottom: 14,
         flexDirection: "column",
-        alignItems: "flex-end"
+        // alignItems: "flex-end"
     },
     logOutWarningMessage: {
         color: "#C62222",
@@ -284,15 +369,15 @@ const styles = StyleSheet.create({
         resizeMode: "stretch",
     },
     iconIonicIosArrowImage: {
-        borderRadius:10,
+        borderRadius: 10,
         resizeMode: "contain",
         backgroundColor: "#F7FAFC",
         // position: "absolute",
-        right: 5,
-        top: 5,
+        right: 15,
+        top: 10,
         width: 36,
         height: 36,
-        padding:5
+        padding: 5
     },
 });
 

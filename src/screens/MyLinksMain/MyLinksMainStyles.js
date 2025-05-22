@@ -293,6 +293,16 @@ payBillText: {
       borderWidth: 1,
       borderColor: "#E1E7ED",
   },
+  initialsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0a1f44',
+    },
+    initialsText: {
+        fontSize: 25,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
   profileImage: {
       width: "100%",
       height: "100%",

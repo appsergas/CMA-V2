@@ -25,59 +25,63 @@ export default class Notification extends Component {
         {
           id: '1',
           title: 'Billing Approved',
-          description: 'you pay 76 AED, Feb Gas Bill.',
+          description: 'you pay 756 AED, Feb Gas Bill.',
           isNew: true,
         },
         {
           id: '2',
           title: 'Billing Approved',
-          description: 'you pay 76 AED.',
+          description: 'you pay 78 AED.',
           isNew: true,
         },
         {
           id: '3',
           title: 'Billing Approved',
-          description: 'you pay 76 AED.',
+          description: 'you pay 176 AED.',
         },
         {
           id: '4',
           title: 'Billing Approved',
-          description: 'you pay 76 AED.',
+          description: 'you pay 96 AED.',
         },
         {
           id: '5',
           title: 'Billing Approved',
-          description: 'you pay 76 AED.',
+          description: 'you pay 126 AED.',
         },
       ],
     };
   }
 
-  renderItem = ({ item }) => (
-    <View
-      style={[
-        styles.notificationCard,
-        item.isNew && styles.notificationCardNew,
-      ]}
-    >
-
-      <View style={styles.logoWrapper}>
-        <LinearGradient
-          colors={['#092A59', '#1E477A']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.logoCircle}
-        >
-          <LogooIcon width={30} height={30} />
-        </LinearGradient>
-      </View>
-
-      <View style={styles.notificationTextWrapper}>
-        <Text style={styles.notificationTitle}>{item.title}</Text>
-        <Text style={styles.notificationDescription}>{item.description}</Text>
-      </View>
+ renderItem = ({ item }) => (
+  <TouchableOpacity
+    style={[
+      styles.notificationCard,
+      item.isNew && styles.notificationCardNew,
+    ]}
+    onPress={() => this.props.navigation.navigate('NotificationDetail', {
+      title: item.title,
+      description: item.description,
+    })}
+  >
+    <View style={styles.logoWrapper}>
+      <LinearGradient
+        colors={['#092A59', '#1E477A']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.logoCircle}
+      >
+        <LogooIcon width={30} height={30} />
+      </LinearGradient>
     </View>
-  );
+
+    <View style={styles.notificationTextWrapper}>
+      <Text style={styles.notificationTitle}>{item.title}</Text>
+      <Text style={styles.notificationDescription}>{item.description}</Text>
+    </View>
+  </TouchableOpacity>
+);
+
 
   render() {
     const { notifications, loading } = this.state;
