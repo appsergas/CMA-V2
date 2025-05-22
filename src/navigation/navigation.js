@@ -22,6 +22,7 @@ import ECPLOption from '../screens/ECPLOption/ECPLOption'
 import ECPLinking from '../screens/ECPLinking/ECPLinking'
 import Walkthrough from '../screens/WalkThrough/Walkthrough'
 import Notification from '../screens/Notification/Notification'
+import NotificationDetail from '../screens/NotificationDetail/NotificationDetail'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -33,7 +34,7 @@ function MainTabs() {
   const backAction = () => {
     Alert.alert("Hold on!", "Are you sure you want to exit?", [
       {
-        text: "Cancel", 
+        text: "Cancel",
         onPress: () => null,
         style: "cancel"
       },
@@ -189,6 +190,7 @@ const MainNavigation = () => {
           ooptions={{ headerShown: false }}
           component={Notification}
         />
+        <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -7,8 +7,8 @@ import { HTTP } from './constants'
 // export const API_PATH = 'http://192.168.5.182:80'
 // export const API_PATH = 'http://devtestapi.sergas.com:81'
  //export const API_PATH = 'https://devtestapi.sergas.com'
-export const API_PATH = 'https://serpapitest.sergas.com' 
-// export const API_PATH = 'https://cmaapiuat.sergas.com'
+//export const API_PATH = 'https://serpapitest.sergas.com' 
+export const API_PATH = 'https://cmaapiuat.sergas.com'
 
 const language = 'en'
 

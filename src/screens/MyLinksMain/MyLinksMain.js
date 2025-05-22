@@ -27,9 +27,10 @@ import { updateUserDetails } from '../../stores/actions/user.action';
 import { logout } from '../../utils/uaePassService';
 import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { commonGradient } from '../../components/molecules/gradientStyles';
 
 import { ArrowIcon, CheckIcon, NavIcon, IdentificationIcon, InfoSquareIcon, MoreCircleIcon, LogOutIcon } from '../../../assets/icons'
+import { CommonActions } from '@react-navigation/native'
 
 class MyLinksMain extends Component {
     constructor(props) {
@@ -115,7 +116,6 @@ class MyLinksMain extends Component {
             const deviceId = await DeviceInfo.getUniqueId();
             const deviceIp = await DeviceInfo.getIpAddress();
             const deviceName = await DeviceInfo.getDeviceName();
-    
             this.setState({
                 LogoutDeviceLog: {
                     user_id: userId,
@@ -126,33 +126,57 @@ class MyLinksMain extends Component {
             }, () => {
                 // Perform the logout operation
                 logout(this.state.LogoutDeviceLog);
-                 //AsyncStorage.setItem('loginThroughUaePass',"false")
-                 //AsyncStorage.setItem('extuuid',"")
+                //AsyncStorage.setItem('loginThroughUaePass',"false")
+                //AsyncStorage.setItem('extuuid',"")
                 // Clear AsyncStorage items
                 AsyncStorage.multiRemove([
-                    'sergas_customer_mobile_number', 
-                    'contract_list', 
-                    'sergas_customer_access_token', 
+                    'sergas_customer_mobile_number',
+                    'contract_list',
+                    'sergas_customer_access_token',
                     'sergas_customer_login_flag',
                     'sergas_customer_user_id'
-                    ,'extuuid'
-                    ,'loginThroughUaePass'
+                    , 'extuuid'
+                    , 'loginThroughUaePass'
                 ], () => {
                     // Update the contracts and navigate to Login screen
                     this.props.updateContracts([]);
-                    this.props.navigation.navigate('Login');
+                    //this.props.navigation.navigate('Login');
+                    this.props.navigation.dispatch(
+                        CommonActions.reset({
+                            index: 1,
+                            routes: [
+                                { name: 'Walkthrough', params: { stepIndex: 4 } }, // Send them to the country selector screen
+                                { name: 'Login' },
+                            ],
+                        })
+                    );
+
                 });
             });
         } catch (error) {
             console.error("Error during logout process: ", error);
         }
     }
-    
     truncateText = (text, maxLength) => {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     };
 
+    getInitials = () => {
+        const fullName = this.props.userDetails?.PARTY_NAME || '';
+        const nameParts = fullName.trim().split(/\s+/);
 
+        if (nameParts.length >= 2) {
+            // Use first and last word initials
+            const first = nameParts[0].charAt(0).toUpperCase();
+            const last = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+            return `${first}${last}`;
+        } else if (nameParts.length === 1) {
+            // Use first two letters of the single word
+            return nameParts[0].substring(0, 2).toUpperCase();
+        } else {
+            return 'NA'; // fallback
+        }
+    };
     render() {
         return (
             <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
@@ -201,14 +225,22 @@ class MyLinksMain extends Component {
                                     <View style={styles.headerView}>
                                         <View style={styles.headerLeft}>
                                             <View style={styles.profileImageContainer}>
-                                                <Image
-                                                    source={
-                                                        this.props.userDetails.profilePicture
-                                                            ? { uri: this.props.userDetails.profilePicture }
-                                                            : require("../../../assets/images/logo2.png")
-                                                    }
-                                                    style={styles.profileImage}
-                                                />
+                                                {this.props.userDetails.image ? (
+                                                    <Image
+                                                        source={{ uri: `data:image/jpeg;base64,${this.props.userDetails.image}` }}
+                                                        style={styles.profileImage}
+                                                    />
+                                                ) : (
+                                                    <View style={[styles.profileImage, styles.initialsContainer]}>
+                                                        <Text style={styles.initialsText}>
+                                                            {this.getInitials(
+                                                                this.props.userDetails.firstName,
+                                                                this.props.userDetails.lastName
+                                                            )}
+                                                        </Text>
+                                                    </View>
+                                                )}
+
                                             </View>
                                             <View style={styles.textContainer}>
                                                 <View style={styles.nameRow}>
@@ -294,8 +326,15 @@ class MyLinksMain extends Component {
 
                             </ScrollView>
                             <Text style={styles.footerText}>
-                                © 2025 SERGAS Group{"\n"}Sergas Mobile App
+                                © 2025 SERGAS Group{"\n"}
+                                Version {DeviceInfo.getVersion()} (Build {DeviceInfo.getBuildNumber()})
                             </Text>
+
+
+                            {/* <Text style={styles.footerText}>
+                                © 2025 SERGAS Group{"\n"}Sergas Mobile App
+                            </Text> */}
+
                             {/* {this.state.showToast ? (
                                 <Toast message={this.state.toastMessage} isImageShow={false} />
                             ) : null} */}
@@ -323,7 +362,7 @@ class MyLinksMain extends Component {
                                             button2: false,
                                             uri: this.state.helpImageUrl,
                                             view: (
-                                                <View style={{ alignItems: 'center', width: "100%",  }}>
+                                                <View style={{ alignItems: 'center', width: "100%", }}>
                                                     <Text style={styles.logoutTitle}>Logout?</Text>
                                                     <Text style={styles.logoutMessage}>Are you sure to want logout?</Text>
 

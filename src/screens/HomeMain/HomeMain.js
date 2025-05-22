@@ -46,6 +46,7 @@ import { Images } from '../../utils/ImageSource/imageSource';
 import { updateUserDetails } from '../../stores/actions/user.action';
 import { API_PATH } from '../../services/api/data/data/api-utils';
 
+import { Notifications } from 'react-native-notifications';
 
 class HomeMain extends Component {
     constructor(props) {
@@ -431,6 +432,36 @@ class HomeMain extends Component {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     };
 
+    getInitials = () => {
+        const fullName = this.props.userDetails?.PARTY_NAME || '';
+        const nameParts = fullName.trim().split(/\s+/);
+
+        if (nameParts.length >= 2) {
+            // Use first and last word initials
+            const first = nameParts[0].charAt(0).toUpperCase();
+            const last = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+            return `${first}${last}`;
+        } else if (nameParts.length === 1) {
+            // Use first two letters of the single word
+            return nameParts[0].substring(0, 2).toUpperCase();
+        } else {
+            return 'NA'; // fallback
+        }
+    };
+
+// handleNotification = () => {
+//   Notifications.postLocalNotification({
+//     title: "New Alert",
+//     body: "You have a new in-app notification",
+//     sound: "default",
+//     silent: false,
+//     userInfo: {
+//       screen: "NotificationDetail",
+//       title: "New Alert",
+//       body: "You have a new in-app notification",
+//     },
+//   });
+// };
 
     render() {
         let totalAmt = 0;
@@ -453,16 +484,24 @@ class HomeMain extends Component {
                 <SafeAreaView style={{ height: "100%", flex: 1 }} >
                     <View style={{ ...styles.headerView }}>
                         <View style={styles.headerLeft}>
-                            <View style={styles.profileImageContainer}>
-                                <Image
-                                    source={
-                                        this.props.userDetails.profilePicture
-                                            ? { uri: this.props.userDetails.profilePicture }
-                                            : require("../../../assets/images/logo2.png")
-                                    }
-                                    style={styles.profileImage}
-                                />
-                            </View>
+                           <View style={styles.profileImageContainer}>
+                                                {this.props.userDetails.image ? (
+                                                    <Image
+                                                        source={{ uri: `data:image/jpeg;base64,${this.props.userDetails.image}` }}
+                                                        style={styles.profileImage}
+                                                    />
+                                                ) : (
+                                                    <View style={[styles.profileImage, styles.initialsContainer]}>
+                                                        <Text style={styles.initialsText}>
+                                                            {this.getInitials(
+                                                                this.props.userDetails.firstName,
+                                                                this.props.userDetails.lastName
+                                                            )}
+                                                        </Text>
+                                                    </View>
+                                                )}
+
+                                            </View>
                             <View style={styles.textContainer}>
                                 <View style={styles.nameRow}>
                                     <Text style={styles.welcomeText}>Hi,
@@ -529,7 +568,7 @@ class HomeMain extends Component {
 
                         <View style={{
                             ...styles.body,
-                            height: Platform.OS == 'ios' ? "90%" : "85%"
+                            height: Platform.OS == 'ios' ? "85%" : "85%"
                         }} >
                             <KeyboardAwareScrollView
                                 behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
@@ -543,7 +582,7 @@ class HomeMain extends Component {
                                     ref={(ref) => (this.scrollView = ref)}
                                     showsVerticalScrollIndicator={false}
                                     contentContainerStyle={styles.scrollView}>
-                                    {this.props.contracts.length ?
+                                    {selectedTab === 'all' && this.props.contracts.length ?
                                         (
                                             <>
 

@@ -2,7 +2,7 @@ import Mainstyles from '../../styles/globalStyles'
 import styles from './ProfileViewStyles'
 
 import React, { Component, useState } from 'react'
-import { View, Text, Image, Button, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Image, Button, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import { setI18nConfig, translationGetters, t } from '../../services/translate/i18n'
 import * as RNLocalize from 'react-native-localize';
 import TextInputControl from '../../controls/TextInput'
@@ -29,8 +29,11 @@ import { faRectangleXmark } from '@fortawesome/free-solid-svg-icons';
 import OtpInputs from 'react-native-otp-inputs';
 import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
-import { ArrowIcon } from '../../../assets/icons'
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { ArrowIcon, OTPIcon } from '../../../assets/icons';
+import AppTextInput from '../../controls/AppTextInput';
+import { launchImageLibrary } from 'react-native-image-picker';
+
 
 class ProfileView extends Component {
     constructor(props) {
@@ -61,27 +64,12 @@ class ProfileView extends Component {
             getUserDetailsCalled: false,
             updateEidCalled: false,
             emiratesIdNumber: "",
-            // emiratesIdNumber: "784199618173506",
             fullName: "",
             showToast: false,
             toastMessage: "",
             emiratesIdFront: null,
             emiratesIdBack: null,
             isModalVisible: false, setIsModalVisible: false,
-            // emiratesIdFront: {
-            //     "height": 4000,
-            //     "uri": "file:///data/user/0/com.sergas.customer/cache/Camera/4ce7d300-d6aa-42ec-81a1-f7222f7d73ad.jpg",
-            //     "width": 3000,
-            //     "pictureOrientation": 1,
-            //     "deviceOrientation": 1
-            // },
-            // emiratesIdBack: {
-            //     "height": 4000,
-            //     "uri": "file:///data/user/0/com.sergas.customer/cache/Camera/1ac96800-149a-4ca8-8950-b1ebe1f848e2.jpg",
-            //     "width": 3000,
-            //     "pictureOrientation": 1,
-            //     "deviceOrientation": 1
-            // },
             showModal: false,
             showUpdateModal: false,
             showEmailUpdateModal: false,
@@ -101,11 +89,13 @@ class ProfileView extends Component {
             eotp: "",
             mobileVerified: false,
             emailOtpEnabled: false,
+            originalMobileNumber: '',
+            originalEmail: '',
 
             editable: false,
-            name: 'Islam Abdelkhalek',
-            phone: '+971 123456789',
-            email: 'Eslam@Sergas.com',
+            name: '',
+            phone: '',
+            email: '',
         }
         this.scrollView = React.createRef()
 
@@ -122,7 +112,7 @@ class ProfileView extends Component {
                 return;
             }
             // Validation checks
-            if (!existingDetails.EMAIL || !setNewMobileNumber || !mobileNumber) {
+            if (!existingDetails.EMAIL || !mobileNumber) {
                 this.setState({
                     errormsg: "Error : Fields are required.",
                     sendOTPCalled: false
@@ -139,7 +129,7 @@ class ProfileView extends Component {
             // Call the sendOTP function with the required details
             this.props.sendOTP({
                 EmailId: existingDetails.EMAIL === "" ? "Email Not Updated" : existingDetails.EMAIL,
-                MobileNumber: setNewMobileNumber,
+                MobileNumber: mobileNumber,
                 Mobile: ""
             });
 
@@ -159,7 +149,7 @@ class ProfileView extends Component {
                 return;
             }
             // Validation checks
-            if (!setNewEmail || !mobileNumber) {
+            if ( !mobileNumber) {
                 this.setState({
                     errormsg: "Error : Fields are required.",
                     sendOTPCalled: false
@@ -173,7 +163,7 @@ class ProfileView extends Component {
             //console.log('Email Id : ', setNewEmail,'mobile No ', mobileNumber);
 
             this.props.sendOTP({
-                EmailId: setNewEmail,
+                EmailId: this.state.email,
                 MobileNumber: "",
                 Mobile: mobileNumber
             });
@@ -295,10 +285,18 @@ class ProfileView extends Component {
                 getUserDetailsCalled: false
             }, () => {
                 if (getUserDetailsResult && getUserDetailsResult.content && getUserDetailsResult.content.USER_ID) {
+                    const content = getUserDetailsResult.content;
+                    console.log("User Details: ", content);
                     this.setState({
-                        existingDetails: getUserDetailsResult.content
-                    })
-                } else {
+                        existingDetails: content,
+                        mobileNumber: content.ID || '',
+                        email: content.EMAIL || '',
+                        originalMobileNumber: content.ID || '',
+                        originalEmail: content.EMAIL || '',
+                        name: content.PARTY_NAME || '',
+                    });
+                }
+                else {
 
                 }
             })
@@ -420,6 +418,71 @@ class ProfileView extends Component {
         this.setState({ editable: !this.state.editable });
     };
 
+    getInitials = () => {
+        const fullName = this.state.existingDetails?.PARTY_NAME || '';
+        const nameParts = fullName.trim().split(/\s+/);
+
+        if (nameParts.length >= 2) {
+            // Use first and last word initials
+            const first = nameParts[0].charAt(0).toUpperCase();
+            const last = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+            return `${first}${last}`;
+        } else if (nameParts.length === 1) {
+            // Use first two letters of the single word
+            return nameParts[0].substring(0, 2).toUpperCase();
+        } else {
+            return 'NA'; // fallback
+        }
+    };
+
+
+    handleImagePick = () => {
+        const options = {
+            mediaType: 'photo',
+            includeBase64: true,
+            quality: 0.8,
+        };
+
+        launchImageLibrary(options, async (response) => {
+            if (response.didCancel || response.errorCode || !response.assets?.[0]) {
+                console.warn('Image selection cancelled or failed');
+                return;
+            }
+
+            const asset = response.assets[0];
+            const base64Image = asset.base64;
+
+            // ✅ Set the base64 image in state so UI updates
+            this.setState((prev) => ({
+                existingDetails: {
+                    ...prev.existingDetails,
+                    image: base64Image, // <-- this is what your render uses
+                }
+            }));
+
+            // ✅ Upload image to backend
+            try {
+                const res = await this.props.updateProfileImage({
+                    USER_ID: this.state.existingDetails.USER_ID,
+                    IMAGE_BASE64: base64Image
+                });
+
+                if (res.STATUS === 'SUCCESS') {
+                    console.log('Image uploaded successfully');
+                } else {
+                    console.warn('Image upload failed:', res.MSG);
+                }
+            } catch (err) {
+                console.error('Image upload error:', err);
+            }
+        });
+    };
+
+
+
+
+
+
     render() {
 
         return (
@@ -494,76 +557,172 @@ class ProfileView extends Component {
                                                     {/* Profile Image */}
 
                                                     <View style={styles.profileImageWrapper}>
-                                                        <Image
-                                                            source={
-                                                                this.state.existingDetails.profilePicture
-                                                                    ? { uri: this.state.existingDetails.profilePicture }
-                                                                    : require("../../../assets/images/logo2.png")
-                                                            }
-                                                            style={styles.profileImage}
-                                                        />
-                                                        <TouchableOpacity style={styles.editIcon}>
-                                                            <Icon name="edit-2" size={16} color="#fff" />
+                                                        {this.state.existingDetails.image ? (
+                                                            <Image
+                                                                source={{ uri: `data:image/jpeg;base64,${this.state.existingDetails.image}` }}
+                                                                style={styles.profileImage}
+                                                            />
+                                                        ) : (
+                                                            <View style={[styles.profileImage, styles.initialsContainer]}>
+                                                                <Text style={styles.initialsText}>
+                                                                    {this.getInitials(
+                                                                        this.state.existingDetails.firstName,
+                                                                        this.state.existingDetails.lastName
+                                                                    )}
+                                                                </Text>
+                                                            </View>
+                                                        )}
+
+                                                        <TouchableOpacity style={styles.editIcon} onPress={this.handleImagePick}>
+                                                            <Icon name="create" size={16} color="#fff" />
                                                         </TouchableOpacity>
                                                     </View>
 
+
+
+
                                                     {/* Full Name */}
                                                     <Text style={styles.label}>Full name</Text>
-                                                    <View style={styles.inputWrapper}>
-                                                        <Icon name="user" size={20} color="#2d2d2d" style={styles.icon} />
-                                                        <TextInput
-                                                            style={styles.input}
-                                                            value={this.state.existingDetails?.PARTY_NAME || ''}
-                                                            editable={this.state.editable}
-                                                            onChangeText={(text) => this.setState({ name: text })}
-                                                            placeholder="Full name"
-                                                            placeholderTextColor="#aaa"
+                                                    <View style={[styles.inputWrapper, { backgroundColor: '#f0f0f0', borderRadius: 8, padding: 10 }]}>
+                                                        <Icon name="person-outline" size={20} style={[styles.icon, { color: '#aaa' }]} />
+
+                                                        <AppTextInput
+                                                            Value={this.state.existingDetails?.PARTY_NAME || ''}
+                                                            OnChange={(text) => this.setState({ name: text })}
+                                                            Type="normal"
+                                                            Editable={false}
+                                                            Style={{
+                                                                color: '#888', // Muted text
+                                                                fontSize: 15,
+                                                                fontWeight: "900",
+                                                                marginTop: 4,
+                                                                backgroundColor: 'transparent' // Prevent conflict with outer View
+                                                            }}
                                                         />
                                                     </View>
+
 
                                                     {/* Phone Number */}
                                                     <Text style={styles.label}>Phone number</Text>
                                                     <View style={styles.inputWrapper}>
-                                                        <Icon name="phone" size={20} color="#2d2d2d" style={styles.icon} />
-                                                        <TextInput
+                                                        <Icon name="call-outline" size={20} style={styles.icon} />
+                                                        {/* <TextInput
                                                             style={styles.input}
                                                             value={this.state.mobileNumber || ''}
                                                             editable={this.state.editable}
                                                             onChangeText={(text) => this.setState({ phone: text })}
                                                             keyboardType="phone-pad"
+                                                        /> */}
+
+                                                        <AppTextInput
+                                                            Value={this.state.mobileNumber}
+                                                            OnChange={(text) => this.setState({ mobileNumber: text })}
+                                                            Type="numeric"
+                                                            Editable={this.state.editable}
+                                                            Style={{
+                                                                color: 'black',
+                                                                fontSize: 15,
+                                                                fontWeight: "900",
+                                                                marginTop: 4
+                                                            }}
                                                         />
+
                                                     </View>
 
                                                     {/* Email Address */}
                                                     <Text style={styles.label}>Email address</Text>
                                                     <View style={styles.inputWrapper}>
-                                                        <Icon name="mail" size={20} color="#2d2d2d" style={styles.icon} />
-                                                        <TextInput
+                                                        <Icon name="mail-outline" size={20} style={styles.icon} />
+                                                        {/* <TextInput
                                                             style={styles.input}
                                                             value={this.state.existingDetails?.EMAIL || ''}
                                                             editable={this.state.editable}
                                                             onChangeText={(text) => this.setState({ email: text })}
                                                             keyboardType="email-address"
+                                                        /> */}
+
+                                                        <AppTextInput
+                                                            Value={this.state.email}
+                                                            OnChange={(text) => this.setState({ email: text })}
+                                                            Type="email"
+                                                            Editable={this.state.editable}
+                                                            Style={{
+                                                                color: 'black',
+                                                                fontSize: 15,
+                                                                fontWeight: "900",
+                                                                marginTop: 0
+                                                            }}
                                                         />
+
                                                     </View>
 
                                                     {/* Save Button */}
-                                                    <TouchableOpacity style={styles.saveButton} onPress={() => this.setState({ editable: !this.state.editable })}>
+                                                    <TouchableOpacity
+                                                        style={styles.saveButton}
+                                                        onPress={() => {
+                                                            const {
+                                                                mobileNumber,
+                                                                email,
+                                                                originalMobileNumber,
+                                                                originalEmail,
+                                                                editable,
+                                                            } = this.state;
+
+                                                            // Only check for changes if in editable mode
+                                                            if (editable) {
+                                                                const mobileChanged = mobileNumber !== originalMobileNumber;
+                                                                const emailChanged = email !== originalEmail;
+
+                                                                // Nothing changed — show alert or do nothing
+                                                                if (!mobileChanged && !emailChanged) {
+                                                                    Alert.alert("Info", "You haven't changed mobile or email.");
+                                                                    this.setState({ editable: false }); // Still turn off editable mode
+                                                                    return;
+                                                                }
+
+                                                                // Only mobile changed
+                                                                if (mobileChanged && !emailChanged) {
+                                                                    this.setState({ setNewMobileNumber: mobileChanged });
+                                                                    this.setState({ showUpdateModal: true, editable: false });
+                                                                    this.handleSendOTP();
+                                                                    return;
+                                                                }
+
+                                                                // Only email changed
+                                                                if (!mobileChanged && emailChanged) {
+                                                                    this.setState({ setNewEmail: emailChanged });
+                                                                    this.setState({ showEmailUpdateModal: true, editable: false });
+                                                                    this.handleSendEOTP();
+                                                                    return;
+                                                                }
+
+                                                                // Both changed — open mobile first, then email after verification
+                                                                if (mobileChanged && emailChanged) {
+                                                                    Alert.alert("Info", "Please update either your email or mobile number, not both at once.");
+                                                                    this.setState({ editable: false }); // Still turn off editable mode
+                                                                    return;
+                                                                    // this.setState({
+                                                                    //     showUpdateModal: true,
+                                                                    //     emailChangePending: true, // <- use this flag to trigger email modal after mobile verification
+                                                                    //     editable: false,
+                                                                    // });
+                                                                    // return;
+                                                                }
+                                                            } else {
+                                                                // Enter edit mode
+                                                                this.setState({ editable: true });
+                                                            }
+                                                        }}
+                                                    >
                                                         <Text style={styles.saveButtonText}>
-                                                            {this.state.editable ? 'Save Cahnge‍s' : 'Edit'}
+                                                            {this.state.editable ? 'Save Changes' : 'Edit'}
                                                         </Text>
                                                     </TouchableOpacity>
+
+
                                                 </View>
 
-
-
-
-
-
-
-
-
-                                                <TouchableOpacity style={{ ...styles.cardView, ...{ paddingHorizontal: 15, minHeight: 50, flexDirection: 'row', marginTop: 10, justifyContent: 'flex-start', borderWidth: 0, borderRadius: 4 } }}>
+                                                {/* <TouchableOpacity style={{ ...styles.cardView, ...{ paddingHorizontal: 15, minHeight: 50, flexDirection: 'row', marginTop: 10, justifyContent: 'flex-start', borderWidth: 0, borderRadius: 4 } }}>
                                                     <Icon name="person-outline" style={styles.TitleIcon} />
                                                     <Text style={styles.accountNumberText}>{this.state.existingDetails.PARTY_NAME == "" ? "Name Not Updated" : this.state.existingDetails.PARTY_NAME}</Text>
                                                 </TouchableOpacity>
@@ -601,7 +760,7 @@ class ProfileView extends Component {
                                                     }}>
                                                         <Icon name="create-outline" style={styles.actionButtonIcon} />
                                                     </TouchableOpacity>
-                                                </TouchableOpacity>
+                                                </TouchableOpacity> */}
 
                                             </>
 
@@ -676,79 +835,44 @@ class ProfileView extends Component {
                                             data={{
                                                 uri: this.state.helpImageUrl,
                                                 view:
-                                                    <View style={{ alignItems: 'center', marginTop: -40 }}>
+                                                    <View style={{ alignItems: 'center', marginTop: -30 }}>
 
-                                                        <View style={styles.circularBox}>
-                                                            <Icon name="phone-portrait" style={styles.actionButtonTitleIcon} />
-                                                            <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-
-                                                            </Text>
-                                                        </View>
+                                                        <OTPIcon />
 
                                                         {/* <FontAwesomeIcon icon={faRectangleXmark} style={styles.actionButtonTitleIcon}/> */}
 
                                                         <View style={{ ...styles.inputGroupStyle, alignItems: 'flex-start', marginBottom: 20 }}>
-                                                            <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-                                                                Enter New Mobile No.
-                                                            </Text>
+
                                                             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                                                                <View style={{ width: "70%" }}>
-                                                                    <TextInput
-                                                                        onChangeText={(text) => this.setState({ setNewMobileNumber: text })}
-                                                                        placeholder=""
-                                                                    />
+                                                                <View style={{ width: "100%" }}>
+                                                                    <Text style={{ ...styles.inputLabelHeadOTPStyle, textAlign: 'center' }}>
+                                                                        Almost there!
+                                                                    </Text>
                                                                 </View>
-                                                                {!this.state.otpSent ? (
-                                                                    <TouchableOpacity
-                                                                        style={{
-                                                                            paddingHorizontal: 5,
-                                                                            paddingVertical: 10,
-                                                                            marginBottom: 15,
-                                                                            marginLeft: 10,
-                                                                            flexDirection: 'row',
-                                                                            justifyContent: 'center',
-                                                                            borderRadius: 4,
-                                                                            backgroundColor: '#102D4F'
-                                                                        }}
-                                                                        onPress={this.handleSendOTP}
-                                                                    >
-                                                                        {
-                                                                            (this.state.sendOTPCalled) ?
-                                                                                <ActivityIndicator size='small' color='white' /> :
-                                                                                <Text style={{ justifyContent: 'center', color: 'white' }}>Send OTP</Text>
-                                                                        }
+                                                            </View>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                                <View style={{ width: "100%" }}>
+                                                                    <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
+                                                                        Check your messages on your phone and E-mail Inbox, then enter the verification code to save your edits
+                                                                    </Text>
+                                                                </View>
 
-                                                                    </TouchableOpacity>
-                                                                ) : (
-                                                                    <TouchableOpacity
-                                                                        style={{
-                                                                            paddingHorizontal: 5,
-                                                                            paddingVertical: 10,
-                                                                            marginBottom: 15,
-                                                                            marginLeft: 10,
-                                                                            flexDirection: 'row',
-                                                                            justifyContent: 'center',
-                                                                            borderRadius: 4,
-                                                                        }}
-                                                                        onPress={this.handleSendOTP}
-                                                                    >
-                                                                        {
-                                                                            (this.state.sendOTPCalled) ?
-                                                                                <ActivityIndicator size='small' color='white' /> :
-                                                                                <Text style={{ justifyContent: 'center', color: '#102D4F' }}>Resend</Text>
-                                                                        }
-
-                                                                    </TouchableOpacity>
-                                                                )}
                                                             </View>
                                                         </View>
 
                                                         {this.state.mobileVerified && (
                                                             <View style={{ ...styles.inputGroupStyle, alignItems: 'flex-start', marginBottom: 20 }}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                    <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-                                                                        Verify Mobile OTP
-                                                                    </Text>
+
+
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                                        <View style={{ width: "100%" }}>
+                                                                            <Text style={{ ...styles.inputLabelOTPStyle, textAlign: 'center' }}>
+                                                                                Mobile Message OTP
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
+
                                                                     <TouchableOpacity style={{ minHeight: 25, marginLeft: 10, flexDirection: 'row', justifyContent: 'center', borderWidth: 0, borderRadius: 4 }}
                                                                     // onPress={() =>
                                                                     //     Toast.show({
@@ -757,7 +881,6 @@ class ProfileView extends Component {
                                                                     //         textBody: 'Congrats! this is toast notification success',
                                                                     //     })}
                                                                     >
-                                                                        <Icon name="help-circle-outline" style={styles.actionButtonIcon} />
                                                                     </TouchableOpacity>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -767,12 +890,8 @@ class ProfileView extends Component {
                                                                         }}
                                                                         numberOfInputs={4}
                                                                         otp={true}
-                                                                        inputContainerStyles={{
-                                                                            ...styles.otpInputContainer
-                                                                        }}
-                                                                        inputStyles={{
-                                                                            ...styles.otpInput
-                                                                        }}
+                                                                        inputContainerStyles={{ borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
+                                                                        inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
                                                                     />
                                                                 </View>
                                                             </View>
@@ -781,9 +900,14 @@ class ProfileView extends Component {
                                                         {this.state.mobileVerified && (
                                                             <View style={{ ...styles.inputGroupStyle, alignItems: 'flex-start', marginBottom: 20 }}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                    <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-                                                                        Verify Email OTP
-                                                                    </Text>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                                        <View style={{ width: "100%" }}>
+                                                                            <Text style={{ ...styles.inputLabelOTPStyle, textAlign: 'center' }}>
+                                                                                E-mail Inbox OTP
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
+
                                                                     <TouchableOpacity style={{ minHeight: 25, marginLeft: 10, flexDirection: 'row', justifyContent: 'center', borderWidth: 0, borderRadius: 4 }}
                                                                     // onPress={() =>
                                                                     //     Toast.show({
@@ -792,7 +916,6 @@ class ProfileView extends Component {
                                                                     //         textBody: 'Congrats! this is toast notification success',
                                                                     //     })}
                                                                     >
-                                                                        <Icon name="help-circle-outline" style={styles.actionButtonIcon} />
                                                                     </TouchableOpacity>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -802,13 +925,9 @@ class ProfileView extends Component {
                                                                         }}
                                                                         numberOfInputs={4}
                                                                         otp={true}
-                                                                        inputContainerStyles={{
-                                                                            ...styles.otpInputContainer
-                                                                        }}
-                                                                        inputStyles={{
-                                                                            ...styles.otpInput
-                                                                        }}
-                                                                    />
+                                                                        inputContainerStyles={{ borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
+                      inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
+                    />
                                                                 </View>
                                                             </View>
                                                         )}
@@ -823,16 +942,50 @@ class ProfileView extends Component {
                                                         )}
                                                         {this.state.mobileVerified && (
                                                             <TouchableOpacity
-                                                                style={{ ...styles.buttonStyle, marginBottom: 20 }}
+                                                                style={{ ...styles.buttonStyle }}
                                                                 onPress={() => {
                                                                     this.handleVerifyUpdate();
 
                                                                 }}
                                                             >
                                                                 <Text style={styles.buttonLabelStyle}>
-                                                                    Verify & Update
+                                                                    Continue
                                                                 </Text>
                                                             </TouchableOpacity>
+                                                        )}
+
+                                                        {!this.state.otpSent ? (
+                                                            <View style={styles.buttonViewR}>
+                                                                <TouchableOpacity
+                                                                    style={styles.buttonStyleR}
+                                                                    onPress={this.handleSendOTP}
+                                                                >
+                                                                    <Text
+                                                                        style={[
+                                                                            styles.buttonLabelStyleR,
+                                                                            { color: "#102D4F" }
+                                                                        ]}
+                                                                    >
+                                                                        Resend Code
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        ) : (
+                                                            <View style={styles.buttonViewR}>
+                                                                <TouchableOpacity
+                                                                    style={styles.buttonStyleR}
+                                                                    onPress={this.handleSendOTP}
+                                                                >
+                                                                    <Text
+                                                                        style={[
+                                                                            styles.buttonLabelStyleR,
+                                                                            { color: "#102D4F" }
+                                                                        ]}
+                                                                    >
+                                                                        Resend Code
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
                                                         )}
                                                     </View>
                                             }}
@@ -852,61 +1005,24 @@ class ProfileView extends Component {
 
                                                 uri: this.state.helpImageUrl,
                                                 view:
-                                                    <View style={{ alignItems: 'center', marginTop: -40 }}>
-                                                        <View style={styles.circularBox}>
-                                                            <Icon name="mail" style={styles.actionButtonTitleIcon} />
-                                                            <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-
-                                                            </Text>
-                                                        </View>
-
+                                                    <View style={{ alignItems: 'center', marginTop: -30 }}>
+                                                        
+                                                        <OTPIcon />
                                                         <View style={{ ...styles.inputGroupStyle, alignItems: 'flex-start', marginBottom: 20 }}>
-                                                            <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-                                                                Enter New Email
-                                                            </Text>
+
                                                             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                                                                <View style={{ width: "70%" }}>
-                                                                    <TextInput
-                                                                        onChangeText={(text) => this.setState({ setNewEmail: text })}
-                                                                        placeholder=""
-                                                                    />
+                                                                <View style={{ width: "100%" }}>
+                                                                    <Text style={{ ...styles.inputLabelHeadOTPStyle, textAlign: 'center' }}>
+                                                                        Almost there!
+                                                                    </Text>
                                                                 </View>
-                                                                {!this.state.otpSent ? (
-                                                                    <TouchableOpacity
-                                                                        style={{
-                                                                            paddingHorizontal: 5,
-                                                                            paddingVertical: 10,
-                                                                            marginBottom: 15,
-                                                                            marginLeft: 10,
-                                                                            flexDirection: 'row',
-                                                                            justifyContent: 'center',
-                                                                            borderRadius: 4,
-                                                                            backgroundColor: '#102D4F'
-                                                                        }}
-                                                                        onPress={this.handleSendEOTP}
-                                                                    >
-                                                                        {
-                                                                            (this.state.sendOTPCalled) ?
-                                                                                <ActivityIndicator size='small' color='white' /> :
-                                                                                <Text style={{ justifyContent: 'center', color: 'white' }}>Send OTP</Text>
-                                                                        }
-                                                                    </TouchableOpacity>
-                                                                ) : (
-                                                                    <TouchableOpacity
-                                                                        style={{
-                                                                            paddingHorizontal: 5,
-                                                                            paddingVertical: 10,
-                                                                            marginBottom: 15,
-                                                                            marginLeft: 10,
-                                                                            flexDirection: 'row',
-                                                                            justifyContent: 'center',
-                                                                            borderRadius: 4,
-                                                                        }}
-                                                                        onPress={this.handleSendEOTP}
-                                                                    >
-                                                                        <Text style={{ justifyContent: 'center', color: '#102D4F' }}>Resend</Text>
-                                                                    </TouchableOpacity>
-                                                                )}
+                                                            </View>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                                <View style={{ width: "100%" }}>
+                                                                    <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
+                                                                        Check your messages on your phone and E-mail Inbox, then enter the verification code to save your edits
+                                                                    </Text>
+                                                                </View>
 
                                                             </View>
                                                         </View>
@@ -916,9 +1032,13 @@ class ProfileView extends Component {
                                                             <View style={{ ...styles.inputGroupStyle, alignItems: 'flex-start', marginBottom: 20 }}>
 
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                    <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-                                                                        Verify Email OTP
-                                                                    </Text>
+                                                                     <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                                        <View style={{ width: "100%" }}>
+                                                                            <Text style={{ ...styles.inputLabelOTPStyle, textAlign: 'center' }}>
+                                                                                E-mail Inbox OTP
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
 
                                                                     <TouchableOpacity style={{ minHeight: 25, marginLeft: 10, flexDirection: 'row', justifyContent: 'center', borderWidth: 0, borderRadius: 4 }}
                                                                     // onPress={() =>
@@ -928,7 +1048,7 @@ class ProfileView extends Component {
                                                                     //         textBody: 'Congrats! this is toast notification success',
                                                                     //     })}
                                                                     >
-                                                                        <Icon name="help-circle-outline" style={styles.actionButtonIcon} />
+                                                                       
                                                                     </TouchableOpacity>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -938,13 +1058,9 @@ class ProfileView extends Component {
                                                                         }}
                                                                         numberOfInputs={4}
                                                                         otp={true}
-                                                                        inputContainerStyles={{
-                                                                            ...styles.otpInputContainer
-                                                                        }}
-                                                                        inputStyles={{
-                                                                            ...styles.otpInput
-                                                                        }}
-                                                                    />
+                                                                        inputContainerStyles={{ borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
+                      inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
+                    />
 
                                                                     {/* <TouchableOpacity style={{ paddingHorizontal: 10, paddingVertical: 10, minHeight: 25, marginLeft: 10, flexDirection: 'row', justifyContent: 'center', borderWidth: 0, borderRadius: 4, backgroundColor: '#102D4F' }}
                                                                     onPress={() => {
@@ -962,9 +1078,13 @@ class ProfileView extends Component {
                                                         {this.state.mobileVerified && (
                                                             <View style={{ ...styles.inputGroupStyle, alignItems: 'flex-start', marginBottom: 20 }}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                    <Text style={{ ...styles.inputLabelStyle, textAlign: 'center' }}>
-                                                                        Verify Mobile OTP
-                                                                    </Text>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                                        <View style={{ width: "100%" }}>
+                                                                            <Text style={{ ...styles.inputLabelOTPStyle, textAlign: 'center' }}>
+                                                                                Mobile Message OTP
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
 
                                                                     <TouchableOpacity style={{ minHeight: 25, marginLeft: 10, flexDirection: 'row', justifyContent: 'center', borderWidth: 0, borderRadius: 4 }}
                                                                     // onPress={() =>
@@ -974,7 +1094,7 @@ class ProfileView extends Component {
                                                                     //         textBody: 'Congrats! this is toast notification success',
                                                                     //     })}
                                                                     >
-                                                                        <Icon name="help-circle-outline" style={styles.actionButtonIcon} />
+                                                                        
                                                                     </TouchableOpacity>
 
 
@@ -988,13 +1108,9 @@ class ProfileView extends Component {
                                                                         }}
                                                                         numberOfInputs={4}
                                                                         otp={true}
-                                                                        inputContainerStyles={{
-                                                                            ...styles.otpInputContainer
-                                                                        }}
-                                                                        inputStyles={{
-                                                                            ...styles.otpInput
-                                                                        }}
-                                                                    />
+                                                                        inputContainerStyles={{ borderRadius: 4, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "#828E92", fontFamily: "Tajawal-Regular", fontSize: 10, textAlign: "right", height: 40, width: 40, justifyContent: 'center', alignItems: 'center', display: 'flex', }}
+                      inputStyles={{ fontFamily: "Tajawal-Regular", fontSize: 28, borderRadius: 10, borderWidth: 1, borderColor: "#0057A2", borderStyle: "solid", color: "black", fontFamily: "Tajawal-Bold", fontSize: 20, height: 40, width: 40, textAlign: 'center', alignItems: "center", justifyContent: 'center', alignContent: 'center', textAlignVertical: "center", padding: 0 }}
+                    />
 
                                                                     {/* <TouchableOpacity style={{ paddingHorizontal: 10, paddingVertical: 10, minHeight: 25, marginLeft: 10, flexDirection: 'row', justifyContent: 'center', borderWidth: 0, borderRadius: 4, backgroundColor: '#102D4F' }}
                                                                     onPress={() => {
@@ -1018,15 +1134,48 @@ class ProfileView extends Component {
                                                         )}
                                                         {this.state.mobileVerified && (
                                                             <TouchableOpacity
-                                                                style={{ ...styles.buttonStyle, marginBottom: 20 }}
+                                                                style={{ ...styles.buttonStyle }}
                                                                 onPress={() => {
                                                                     this.handleVerifyEUpdate();
                                                                 }}
                                                             >
                                                                 <Text style={styles.buttonLabelStyle}>
-                                                                    Verify & Update
+                                                                    Continue
                                                                 </Text>
                                                             </TouchableOpacity>
+                                                        )}
+                                                        {!this.state.otpSent ? (
+                                                            <View style={styles.buttonViewR}>
+                                                                <TouchableOpacity
+                                                                    style={styles.buttonStyleR}
+                                                                    onPress={this.handleSendEOTP}
+                                                                >
+                                                                    <Text
+                                                                        style={[
+                                                                            styles.buttonLabelStyleR,
+                                                                            { color: "#102D4F" }
+                                                                        ]}
+                                                                    >
+                                                                        Resend Code
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        ) : (
+                                                            <View style={styles.buttonViewR}>
+                                                                <TouchableOpacity
+                                                                    style={styles.buttonStyleR}
+                                                                    onPress={this.handleSendEOTP}
+                                                                >
+                                                                    <Text
+                                                                        style={[
+                                                                            styles.buttonLabelStyleR,
+                                                                            { color: "#102D4F" }
+                                                                        ]}
+                                                                    >
+                                                                        Resend Code
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
                                                         )}
                                                     </View>
 
@@ -1076,6 +1225,12 @@ export default withApiConnector(ProfileView, {
             type: 'post',
             moduleName: 'api',
             url: 'verifyotp',
+            authenticate: true,
+        },
+        updateProfileImage: {
+            type: 'post',
+            moduleName: 'api',
+            url: 'updateProfileImage',
             authenticate: true,
         },
     }

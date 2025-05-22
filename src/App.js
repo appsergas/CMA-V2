@@ -1,158 +1,171 @@
-import 'react-native-gesture-handler'
-import React,{ Component } from 'react'
-import MainNavigation from './navigation/navigation'
-import { Provider } from 'react-redux'
-import { store } from './stores'
-import { Alert, AppState, BackHandler, Linking, Platform } from 'react-native'
-import { LogBox } from "react-native";
-import withApiConnector from './services/api/data/data/api'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-//import crashlytics  from '@react-native-firebase/crashlytics'
+import 'react-native-gesture-handler';
+import React, { Component } from 'react';
+import MainNavigation from './navigation/navigation';
+import { Provider } from 'react-redux';
+import { store } from './stores';
+import { Alert, AppState, BackHandler, Linking, Platform } from 'react-native';
+import { LogBox } from 'react-native';
+import withApiConnector from './services/api/data/data/api';
+import { Notifications } from 'react-native-notifications';
+import { createNavigationContainerRef } from '@react-navigation/native';
 
-
-
-
+export const navigationRef = createNavigationContainerRef();
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
-LogBox.ignoreLogs(['Warning: ...']);
-LogBox.ignoreAllLogs()
+LogBox.ignoreAllLogs();
 
-require('react-native').LogBox.ignoreAllLogs() // console.disableYellowBox = true
+// Register for remote notifications
+Notifications.registerRemoteNotifications();
 
-// const App = () => {
-//   return (
-//     <>
-//       <Provider store={store}>
-//         <MainNavigation />
-//       </Provider>
-//     </>
-//   )
-// }
+// Handle notification tap (foreground & background)
+Notifications.events().registerNotificationOpened((notification, completion) => {
+  console.log('Notification tapped (background/foreground):', notification);
 
+  const screen = notification?.payload?.screen;
+  const title = notification?.payload?.title;
+  const body = notification?.payload?.body;
+  const id = notification?.payload?.id;
 
+  if (navigationRef.isReady() && screen) {
+    navigationRef.navigate(screen, {
+      title: title || 'Notification',
+      description: body || 'No details available.',
+      id: id,
+    });
+  }
+
+  completion();
+});
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       appState: AppState.currentState,
-      versionCheckCalled: false
-    }
+      versionCheckCalled: false,
+    };
   }
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      // return true
-      Alert.alert(
-          'Exit App',
-          'Exiting the application?', [{
-              text: 'Cancel',
-              onPress: () => {
+    // Handle back button
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
 
-              },
-              style: 'cancel'
-          }, {
-              text: 'OK',
-              onPress: () => BackHandler.exitApp()
-          },], {
-          cancelable: false
-      }
-      )
-      return true;
-  });
-    this.appStateSubscription = AppState.addEventListener(
-      'change',
-      nextAppState => {
-        if (
-          this.state.appState.match(/inactive|background/) &&
-          nextAppState === 'active'
-        ) {
-          
-          this.setState({
-            versionCheckCalled: true
-          }, () => {
-            //crashlytics().log('crash');
-            this.props.getAppVersion({"app_name": "sergas_customer"})
-          })
+    // Handle app state changes
+    this.appStateSubscription = AppState.addEventListener('change', this.handleAppStateChange);
+
+    // Initial version check
+    this.setState({ versionCheckCalled: true }, () => {
+      this.props.getAppVersion({ app_name: 'sergas_customer' });
+    });
+
+    // Handle app launch from killed state via notification
+    Notifications.getInitialNotification()
+      .then((notification) => {
+        if (notification) {
+          console.log('Notification caused app launch (killed state):', notification);
+
+          const screen = notification?.payload?.screen;
+          const title = notification?.payload?.title;
+          const body = notification?.payload?.body;
+          const id = notification?.payload?.id;
+
+          // Navigate after short delay to ensure NavigationContainer is mounted
+          setTimeout(() => {
+            if (navigationRef.isReady() && screen) {
+              navigationRef.navigate(screen, {
+                title,
+                description: body,
+                id,
+              });
+            }
+          }, 500);
         }
-        this.setState({ appState: nextAppState });
-      },
-    );
-    this.setState({
-      versionCheckCalled: true
-    }, () => {
-      this.props.getAppVersion({"app_name": "sergas_customer"})
-    })
+      });
+  }
+
+  componentWillUnmount() {
+    if (this.appStateSubscription) {
+      this.appStateSubscription.remove();
+    }
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { getAppVersionResult } = nextProps
+    const { getAppVersionResult } = nextProps;
     if (this.state.versionCheckCalled) {
-      this.setState({
-        versionCheckCalled: false
-      }, () => {
-        if (getAppVersionResult && getAppVersionResult.content && getAppVersionResult.content.version) {
-          if (Platform.OS == 'android') {
-            if (parseFloat(getAppVersionResult.content.version.ANDROID) > 0.31) {
-              this.showUpdateModal()
-            }
-          } else {
-            if (parseFloat(getAppVersionResult.content.version.IOS) > 0.31) {
-              this.showUpdateModal()
-            }
+      this.setState({ versionCheckCalled: false }, () => {
+        if (
+          getAppVersionResult &&
+          getAppVersionResult.content &&
+          getAppVersionResult.content.version
+        ) {
+          const versionData = getAppVersionResult.content.version;
+          const platformVersion = Platform.OS === 'android' ? versionData.ANDROID : versionData.IOS;
+
+          if (parseFloat(platformVersion) > 0.31) {
+            this.showUpdateModal();
           }
         }
-      })
+      });
     }
   }
 
+  handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      this.setState({ versionCheckCalled: true }, () => {
+        this.props.getAppVersion({ app_name: 'sergas_customer' });
+      });
+    }
+    this.setState({ appState: nextAppState });
+  };
+
   showUpdateModal = () => {
     Alert.alert('Update available', 'Version is out of date, please update', [
-      { text: 'OK', onPress: () => {
-        if (Platform.OS == 'android') {
-          Linking.openURL("https://play.google.com/store/apps/details?id=com.sergas.customer")
-        } else {
-          const link = 'https://apps.apple.com/id/app/sergas-group/id1641489055'
-          Linking.canOpenURL(link).then(supported => {
-            supported && Linking.openURL(link);
-          }, (err) => {});
-        }
-      } },
+      {
+        text: 'OK',
+        onPress: () => {
+          if (Platform.OS === 'android') {
+            Linking.openURL('https://play.google.com/store/apps/details?id=com.sergas.customer');
+          } else {
+            const link = 'https://apps.apple.com/id/app/sergas-group/id1641489055';
+            Linking.canOpenURL(link).then(
+              (supported) => {
+                if (supported) Linking.openURL(link);
+              },
+              (err) => {}
+            );
+          }
+        },
+      },
     ]);
-  }
-  
-  handleBackButton = () => {
-    // return true
-    Alert.alert(
-        'Exit App',
-        'Exiting the application?', [{
-            text: 'Cancel',
-            onPress: () => {},
-            style: 'cancel'
-        }, {
-            text: 'OK',
-            onPress: () => BackHandler.exitApp()
-        }, ], {
-            cancelable: false
-        }
-     )
-     return true;
-   } 
+  };
 
+  handleBackButton = () => {
+    Alert.alert('Exit App', 'Exiting the application?', [
+      {
+        text: 'Cancel',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => BackHandler.exitApp(),
+      },
+    ]);
+    return true;
+  };
 
   render() {
     return (
-    <>
       <Provider store={store}>
         <MainNavigation />
       </Provider>
-    </>
-    )
+    );
   }
 }
 
-export default (withApiConnector(App, {
+export default withApiConnector(App, {
   methods: {
     getAppVersion: {
       type: 'get',
@@ -160,5 +173,5 @@ export default (withApiConnector(App, {
       url: 'getAppVersion',
       authenticate: false,
     },
-  }
-}))
+  },
+});

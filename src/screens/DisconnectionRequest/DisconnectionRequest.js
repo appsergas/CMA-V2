@@ -55,6 +55,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { commonGradient } from '../../components/molecules/gradientStyles';
 import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
 import * as PaymentService from '../../services/paymentService'
+import postLocalNotification from '../../services/NotificationService'
+import { Notifications } from 'react-native-notifications';
 class DisconnectionRequest extends Component {
     constructor(props) {
         super(props)
@@ -138,6 +140,11 @@ class DisconnectionRequest extends Component {
                         })
                     } else {
                         this.toastIt("Request successful for Disconnection", true)
+                        postLocalNotification(
+                            "Disconnection Alert",
+                            "Request successful for Disconnection",
+                            "NotificationDetail"
+                        );
                     }
                 } else if (requestDisconnectionResult && requestDisconnectionResult.content && (requestDisconnectionResult.content.MSG == "Request submitted already, Could not request again.")) {
                     this.toastIt(requestDisconnectionResult.content.MSG, false)
@@ -178,9 +185,19 @@ class DisconnectionRequest extends Component {
                 makePaymentClicked: false
             }, () => {
                 if (updatePaymentResult && updatePaymentResult.content && (updatePaymentResult.content.MSG == "SUCESS")) {
+                    postLocalNotification(
+                        "Disconnection Alert",
+                        "Request successful for Disconnection",
+                        "NotificationDetail"
+                    );
                     this.toastIt("Request successful for Disconnection", true)
                 } else {
                     this.toastIt("Request successful for Disconnection", true)
+                    postLocalNotification(
+                        "Disconnection Alert",
+                        "Request successful for Disconnection",
+                        "NotificationDetail"
+                    );
                 }
             })
         }
@@ -512,7 +529,7 @@ class DisconnectionRequest extends Component {
 
 
                     logPayment("CAPTURED", String(paidAmount), paymentState, paymentMethod);
-                    this.setState({ showSaveCardModal: true });
+                    //this.setState({ showSaveCardModal: true });
 
                     // Store necessary info temporarily for later card saving
                     this.savedCardContext = {
@@ -872,39 +889,39 @@ class DisconnectionRequest extends Component {
                             }
                             {
                                 this.state.showSaveCardModal ?
-                                <Modal
-                                    close={false}
-                                    onClose={() => this.setState({ showSaveCardModal: false })}
-                                    visible={this.state.showSaveCardModal}
-                                    data={{
-                                        button1Text: "Close",
-                                        view: (
-                                            <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image
-                                                    style={{ width: 66.34, height: 88, resizeMode: "contain", marginBottom: 20 }}
-                                                    source={require("../../../assets/images/readingSuccess.png")} // Make sure to add this image
-                                                />
-                                                <Text style={styles.inputLabelStyle}>
-                                                    Do you want to save your card for future payments?
-                                                </Text>
+                                    <Modal
+                                        close={false}
+                                        onClose={() => this.setState({ showSaveCardModal: false })}
+                                        visible={this.state.showSaveCardModal}
+                                        data={{
+                                            button1Text: "Close",
+                                            view: (
+                                                <View style={{ alignItems: 'center', width: "100%" }}>
+                                                    <Image
+                                                        style={{ width: 66.34, height: 88, resizeMode: "contain", marginBottom: 20 }}
+                                                        source={require("../../../assets/images/readingSuccess.png")} // Make sure to add this image
+                                                    />
+                                                    <Text style={styles.inputLabelStyle}>
+                                                        Do you want to save your card for future payments?
+                                                    </Text>
 
-                                                <TouchableOpacity
-                                                    style={{ ...Mainstyles.buttonStyle, width: "100%", marginTop: 20 }}
-                                                    onPress={this.handleSaveCard}
-                                                >
-                                                    <Text style={Mainstyles.buttonLabelStyle}>Yes, Save Card</Text>
-                                                </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        style={{ ...Mainstyles.buttonStyle, width: "100%", marginTop: 20 }}
+                                                        onPress={this.handleSaveCard}
+                                                    >
+                                                        <Text style={Mainstyles.buttonLabelStyle}>Yes, Save Card</Text>
+                                                    </TouchableOpacity>
 
-                                                <TouchableOpacity
-                                                    style={{ ...Mainstyles.buttonStyle, width: "100%", marginTop: 10 }}
-                                                    onPress={() => this.setState({ showModal: false })}
-                                                >
-                                                    <Text style={Mainstyles.buttonLabelStyle}>No, Thanks</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    }}
-                                    titleText={{ alignItems: 'center' }}
+                                                    <TouchableOpacity
+                                                        style={{ ...Mainstyles.buttonStyle, width: "100%", marginTop: 10 }}
+                                                        onPress={() => this.setState({ showModal: false })}
+                                                    >
+                                                        <Text style={Mainstyles.buttonLabelStyle}>No, Thanks</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        }}
+                                        titleText={{ alignItems: 'center' }}
                                     /> :
                                     null
                             }

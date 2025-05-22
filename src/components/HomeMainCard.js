@@ -88,8 +88,8 @@ class HomeMainCard extends Component {
                                 <FontAwesomeIcon icon={faBuilding} size={10} style={{ fontWeight: 'normal' }} />
                                 <Text style={styles.label}> Building Name</Text>
                             </View>
-                            {/* <Text style={styles.value}>{item.BUILDING_NAME}</Text> */}
-                            <Text style={styles.value}>AL MASKAN BUILDING-AL GHANDI </Text>
+                            <Text style={styles.value}>{item.BUILDING_NAME}</Text>
+                            {/* <Text style={styles.value}>AL MASKAN BUILDING-AL GHANDI </Text> */}
 
                         </View>
 
