@@ -327,10 +327,18 @@ class MyLinksMain extends Component {
                                 {/* 📄 Footer */}
 
                             </ScrollView>
-                            <Text style={styles.footerText}>
-                                © 2025 SERGAS Group{"\n"}
-                                Version {DeviceInfo.getVersion()} (Build {DeviceInfo.getBuildNumber()})
-                            </Text>
+                            <View>
+  <Text style={styles.footerText}>
+    <Text style={{ fontSize: 9, color: '#102D4F' }}>
+      © 2025 Sergas Group
+    </Text>
+    {"\n"}
+    <Text style={{ fontSize: 7, color: '#666' }}>
+      version {DeviceInfo.getVersion()} (build {DeviceInfo.getBuildNumber()})
+    </Text>
+  </Text>
+</View>
+
 
 
                             {/* <Text style={styles.footerText}>

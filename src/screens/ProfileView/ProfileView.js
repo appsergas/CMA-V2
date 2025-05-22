@@ -573,7 +573,10 @@ class ProfileView extends Component {
                                                             </View>
                                                         )}
 
-                                                        <TouchableOpacity style={styles.editIcon} onPress={this.handleImagePick}>
+                                                        {/* <TouchableOpacity style={styles.editIcon} onPress={this.handleImagePick}>
+                                                            <Icon name="create" size={16} color="#fff" />
+                                                        </TouchableOpacity> */}
+                                                        <TouchableOpacity style={styles.editIcon} >
                                                             <Icon name="create" size={16} color="#fff" />
                                                         </TouchableOpacity>
                                                     </View>
