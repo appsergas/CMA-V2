@@ -59,10 +59,10 @@ export default class Notification extends Component {
       styles.notificationCard,
       item.isNew && styles.notificationCardNew,
     ]}
-    onPress={() => this.props.navigation.navigate('NotificationDetail', {
-      title: item.title,
-      description: item.description,
-    })}
+    // onPress={() => this.props.navigation.navigate('NotificationDetail', {
+    //   title: item.title,
+    //   description: item.description,
+    // })}
   >
     <View style={styles.logoWrapper}>
       <LinearGradient
