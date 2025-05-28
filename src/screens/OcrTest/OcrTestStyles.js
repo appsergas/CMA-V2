@@ -408,7 +408,16 @@ Labeltxt: {
     fontFamily: "Tajawal-Medium",
     fontWeight: "bold",
     textAlign: "right",          // Align text to the right
-}
+},
+
+accountNumberTextScan: {
+  fontSize: 16,
+  color: '#FFFFFF',
+  fontFamily: 'Tajawal-Bold',
+  marginLeft:10,
+},
+
+
 })
 
 export default styles

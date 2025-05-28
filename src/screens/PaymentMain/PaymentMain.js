@@ -495,7 +495,10 @@ class PaymentMain extends Component {
                                                 </Text>
                                             </View>
                                             <View style={Mainstyles.payBillView}>
-                                                <TouchableOpacity style={Mainstyles.payBillButton}>
+                                                <TouchableOpacity style={Mainstyles.payBillButton}
+                                                 onPress={() => {
+                                                    this.props.navigation.navigate("statement")
+                                                }}>
                                                     <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 }]}>
                                                         {t("home.checkNow")}
                                                     </Text>
@@ -504,7 +507,7 @@ class PaymentMain extends Component {
                                         </View>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={Mainstyles.cardView}
+                                    {/* <TouchableOpacity style={Mainstyles.cardView}
                                         onPress={() => {
                                             if (this.props.contracts.length) {
                                                 this.props.navigation.navigate("submitReading")
@@ -536,7 +539,7 @@ class PaymentMain extends Component {
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
 
                                     {/* <TouchableOpacity style={{ ...styles.cardView, ...{ minHeight: "auto", flexDirection: 'row', marginTop: 20 } }}
                                         onPress={() => {

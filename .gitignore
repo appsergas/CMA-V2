@@ -73,3 +73,9 @@ buck-out/
 # Ignore all hprof files
 android/
 *.hprof
+"node_modules.zip" 
+package.json
+package-lock.json
+index.js
+pubspec.lock
+pubspec.yaml

@@ -116,6 +116,7 @@ class MyLinksMain extends Component {
             const deviceId = await DeviceInfo.getUniqueId();
             const deviceIp = await DeviceInfo.getIpAddress();
             const deviceName = await DeviceInfo.getDeviceName();
+
             this.setState({
                 LogoutDeviceLog: {
                     user_id: userId,
@@ -157,6 +158,7 @@ class MyLinksMain extends Component {
             console.error("Error during logout process: ", error);
         }
     }
+
     truncateText = (text, maxLength) => {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
     };
@@ -325,10 +327,18 @@ class MyLinksMain extends Component {
                                 {/* 📄 Footer */}
 
                             </ScrollView>
-                            <Text style={styles.footerText}>
-                                © 2025 SERGAS Group{"\n"}
-                                Version {DeviceInfo.getVersion()} (Build {DeviceInfo.getBuildNumber()})
-                            </Text>
+                            <View>
+                                <Text style={styles.footerText}>
+                                    <Text style={{ fontSize: 9, color: '#102D4F' }}>
+                                        © 2025 Sergas Group
+                                    </Text>
+                                    {"\n"}
+                                    <Text style={{ fontSize: 7, color: '#666' }}>
+                                        version {DeviceInfo.getVersion()} (build {DeviceInfo.getBuildNumber()})
+                                    </Text>
+                                </Text>
+                            </View>
+
 
 
                             {/* <Text style={styles.footerText}>
@@ -404,7 +414,7 @@ class MyLinksMain extends Component {
                                         // title: "Version 1.0",
                                         message: TermsAndConditions,
                                     }}
-                                    titleText={{ marginBottom: 10 }}
+                                    titleText={{ marginBottom: 30 }}
                                 />
                             ) : null}
 

@@ -19,7 +19,7 @@ import { updateContracts } from '../../stores/actions/contracts.action';
 import { updateUserDetails } from '../../stores/actions/user.action';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { commonGradient } from '../../components/molecules/gradientStyles';
 import { ArrowIcon } from '../../../assets/icons';
 
 
@@ -138,30 +138,30 @@ class Feedback extends Component {
         const { apiCallFlags } = this.state
         return (
             <LinearGradient colors={commonGradient.colors} start={commonGradient.start} end={commonGradient.end} style={commonGradient.style} >
-            <SafeAreaView style={{ height: "100%", flex: 1 }} >
-                <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
-                    <View style={Mainstyles.headerLeft}>
-                        <TouchableOpacity
-                            style={Mainstyles.backbutton}
-                            onPress={() => this.props.navigation.goBack()} >
-                            <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
-                        </TouchableOpacity>
-                        <View style={Mainstyles.textContainer}>
-                            <View style={Mainstyles.nameRow}>
-                                <Text style={Mainstyles.welcomeLabel} >
-                                Feedback
-                                </Text>
+                <SafeAreaView style={{ height: "100%", flex: 1 }} >
+                    <View style={{ ...Mainstyles.headerView, height: Platform.OS == 'ios' ? Dimensions.HP_10 : Dimensions.HP_10 }}>
+                        <View style={Mainstyles.headerLeft}>
+                            <TouchableOpacity
+                                style={Mainstyles.backbutton}
+                                onPress={() => this.props.navigation.goBack()} >
+                                <ArrowIcon direction={"left"} size={20} color="#FFFFFF" />
+                            </TouchableOpacity>
+                            <View style={Mainstyles.textContainer}>
+                                <View style={Mainstyles.nameRow}>
+                                    <Text style={Mainstyles.welcomeLabel} >
+                                        Feedback
+                                    </Text>
+                                </View>
                             </View>
                         </View>
                     </View>
-                </View>
-                <View style={Mainstyles.banner}>
-                    <Text style={Mainstyles.bannerText}>
-                    Share your feedback to help us improve our services and serve you better.
-                    </Text>
-                </View>
-                 <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
-                 <KeyboardAwareScrollView
+                    <View style={Mainstyles.banner}>
+                        <Text style={Mainstyles.bannerText}>
+                            Share your feedback to help us improve our services and serve you better.
+                        </Text>
+                    </View>
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                        <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
                             contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_11 }}
@@ -208,14 +208,16 @@ class Feedback extends Component {
                                         <Text style={styles.inputLabelStyle}>{t('support.feedbackAndSuggestions')}</Text>
                                     </View>
 
-                                    <View style={styles.inputGroupStyle}>
+                                    <View>
                                         <TextInput
                                             Placeholder="Waiting to hear from you"
-                                            Style={{ height: 89, width: '100%', fontSize: 14, textAlignVertical: 'top', fontFamily: 'Tajawal-Medium', paddingTop: 10 }}
+                                            // Style={{ height: 89, width: '100%', fontSize: 14, textAlignVertical: 'top', fontFamily: 'Tajawal-Medium', paddingTop: 10 }}
+                                            Style={{ ...Mainstyles.textAreaBox, marginTop: 10 }}
                                             value={this.state.suggestion}
                                             onChangeText={val => this.setState({ suggestion: val })}
                                             multiline={true}
-                                        />
+                                        >
+                                        </TextInput>
                                     </View>
                                 </View>
 
@@ -255,10 +257,10 @@ class Feedback extends Component {
                                             button2Text: 'Pay',
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: '100%' }}>
-                                                <Image style={{ width: 232, height: 232, resizeMode: 'stretch', marginBottom: 20 }}
-                                                    source={this.state.readingResult == 'Feedback posted sucessfully' ? require('../../../assets/images/success.png') : require('../../../assets/images/readingFailure.png')}
-                                                    // source={this.state.readingResult == "Feedback posted sucessfully" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{ resizeMode: 'stretch', marginBottom: 20 }}
+                                                    source={this.state.readingResult == 'Feedback posted sucessfully' ? require('../../../assets/images/Done.gif') : require('../../../assets/images/InternetError.gif')}
+                                                // source={this.state.readingResult == "Feedback posted sucessfully" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -271,7 +273,7 @@ class Feedback extends Component {
                                                 {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
 
                                                 <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: '70%' }}
+                                                    style={{ ...Mainstyles.buttonStyle }}
                                                     onPress={() => {
                                                         this.setState({
                                                             showModal: false
@@ -280,7 +282,7 @@ class Feedback extends Component {
                                                     }}
                                                 >
                                                     <Text
-                                                        style={styles.buttonLabelStyle}>{this.state.readingResult !== 'Feedback posted sucessfully' ? 'Try Again' : 'Go to home page'}</Text>
+                                                        style={Mainstyles.buttonLabelStyle}>{this.state.readingResult !== 'Feedback posted sucessfully' ? 'Try Again' : 'Go to home page'}</Text>
                                                 </TouchableOpacity>
 
                                                 {/* </View> */}

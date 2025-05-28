@@ -876,7 +876,7 @@ class Payment extends Component {
                                                 this.state.applePaySupported || this.state.samsungPaySupported ?
 
                                                     <TouchableOpacity
-                                                        style={(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0) && !(this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)))) ? { ...Mainstyles.buttonStyle, marginTop: 20 } : { ...Mainstyles.buttonStyle, backgroundColor: "#99b1d1", marginTop: 20 }}
+                                                        style={(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0) && !(this.state.payOtherAmount && ((this.state.otherAmt == '') || (parseFloat(this.state.otherAmt) < 10) || !(/^(\d)*(\.)?([0-9]{1,2})?$/.test(this.state.otherAmt)))) ? { ...Mainstyles.buttonStyle, marginTop: 15 } : { ...Mainstyles.buttonStyle, backgroundColor: "#99b1d1", marginTop: 20 }}
                                                         onPress={() => {
                                                             this.setState({
                                                                 payMode: this.state.applePaySupported ? "applepay" : "samsungpay"
@@ -904,9 +904,9 @@ class Payment extends Component {
                                         :
                                         null}
 
-                                <TouchableOpacity style={{ ...Mainstyles.buttonStyle, marginTop:10 }}>
+                                {/* <TouchableOpacity style={{ ...Mainstyles.buttonStyle, marginTop:10 }}>
                                     <Text style={Mainstyles.buttonLabelStyle}>Pay Now</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                             </ScrollView>
                             {
@@ -930,9 +930,9 @@ class Payment extends Component {
                                             button2Text: "Pay",
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{  resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>

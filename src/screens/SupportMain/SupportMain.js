@@ -153,7 +153,14 @@ class SupportMain extends Component {
                                                 </Text>
                                             </View>
                                             <View style={Mainstyles.payBillView}>
-                                                <TouchableOpacity style={Mainstyles.payBillButton}>
+                                                <TouchableOpacity style={Mainstyles.payBillButton}
+                                                onPress={() => {
+                                                    if (this.props.contracts.length) {
+                                                        this.props.navigation.navigate("submitReading")
+                                                    } else {
+                                                        this.toastIt("No Contract Available")
+                                                    }
+                                                }}>
                                                     <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 }]}>
                                                         {t("home.updateNow")}
                                                     </Text>
@@ -183,7 +190,9 @@ class SupportMain extends Component {
                                                 </Text>
                                             </View>
                                             <View style={Mainstyles.payBillView}>
-                                                <TouchableOpacity style={Mainstyles.payBillButton}>
+                                                <TouchableOpacity style={Mainstyles.payBillButton}  onPress={() => {
+                                            this.props.navigation.navigate("reqNewConn")
+                                        }}>
                                                     <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 1 }]}>
                                                         {t("home.requestNow")}
                                                     </Text>
@@ -196,7 +205,7 @@ class SupportMain extends Component {
                                     <TouchableOpacity style={Mainstyles.cardView}
                                         onPress={() => {
                                             if (this.props.contracts.length) {
-                                                this.props.navigation.navigate("submitReading")
+                                                this.props.navigation.navigate("disconnection")
                                             } else {
                                                 this.toastIt("No Contract Available")
                                             }
@@ -220,7 +229,15 @@ class SupportMain extends Component {
                                                 </Text>
                                             </View>
                                             <View style={Mainstyles.payBillView}>
-                                                <TouchableOpacity style={Mainstyles.payBillButton}>
+                                                <TouchableOpacity style={Mainstyles.payBillButton} 
+                                                onPress={() => {
+                                                    if (this.props.contracts.length) {
+                                                        this.props.navigation.navigate("disconnection")
+                                                    } else {
+                                                        this.toastIt("No Contract Available")
+                                                    }
+                                                }}
+                                                >
                                                     <Text style={[Mainstyles.payBillText, { opacity: this.props.contracts.length ? 1 : 0.5 }]}>
                                                         {t("home.requestNow")}
                                                     </Text>

@@ -222,11 +222,13 @@ class HelpMain extends Component {
 
                 {isExpanded && (
                     <View style={styles.accordionContent}>
-                        {data.ANSWER ? (
-                            <Text style={styles.accordionText}>{data.ANSWER}</Text>
+                        {/* {data.ANSWER ? (
+                            <Text style={styles.accordionText}>
+                                {data.ANSWER}
+                            </Text>
                         ) : (
                             <Text style={styles.accordionText}>Coming soon...</Text>
-                        )}
+                        )} */}
 
                         <TouchableOpacity
                             style={styles.watchVideoButton}

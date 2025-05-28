@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     // flex: 1,
     // display: "flex",
     flexGrow: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: 'center',
     paddingBottom: 0,
-    paddingTop: 25,
+    paddingTop: 40,
     // backgroundColor: "red"
     // height: "100%",
     // overflow: "scroll",
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     borderRadius:12,
     alignSelf:"flex-start",
     marginBottom:5,
+    justifyContent: "center",
 },
 accountsLabel: {
     fontFamily: "Tajawal-Bold",
@@ -73,14 +74,18 @@ accountsLabel: {
     color: "#FFFFFF",
     fontWeight:"bold",
     textAlign:"center",
-    paddingTop:5,
-    paddingBottom:5,
+    // paddingTop:5,
+    // paddingBottom:5,
+    paddingVertical:Platform.OS === 'ios' ? 8 : 5,
+    paddingHorizontal:5,
     
 },
   welcomeLabel: {
     fontFamily: "Tajawal-Medium",
     fontSize: 18,
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   userNameLabel: {
     fontFamily: "Tajawal-Medium",
@@ -322,7 +327,12 @@ homeOptionText: {
     width: '100%'
   },
   bodyview:{
-    backgroundColor: "#FFFFFF",padding: 8,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,marginBottom: 10,
+    backgroundColor: "#FFFFFF",padding: 8,borderRadius: 12,width: '90%',shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 10,
   },
   bodyviewSupport:{
     backgroundColor: "#FFFFFF",marginTop:20,padding: 8,borderRadius: 12,width: '90%',shadowColor: "#000",shadowOpacity: 0.1,shadowOffset: { width: 0, height: 2 },shadowRadius: 4,elevation: 3,marginBottom: 10,

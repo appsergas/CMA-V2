@@ -568,7 +568,7 @@ class HomeMain extends Component {
 
                         <View style={{
                             ...styles.body,
-                            height: Platform.OS == 'ios' ? "85%" : "85%"
+                            height: Platform.OS == 'ios' ? "90%" : "85%"
                         }} >
                             <KeyboardAwareScrollView
                                 behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}

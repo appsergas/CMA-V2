@@ -55,13 +55,18 @@ const styles = StyleSheet.create({
 
     // flex: 1,
     // display: "flex",
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: 'center',
-    paddingBottom: 80,
-    paddingTop: Platform.OS == 'ios' ? 40 : 0,
+    // flexGrow: 1,
+    // justifyContent: "center",
+    // alignItems: 'center',
+    // paddingBottom: 80,
+    // paddingTop: Platform.OS == 'ios' ? 40 : 0,
     // height: "100%",
     // overflow: "scroll"
+
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    alignItems: 'center',
+    paddingBottom: 80
   },
 
   userNameLabel: {
@@ -311,6 +316,115 @@ RequestButton: {
   fontFamily: "Tajawal-Medium",
   fontWeight:"600"
 },
+
+
+
+
+watchVideoButton: {
+  flexDirection:"row",
+  backgroundColor: "#102D4F",
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  borderRadius: 5,
+  alignSelf: "flex-start", 
+},
+watchVideoButtonText: {
+  color: "#FFFFFF",
+  fontWeight: "bold",
+},
+
+
+
+//Enayat
+
+headerView: {
+  // flexDirection: "row",
+  // justifyContent: "space-between",
+  // alignItems: "center",
+  // paddingHorizontal: 20,
+  // paddingVertical: 15,
+  // marginVertical: Platform.OS === 'ios' ? null : 20,
+
+  flexDirection: "row",
+alignItems: "center",
+paddingHorizontal: 10,
+paddingTop: 0,
+paddingBottom: 10,
+backgroundColor: "#FFFFFF",
+borderTopLeftRadius: 20,
+borderTopRightRadius: 20,
+},
+headerLeft: {
+  flexDirection: "row",
+  alignItems: "center",
+},
+
+initialsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0a1f44',
+},
+initialsText: {
+    fontSize: 25,
+    color: '#fff',
+    fontWeight: 'bold',
+},
+profileImage: {
+  width: "100%",
+  height: "100%",
+  resizeMode: "cover",
+},
+textContainer: {
+  flex: 1,
+},
+nameRow: {
+flexDirection: "row",
+alignItems: "center",
+},
+welcomeText: {
+fontSize: 18,
+color: "#102D4F",
+fontWeight: "700",
+marginRight: 0,
+lineHeight:35
+},
+welcomeSubText: {
+  fontSize: 12,
+  color: "#102D4F",
+  fontWeight:"400",
+  // opacity:0.6,
+  marginTop: 2,
+  // textDecorationLine: "underline",
+},
+verifiedIcon: {
+marginTop: 2,
+},
+
+divider: {
+width: "90%",
+height: 1,
+backgroundColor: "#E1E7ED",
+alignSelf: "center",
+marginVertical: 0,
+},
+
+
+containerDetails: {
+  margin:10,
+  backgroundColor: '#F8FAFC', // very light grayish blue
+  paddingHorizontal: 16,
+  paddingVertical: 10,
+  borderRadius: 12,
+  alignSelf: 'flex-start', // fits the text width
+  width:"90%"
+},
+containerDetailstext: {
+  color: '#102C4E', // navy blue
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+
+
 })
 
 export default styles
