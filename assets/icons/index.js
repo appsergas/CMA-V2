@@ -35,4 +35,5 @@ export { default as RegInfoIcon } from "./RegInfoIcon";
 export { default as FlagUAEIcon } from "./FlagUAEIcon";
 export { default as FlagKSAIcon } from "./FlagKSAIcon";
 export { default as FlagOMANIcon } from "./FlagOMANIcon";
+export { default as AEDIcon } from "./AEDIcon";
 

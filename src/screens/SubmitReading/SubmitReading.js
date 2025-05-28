@@ -418,24 +418,25 @@ class SubmitReading extends Component {
                                                         }}
                                                         inputStyles={{
                                                             fontFamily: "Tajawal-Regular",
-                                                            fontSize: 20,
+                                                            fontSize: 18,
                                                             borderRadius: 8,
                                                             borderWidth: 1,
                                                             borderColor: "black",
                                                             borderStyle: "solid",
                                                             color: "black",
                                                             fontFamily: "Tajawal-Bold",
-                                                            fontSize: 20,
+                                                            fontSize: 18,
                                                             // textAlign: "center",
-                                                            height: 42,
-                                                            width: 32,
+                                                            height: 35,
+                                                            width: 30,
                                                             textAlign: 'center',
                                                             alignItems: "center",
                                                             justifyContent: 'center',
                                                             alignContent: 'center',
                                                             textAlignVertical: "center",
                                                             // lineHeight: 32, 
-                                                            padding: 0
+                                                            margin: 1,
+                                                            padding: 0,
                                                         }}
                                                     />
                                                 </View>
@@ -599,8 +600,8 @@ class SubmitReading extends Component {
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "Reading updated successfully" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    source={this.state.readingResult == "Reading updated successfully" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>

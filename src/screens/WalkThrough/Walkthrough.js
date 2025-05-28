@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#fff',
     fontSize: 30,
-    marginTop: 30,
-    lineHeight: 40,
+    marginTop: Platform.OS === 'android' ? 0 : 30,
+    lineHeight: Platform.OS === 'android' ? 30 : 40,
     fontWeight: '300',
     marginRight: 20,
   },

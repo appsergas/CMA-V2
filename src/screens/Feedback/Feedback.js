@@ -257,8 +257,8 @@ class Feedback extends Component {
                                             view: <View style={{ alignItems: 'center', width: '100%' }}>
                                                 <Image style={{ width: 232, height: 232, resizeMode: 'stretch', marginBottom: 20 }}
                                                     source={this.state.readingResult == 'Feedback posted sucessfully' ? require('../../../assets/images/success.png') : require('../../../assets/images/readingFailure.png')}
-                                                    // source={this.state.readingResult == "Feedback posted sucessfully" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    // source={this.state.readingResult == "Feedback posted sucessfully" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>

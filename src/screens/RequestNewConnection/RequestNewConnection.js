@@ -2762,8 +2762,8 @@ class RequestNewConnection extends Component {
                                             // uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult.split(" ")[0] == "Payment" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    source={this.state.readingResult.split(" ")[0] == "Payment" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -2822,8 +2822,8 @@ class RequestNewConnection extends Component {
                                             // uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={require("../../../assets/images/readingSuccess.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    source={require("../../../assets/images/Done.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -2866,7 +2866,7 @@ class RequestNewConnection extends Component {
                                         data={{
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={require("../../../assets/images/readingSuccess.png")}
+                                                    source={require("../../../assets/images/Done.gif")}
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>

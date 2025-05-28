@@ -52,8 +52,8 @@ import { Images } from '../../utils/ImageSource/imageSource';
 import { API_PATH } from '../../services/api/data/data/api-utils';
 import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
-import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { ArrowIcon, CircleRadioIcon, AEDIcon, XIcon } from '../../../assets/icons'
 
 class Payment extends Component {
     constructor(props) {
@@ -297,27 +297,27 @@ class Payment extends Component {
             let outLetReference = "", apiKey = "";
             const tokenApiUrl = isTestEnv ? paymentGatewayTokenApiUrlTest : paymentGatewayTokenApiUrl;
             const orderApiUrl = isTestEnv ? paymentGatewayCreateOrderUrlTest : paymentGatewayCreateOrderUrl;
-            
+
             switch (currentGasContract.COMPANY) {
-              case "01": // Abu Dhabi
-                outLetReference = isTestEnv ? abudhabiTestOutletReference : abudhabiOutletReference;
-                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyAUH;
-                break;
-              case "02": // Dubai
-                outLetReference = isTestEnv ? dubaiTestOutletReference : dubaiOutletReference;
-                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyDXB;
-                break;
-              case "03": // Fujairah
-                outLetReference = isTestEnv ? fujairahTestOutletReference : fujairahOutletReference;
-                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyTest; // Confirm if this is correct
-                break;
-              case "05": // Al Ain
-                outLetReference = isTestEnv ? alainTestOutletReference : alainOutletReference;
-                apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyALN;
-                break;
-              default:
-                this.toastIt("Payment setup not found for your company. Please contact support.");
-                return;
+                case "01": // Abu Dhabi
+                    outLetReference = isTestEnv ? abudhabiTestOutletReference : abudhabiOutletReference;
+                    apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyAUH;
+                    break;
+                case "02": // Dubai
+                    outLetReference = isTestEnv ? dubaiTestOutletReference : dubaiOutletReference;
+                    apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyDXB;
+                    break;
+                case "03": // Fujairah
+                    outLetReference = isTestEnv ? fujairahTestOutletReference : fujairahOutletReference;
+                    apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyTest; // Confirm if this is correct
+                    break;
+                case "05": // Al Ain
+                    outLetReference = isTestEnv ? alainTestOutletReference : alainOutletReference;
+                    apiKey = isTestEnv ? paymentApiKeyTest : paymentApiKeyALN;
+                    break;
+                default:
+                    this.toastIt("Payment setup not found for your company. Please contact support.");
+                    return;
             }
             this.setState({ makePaymentClicked: true }, async () => {
                 let token = await this.getPaymentGatewayAccessToken(apiKey, tokenApiUrl)
@@ -502,7 +502,7 @@ class Payment extends Component {
 
                                     } catch (err) {
                                         this.setState({ makePaymentClicked: false })
-                                        this.toastIt("Payment Failed",err)
+                                        this.toastIt("Payment Failed", err)
 
                                         const paidCardDetails =
                                             type === "samsungpay"
@@ -738,7 +738,7 @@ class Payment extends Component {
                         </Text>
                     </View>
 
-                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
 
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -775,13 +775,22 @@ class Payment extends Component {
                                             <View style={Mainstyles.row}>
                                                 <Text style={Mainstyles.label}>Total Amount Due</Text>
                                                 <View style={Mainstyles.badge}>
-                                                    <Text style={Mainstyles.amount}>
+                                                    {/* <Text style={Mainstyles.amount}>
                                                         {this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0 ? Math.round(parseFloat(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT) * 100) / 100 : 0} AED
-                                                    </Text>
+                                                    </Text> */}
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <AEDIcon style={{ marginRight: 2, marginTop: 2 }} />
+                                                        <Text style={Mainstyles.amount}>
+                                                            {this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT > 0
+                                                                ? Math.round(parseFloat(this.props.contracts[this.state.activeItemIndex].OUTSTANDING_AMT) * 100) / 100
+                                                                : 0}
+                                                        </Text>
+                                                    </View>
+
                                                 </View>
                                             </View>
 
-                                            <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: false }) }} style={{ ...styles.headerView, marginBottom: 0, minHeight: 40 }}>
+                                            <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: false }) }} style={{ ...styles.headerView, marginBottom: 0, minHeight: 10 }}>
 
                                                 <View style={{ flexDirection: "row", }}>
                                                     <View style={Mainstyles.headerCol1}>
@@ -798,7 +807,7 @@ class Payment extends Component {
                                                     </View>
                                                 </View>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: true }) }} style={{ ...Mainstyles.headerSubView, marginBottom: 20 }}>
+                                            <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: true }) }} style={{ ...Mainstyles.headerSubView, marginBottom: 10 }}>
                                                 <View style={{ flexDirection: "row", }}>
                                                     <View style={{ ...Mainstyles.headerCol1 }}>
                                                         <TouchableOpacity onPress={() => { this.setState({ payOtherAmount: true }) }}>
@@ -904,9 +913,9 @@ class Payment extends Component {
                                         :
                                         null}
 
-                                <TouchableOpacity style={{ ...Mainstyles.buttonStyle, marginTop:10 }}>
+                                {/* <TouchableOpacity style={{ ...Mainstyles.buttonStyle, marginTop: 10 }}>
                                     <Text style={Mainstyles.buttonLabelStyle}>Pay Now</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                             </ScrollView>
                             {
@@ -931,8 +940,8 @@ class Payment extends Component {
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    source={this.state.readingResult == "Payment Successful. It will be reflected in your account shortly." ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>

@@ -76,5 +76,6 @@ android/
 "node_modules.zip" 
 package.json
 package-lock.json
+index.js
 pubspec.lock
 pubspec.yaml

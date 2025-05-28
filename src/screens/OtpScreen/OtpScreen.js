@@ -307,13 +307,13 @@ class OtpScreen extends Component {
                     disabled={this.state.otp.length < 4}
                     style={[
                       styles.buttonStyle,
-                      this.state.otp.length < 4 && { backgroundColor: '#ccc' }
+                      this.state.otp.length < 4 && { backgroundColor: '#102C4E4D' }
                     ]}
                   >
                     <Text
                       style={[
                         styles.buttonLabelStyle,
-                        this.state.otp.length < 4 && { color: '#888' }
+                        this.state.otp.length < 4 && { color: '#FFFFFF' }
                       ]}
                     >
                       Continue

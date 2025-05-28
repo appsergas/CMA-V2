@@ -456,8 +456,8 @@ console.log("reqBody", reqBody)
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "We will get back to you shortly." ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    source={this.state.readingResult == "We will get back to you shortly." ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>

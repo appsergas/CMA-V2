@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     // flex: 1,
     // display: "flex",
     flexGrow: 1,
-    justifyContent: "center",
+    //justifyContent: "center",
     alignItems: 'center',
     paddingBottom: 0,
-    paddingTop: 25,
+    paddingTop: 40,
     // backgroundColor: "red"
     // height: "100%",
     // overflow: "scroll",
@@ -73,8 +73,8 @@ accountsLabel: {
     color: "#FFFFFF",
     fontWeight:"bold",
     textAlign:"center",
-    paddingTop:5,
-    paddingBottom:5,
+   paddingVertical:5,
+    paddingHorizontal:5,
     
 },
   welcomeLabel: {

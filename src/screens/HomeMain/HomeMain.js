@@ -503,19 +503,20 @@ class HomeMain extends Component {
 
                                             </View>
                             <View style={styles.textContainer}>
+                                <Text style={styles.welcomeSubText}>Welcome,</Text>
                                 <View style={styles.nameRow}>
-                                    <Text style={styles.welcomeText}>Hi,
+                                    <Text style={styles.welcomeText}>
                                         {
                                             this.props.userDetails.PARTY_NAME
-                                                ? this.truncateText(this.props.userDetails.PARTY_NAME, 15)
+                                                ? this.truncateText(this.props.userDetails.PARTY_NAME, 17)
                                                 : this.props.contracts.length
-                                                    ? this.truncateText(this.props.contracts[this.state.activeItemIndex].PARTYNAME, 15)
+                                                    ? this.truncateText(this.props.contracts[this.state.activeItemIndex].PARTYNAME, 17)
                                                     : null
                                         }
                                     </Text>
                                     <CheckIcon size={18} color="#4A90E2" style={styles.verifiedIcon} />
                                 </View>
-                                <Text style={styles.welcomeSubText}>Welcome Back</Text>
+                                
                             </View>
                         </View>
 

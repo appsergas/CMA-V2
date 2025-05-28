@@ -140,11 +140,7 @@ class DisconnectionRequest extends Component {
                         })
                     } else {
                         this.toastIt("Request successful for Disconnection", true)
-                        postLocalNotification(
-                            "Disconnection Alert",
-                            "Request successful for Disconnection",
-                            "NotificationDetail"
-                        );
+                        //postLocalNotification("Disconnection Alert","Request successful for Disconnection","NotificationDetail");
                     }
                 } else if (requestDisconnectionResult && requestDisconnectionResult.content && (requestDisconnectionResult.content.MSG == "Request submitted already, Could not request again.")) {
                     this.toastIt(requestDisconnectionResult.content.MSG, false)
@@ -185,19 +181,11 @@ class DisconnectionRequest extends Component {
                 makePaymentClicked: false
             }, () => {
                 if (updatePaymentResult && updatePaymentResult.content && (updatePaymentResult.content.MSG == "SUCESS")) {
-                    postLocalNotification(
-                        "Disconnection Alert",
-                        "Request successful for Disconnection",
-                        "NotificationDetail"
-                    );
+                    //postLocalNotification("Disconnection Alert","Request successful for Disconnection","NotificationDetail");
                     this.toastIt("Request successful for Disconnection", true)
                 } else {
                     this.toastIt("Request successful for Disconnection", true)
-                    postLocalNotification(
-                        "Disconnection Alert",
-                        "Request successful for Disconnection",
-                        "NotificationDetail"
-                    );
+                    //postLocalNotification("Disconnection Alert","Request successful for Disconnection","NotificationDetail");
                 }
             })
         }
@@ -741,8 +729,8 @@ class DisconnectionRequest extends Component {
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/readingSuccess.png") : require("../../../assets/images/readingFailure.png") }
+                                                    source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -856,7 +844,7 @@ class DisconnectionRequest extends Component {
                                         data={{
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
                                                 <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={require("../../../assets/images/readingSuccess.png")}
+                                                    source={require("../../../assets/images/Done.gif")}
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -900,7 +888,7 @@ class DisconnectionRequest extends Component {
                                                 <View style={{ alignItems: 'center', width: "100%" }}>
                                                     <Image
                                                         style={{ width: 66.34, height: 88, resizeMode: "contain", marginBottom: 20 }}
-                                                        source={require("../../../assets/images/readingSuccess.png")} // Make sure to add this image
+                                                        source={require("../../../assets/images/Done.gif")} // Make sure to add this image
                                                     />
                                                     <Text style={styles.inputLabelStyle}>
                                                         Do you want to save your card for future payments?
