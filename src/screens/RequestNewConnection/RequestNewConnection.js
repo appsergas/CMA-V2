@@ -2761,9 +2761,9 @@ class RequestNewConnection extends Component {
                                             button2Text: "Pay",
                                             // uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult.split(" ")[0] == "Payment" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{  resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult.split(" ")[0] == "Payment" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -2821,17 +2821,18 @@ class RequestNewConnection extends Component {
                                             button2Text: "Pay",
                                             // uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={require("../../../assets/images/Done.gif")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{  resizeMode: "stretch", marginBottom: 30 }}
+                                                    // source={require("../../../assets/images/Done.gif")}
+                                                    source={require("../../../assets/images/Scan.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
                                                     <Text style={styles.inputLabelStyle}>Update Emirates ID</Text>
                                                 </View>
 
-                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
-                                                    <Text style={styles.accountNumberText}>Update Emirates ID to proceed for requesting the new connection</Text>
+                                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10, justifyContent: 'center', alignItems: 'center',paddingHorizontal: 20 } }}>
+                                                    <Text sstyle={[styles.accountNumberText, { textAlign: 'center',width: '100%' }]}>Update Emirates ID to proceed for requesting the new </Text>
                                                 </View>
                                                 {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
 
@@ -2865,7 +2866,7 @@ class RequestNewConnection extends Component {
                                         visible={this.state.excludedConnectionModal}
                                         data={{
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                <Image style={{  resizeMode: "stretch", marginBottom: 30 }}
                                                     source={require("../../../assets/images/Done.gif")}
                                                 />
 

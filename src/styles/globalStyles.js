@@ -70,8 +70,10 @@ welcomeLabel: {
 
   bodyview:{
     backgroundColor: "#FFFFFF",padding: 5,borderRadius: 12,width: '90%',
-    shadowColor: "#000",shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },shadowRadius: 4,elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 4,elevation: 3,
     margin:12,
     position: 'absolute',
    
@@ -196,8 +198,9 @@ paymentDueRow1: {
   },
   buttonLabelStyle: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Tajawal-Medium"
+    fontSize: 16,
+    fontFamily: "Tajawal-Medium",
+    fontWeight:"bold",
   },
 
 
@@ -252,6 +255,22 @@ paymentDueRow1: {
     fontSize: 10,
     color: "#102C4ECC",
   },
+
+  textAreaBox: {
+    height: 100,
+    width: "100%",
+    fontSize: 14,
+    textAlignVertical: 'top',
+    fontFamily: "Tajawal-Medium",
+    borderRadius: 16,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 12,
+    paddingBottom: 12,
+    backgroundColor: "#FFFFFF", // optional for better contrast
+    borderWidth: 1,             // optional for clear boundary
+    borderColor: "#DDD"         // optional border color
+  }
   //Enayat
 
   

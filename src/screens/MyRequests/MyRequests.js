@@ -17,7 +17,7 @@ import Toast from '../../controls/Toast'
 import DatePicker from 'react-native-date-picker'
 import HomeMainCard from '../../components/HomeMainCard';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
+import { commonGradient } from '../../components/molecules/gradientStyles';
 import { ArrowIcon } from '../../../assets/icons'
 
 import {
@@ -562,53 +562,52 @@ class MyRequests extends Component {
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
-                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_19 }}
+                            contentContainerStyle={{ flexGrow: 1, paddingBottom: Dimensions.HP_10 }}
                             style={{ flex: 1 }}
                             enabled
                             showsVerticalScrollIndicator={false}
                         >
+
+
                             <ScrollView
                                 ref={(ref) => (this.scrollView = ref)}
                                 showsVerticalScrollIndicator={false}
-                                contentContainerStyle={Mainstyles.containerView}>
+                                contentContainerStyle={styles.scrollView}>
 
-                                <View style={{}}>
+                                <View style={Mainstyles.bodyview}>
 
 
-                                    {this.state.requests.length ? <><View style={{ ...styles.cardView, ...{ flexDirection: "row", minHeight: 0, width: "100%" } }}>
+                                    {this.state.requests.length ? <>
+                                    {/* <View style={{ ...styles.cardView, ...{ flexDirection: "row", minHeight: 0, width: "100%" } }}>
                                         <View style={{ width: "12%", justifyContent: "center" }}>
                                             <Text style={styles.colHeadeingText}>No.</Text>
                                         </View>
                                         <View style={{ width: "24%", justifyContent: "center" }}>
                                             <Text style={styles.colHeadeingText}>Date</Text>
                                         </View>
-                                        {/* <View style={{ width: "22.5%", justifyContent: "center" }}>
-                                                    <Text style={styles.colHeadeingText}>Tenancy C. No.</Text>
-                                                </View> */}
+
                                         <View style={{ width: "32%", justifyContent: "center", overflow: 'scroll' }}>
                                             <Text style={styles.colHeadeingText}>Type</Text>
                                         </View>
                                         <View style={{ width: "32%", justifyContent: "center" }}>
                                             <Text style={styles.colHeadeingText}>Status</Text>
                                         </View>
-                                    </View>{this.state.requests.map((request, index) => {
+                                    </View> */}
+                                    {this.state.requests.map((request, index) => {
                                         return <>
                                             <TouchableOpacity onPress={() => {
                                                 this.setState({
                                                     currentTransaction: request
                                                 })
                                             }}>
-                                                <View style={{ ...styles.cardView, ...{ flexDirection: "row", minHeight: 0, width: "100%", paddingVertical: 10 } }}>
+                                                {/* <View style={{ ...styles.cardView, ...{ flexDirection: "row", minHeight: 0, width: "100%", paddingVertical: 10 } }}>
                                                     <View style={{ width: "12%", justifyContent: "center" }}>
                                                         <Text style={styles.dataText}>{request.ID}</Text>
                                                     </View>
                                                     <View style={{ width: "24%", justifyContent: "center" }}>
-                                                        {/* <Text style={styles.dataText}>{new Date(request.DATE).toLocaleDateString()}</Text> */}
                                                         <Text style={styles.dataText}>{request.DATE.split(" ")[0]}</Text>
                                                     </View>
-                                                    {/* <View style={{ width: "22.5%", justifyContent: "center" }}>
-                                        <Text style={styles.dataText}>{request.TENANCY_CONT_NO}</Text>
-                                    </View> */}
+                                                   
                                                     <View style={{ width: "32%", justifyContent: "center" }}>
                                                         <Text style={styles.dataText}>{request.REQUEST_TYPE == "NEW_CONNECTION" ? "CONNECTION" : request.REQUEST_TYPE}</Text>
                                                     </View>
@@ -640,8 +639,40 @@ class MyRequests extends Component {
                                                                 null
                                                         }
                                                     </View>
+
+
+                                                </View> */}
+
+                                                <View style={styles.headerView}>
+                                                    <View style={styles.headerLeft}>
+
+                                                        <View style={styles.textContainer}>
+                                                            <View style={styles.nameRow}>
+                                                                <Text style={styles.welcomeText}>Request Details</Text>
+                                                            </View>
+
+                                                            <TouchableOpacity >
+                                                                <Text style={styles.welcomeSu400bText}>Request No. #{request.ID}</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        <View>
+
+                                                            <TouchableOpacity style={styles.watchVideoButton} >
+                                                                <View>
+                                                                    <Text style={styles.watchVideoButtonText}>{request.CONNECTION_STATUS != "" ? (request.CONNECTION_STATUS == "NEW_REQUEST" ? "REQUESTED" : request.CONNECTION_STATUS) : request.DISCONNECTION_STATUS}</Text>
+                                                                </View>
+                                                            </TouchableOpacity>
+                                                        </View>
+
+                                                    </View>
+                                                </View>
+                                                <View style={styles.containerDetails}>
+                                                    <Text style={styles.containerDetailstext}>{request.REQUEST_TYPE == "NEW_CONNECTION" ? "CONNECTION" : request.REQUEST_TYPE}</Text>
                                                 </View>
                                             </TouchableOpacity>
+
+
+
                                         </>
                                     })}</> : this.state.apiCallFlags.getRequestsCalled ? <ActivityIndicator size={"small"} color={"black"} /> :
                                         <View style={{ alignItems: "center" }}>

@@ -307,13 +307,15 @@ const styles = StyleSheet.create({
         shadowRadius: 12,
         shadowOpacity: 1,
         elevation: 5,
-        width: "100%"
+        width: "100%",
+        
     },
     modalViewInnerContainer: {
         justifyContent: "center",
         alignSelf: "center",
         textAlignVertical: "center",
-        width: "100%"
+        width: "100%",
+        marginBottom:0
     },
     modalButtonContainer: {
         // alignSelf: "center",
@@ -346,7 +348,8 @@ const styles = StyleSheet.create({
         // width: "90%",
         height: 25,
         marginTop: 14,
-        marginBottom: 14,
+        // marginBottom: 14,
+        marginBottom: 0,
         flexDirection: "column",
         // alignItems: "flex-end"
     },

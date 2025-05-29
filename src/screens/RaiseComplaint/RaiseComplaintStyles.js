@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
   cardView: {
     width: "95%",
     minHeight: 100,
-    borderRadius: 4,
+    borderRadius: 12,
     borderStyle: "solid",
-        borderColor: "#ABB2AC",
-        borderWidth: 0.4,
+    borderColor: "#ABB2AC",
+    borderWidth: 0.4,
     //     shadowColor: 'rgba(0, 0, 0, 0.5)',
     //     shadowOffset: { height: 2, width: 2 }, // IOS
     //     shadowOpacity: 0.5, // IOS
@@ -112,16 +112,19 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',
     // elevation: 15,  // Android,
     paddingVertical: 10,
-    marginBottom: 8
+    marginBottom: 8,
+    borderWidth: 1, 
+    borderColor: "#0057A21A"
   },
   icon:  {
     height: 40,
     width: 40,
     resizeMode: "stretch"
 },
-  paymentDueRow1: {
-    paddingHorizontal: 15
-  },
+paymentDueRow1: {
+  paddingHorizontal: 15,
+  flexDirection: "row"
+},
   paymentDueRow2: {
     marginTop: 10,
     paddingHorizontal: 15,
@@ -135,12 +138,12 @@ const styles = StyleSheet.create({
   },
   addImageView: {
     flexDirection: "row",
-    marginTop: 10,
-    // justifyContent: "center",
+    // marginTop: 10,
+    justifyContent: "center",
     overflow: "visible",
   },
   addImageViewCol: {
-    width: "33%",
+    // width: "25%",
     alignItems: "center"
   },
   optionIconViewCol2: {
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
   imageClearText: {
     fontFamily: "Tajawal-Medium",
     fontSize: 14,
-    color: "#ABB2AC"
+    color: "#102C4E99"
   },
   frontBackText: {
     fontFamily: "Tajawal-Regular",

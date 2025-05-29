@@ -418,25 +418,24 @@ class SubmitReading extends Component {
                                                         }}
                                                         inputStyles={{
                                                             fontFamily: "Tajawal-Regular",
-                                                            fontSize: 18,
+                                                            fontSize: 20,
                                                             borderRadius: 8,
                                                             borderWidth: 1,
                                                             borderColor: "black",
                                                             borderStyle: "solid",
                                                             color: "black",
                                                             fontFamily: "Tajawal-Bold",
-                                                            fontSize: 18,
+                                                            fontSize: 20,
                                                             // textAlign: "center",
-                                                            height: 35,
-                                                            width: 30,
+                                                            height: 42,
+                                                            width: 32,
                                                             textAlign: 'center',
                                                             alignItems: "center",
                                                             justifyContent: 'center',
                                                             alignContent: 'center',
                                                             textAlignVertical: "center",
                                                             // lineHeight: 32, 
-                                                            margin: 1,
-                                                            padding: 0,
+                                                            padding: 0
                                                         }}
                                                     />
                                                 </View>
@@ -599,9 +598,9 @@ class SubmitReading extends Component {
                                         data={{
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "Reading updated successfully" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{  resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "Reading updated successfully" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -614,7 +613,7 @@ class SubmitReading extends Component {
                                                 {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
 
                                                 <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%" }}
                                                     onPress={() => {
                                                         this.setState({
                                                             showModal: false
@@ -623,7 +622,7 @@ class SubmitReading extends Component {
                                                     }}
                                                 >
                                                     <Text
-                                                        style={styles.buttonLabelStyle}>{this.state.readingResult == "Something went wrong, please try again later" ? "Try Again" : "Done"}</Text>
+                                                        style={Mainstyles.buttonLabelStyle}>{this.state.readingResult == "Something went wrong, please try again later" ? "Try Again" : "Done"}</Text>
                                                 </TouchableOpacity>
 
                                                 {/* </View> */}

@@ -728,9 +728,10 @@ class DisconnectionRequest extends Component {
                                             button2Text: "Pay",
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{ resizeMode: "stretch", marginBottom: 30 }}
+                                                    // source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif")}
+                                                    source={this.state.readingResult == "Request successful for Disconnection" ? require("../../../assets/images/Mail.gif") : require("../../../assets/images/InternetError.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -756,6 +757,8 @@ class DisconnectionRequest extends Component {
                                                     <Text
                                                         style={Mainstyles.buttonLabelStyle}>{(this.state.readingResult == "Request successful for Disconnection") || (this.state.readingResult == "Request submitted already, Could not request again.") ? "Done" : "Try Again"}</Text>
                                                 </TouchableOpacity>
+
+
 
                                                 {/* </View> */}
 
@@ -797,21 +800,21 @@ class DisconnectionRequest extends Component {
 
 
                                                 <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "80%", marginBottom: 20, marginTop: 5 }}
+                                                    style={{ ...Mainstyles.buttonStyle, marginBottom: 10, width: "100%", marginTop: 5 }}
                                                     onPress={() => {
                                                         this.setState({ showPaidModal: false })
                                                         this.makePayment("")
                                                     }}
                                                 >
-                                                    <Text
-                                                        style={styles.buttonLabelStyle}>Pay 105 AED now</Text>
+                                                    <Text style={Mainstyles.buttonLabelStyle}>Pay 105 AED now</Text>
                                                 </TouchableOpacity>
+
 
                                                 {
                                                     this.state.applePaySupported || this.state.samsungPaySupported ?
 
                                                         <TouchableOpacity
-                                                            style={{ ...styles.buttonStyle, width: "80%" }}
+                                                            style={{...Mainstyles.buttonStyle, width:"100%"}}
                                                             onPress={() => {
                                                                 this.setState({
                                                                     showPaidModal: false,
@@ -822,7 +825,7 @@ class DisconnectionRequest extends Component {
                                                         >
                                                             {
                                                                 this.state.applePaySupported ? <Image source={require("../../../assets/images/Apple_Pay.png")} style={{ height: 25, resizeMode: "contain" }} /> :
-                                                                    <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ height: 30, resizeMode: "contain" }} />
+                                                                    <Image source={require("../../../assets/images/Samsung_Pay.png")} style={{ ...Mainstyles.buttonLabelStyle, }} />
                                                             }
                                                         </TouchableOpacity>
                                                         : null
@@ -843,7 +846,7 @@ class DisconnectionRequest extends Component {
                                         visible={this.state.restrictDisconnectionModal}
                                         data={{
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
+                                                <Image style={{  resizeMode: "stretch", marginBottom: 30 }}
                                                     source={require("../../../assets/images/Done.gif")}
                                                 />
 
@@ -856,7 +859,7 @@ class DisconnectionRequest extends Component {
                                                 </View>
 
                                                 <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%" }}
                                                     onPress={() => {
                                                         this.setState({
                                                             restrictDisconnectionModal: false
@@ -887,7 +890,7 @@ class DisconnectionRequest extends Component {
                                             view: (
                                                 <View style={{ alignItems: 'center', width: "100%" }}>
                                                     <Image
-                                                        style={{ width: 66.34, height: 88, resizeMode: "contain", marginBottom: 20 }}
+                                                        style={{ resizeMode: "contain", marginBottom: 20 }}
                                                         source={require("../../../assets/images/Done.gif")} // Make sure to add this image
                                                     />
                                                     <Text style={styles.inputLabelStyle}>

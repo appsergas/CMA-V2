@@ -165,8 +165,9 @@ const styles = StyleSheet.create({
   },
   accountNumberText: {
       fontFamily: "Tajawal-Medium",
-      fontSize: 12,
-      color: "#102D4F"
+      fontSize: 14,
+      color: "#102D4F",
+      textAlign: "center"
   },
   noteText: {
     fontFamily: "Tajawal-Bold",
@@ -256,6 +257,26 @@ payBillText: {
     fontSize: 14,
     fontFamily: "Tajawal-Medium"
   },
+
+  // buttonStyle: {
+  //   borderRadius: 12,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   padding: 0,
+  //   // width: "95%",
+  //   height: 40,
+  //   backgroundColor: '#102C4E',
+  //   fontSize:14,
+  //   fontWeight:"bold",
+  //   // elevation: 5,  // Android
+  // },
+  // buttonLabelStyle: {
+  //   color: "#FFFFFF",
+  //   fontSize: 14,
+  //   fontFamily: "Tajawal-Medium"
+  // },
+
+
   registerButtonViewStyle: {
     width: "95%",
   },

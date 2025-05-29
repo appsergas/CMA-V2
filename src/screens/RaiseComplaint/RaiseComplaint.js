@@ -25,8 +25,8 @@ import { Colors } from '../../utils/Colors/Colors';
 import Dimensions from '../../utils/Dimensions';
 import { Images } from '../../utils/ImageSource/imageSource';
 import LinearGradient from 'react-native-linear-gradient';
-import { commonGradient } from '../../components/molecules/gradientStyles'; 
-import { ArrowIcon, CircleRadioIcon } from '../../../assets/icons'
+import { commonGradient } from '../../components/molecules/gradientStyles';
+import { ArrowIcon, CircleRadioIcon, CameraIcon } from '../../../assets/icons'
 
 class RaiseComplaint extends Component {
     constructor(props) {
@@ -159,7 +159,7 @@ class RaiseComplaint extends Component {
                 "COMMENTS": this.state.complaintDescription,
                 "FILE_ATTACHMENTS": attachments
             }
-console.log("reqBody", reqBody)
+            console.log("reqBody", reqBody)
             this.setState({
                 apiCallFlags: { ...this.state.apiCallFlags, ...{ postComplaintApiCalled: true } }
             }, () => this.props.postComplaint(reqBody))
@@ -227,7 +227,7 @@ console.log("reqBody", reqBody)
                     </View>
 
                     {/* <InfoContainer colors={["#FFFFFF", "#FFFFFF"]} style={{ height: Platform.OS == 'ios' ? Dimensions.HP_80 : Dimensions.HP_88, }}> */}
-                     <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
+                    <InfoContainer colors={["#F7FAFC", "#F7FAFC"]} style={{ flexGrow: 1 }}>
                         <KeyboardAwareScrollView
                             behavior={Platform.OS === 'ios' ? 'padding' : null}
                             // style={{ flex: 1, backgroundColor: "rgba(255,255,255,0)" }}
@@ -248,7 +248,7 @@ console.log("reqBody", reqBody)
                                     </Text>
                                 </View>
 
-                                <View style={{ ...Mainstyles.accountsLabelView, marginTop: 20 }}>
+                                <View style={{ ...Mainstyles.accountsLabelView, marginTop: 15 }}>
                                     <Text style={Mainstyles.accountsLabel} >
                                         {t("home.selectAccount")}
                                     </Text>
@@ -263,76 +263,162 @@ console.log("reqBody", reqBody)
                                 />
 
                                 {/* <View style={styles.cardView}> */}
-                                    <View style={{ ...Mainstyles.accountsLabelView }}>
-                                        <Text style={Mainstyles.accountsLabel} >
-                                            Submit Your Inquiry
-                                        </Text>
-                                    </View>
+                                <View style={{ ...Mainstyles.accountsLabelView }}>
+                                    <Text style={Mainstyles.accountsLabel} >
+                                        Submit Your Inquiry
+                                    </Text>
+                                </View>
 
-                                    <View>
-                                        <TextInput
-                                            Placeholder="Write more details"
-                                            Style={{ height: 100, width: "100%", fontSize: 14, textAlignVertical: 'top', fontFamily: "Tajawal-Medium" }}
-                                            value={this.state.complaintDescription}
-                                            onChangeText={val => this.setState({ complaintDescription: val })}
-                                            multiline={true}
-                                        >
+                                <View>
+                                    <TextInput
+                                        Placeholder="Write more details..."
+                                        Style={ Mainstyles.textAreaBox }
+                                        value={this.state.complaintDescription}
+                                        onChangeText={val => this.setState({ complaintDescription: val })}
+                                        multiline={true}
+                                    >
 
-                                        </TextInput>
-                                    </View>
-                               
-                                <View style={{ ...styles.paymentDueRow1, ...{ marginBottom: 10 } }}>
+                                    </TextInput>
+                                </View>
+                                <View style={{ ...Mainstyles.accountsLabelView, marginTop: 0 }}>
                                     <Text style={Mainstyles.accountsLabel}>{t("support.attachImages")}</Text>
-                                    <View style={styles.addImageView}>
-                                        <View style={{ ...styles.addImageViewCol, flexDirection: "row" }}>
-                                            {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
-                                        (media) => {
-                                            if (!!media && media.assets) {
-                                                this.setState({ image1: media })
-                                            }
-                                        }
-                                    )}> */}
-                                            <TouchableOpacity onPress={() => {
-                                                if (this.state.image1 == null) {
-                                                    // this.handleAttachImages("capture", "emiratesId")
-                                                    this.setState({
-                                                        showPickerModal: true,
-                                                        currentImageType: "image1"
-                                                    })
-                                                } else {
-                                                    this.setState({
-                                                        showImageModal: true,
-                                                        currentImageUri: this.state.image1.assets[0].uri,
-                                                        currentImageType: "image1"
-                                                    })
-                                                }
-                                            }}>
-                                                {this.state.image1 != null ?
-                                                    <Image style={styles.addImage} source={{ uri: this.state.image1.assets[0].uri }} />
-                                                    : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/camera2.png")} />
-                                                }
-                                            </TouchableOpacity>
+                                </View>
+
+                                {/* <View style={{ ...styles.cardView, minHeight: 60, marginBottom: 40 }}>
+
+                                    <View style={{ ...styles.paymentDueRow1, alignItems: 'center' }}>
+                                        <View style={styles.addImageView}>
+                                            <View style={{ ...styles.addImageViewCol, flexDirection: "row" }}>
+                                          
+                                                <TouchableOpacity onPress={() => {
+                                                    if (this.state.image1 == null) {
+                                                        this.setState({
+                                                            showPickerModal: true,
+                                                            currentImageType: "image1"
+                                                        })
+                                                    } else {
+                                                        this.setState({
+                                                            showImageModal: true,
+                                                            currentImageUri: this.state.image1.assets[0].uri,
+                                                            currentImageType: "image1"
+                                                        })
+                                                    }
+                                                }}>
+                                                    {this.state.image1 != null ?
+                                                        <Image style={styles.addImage} source={{ uri: this.state.image1.assets[0].uri }} />
+                                                        : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/camera2.png")} />
+                                                    }
+
+                                                    {
+                                                        this.state.image1 == null ?
+                                                            <View style={{ ...styles.addImageView, ...{ width: "75%", marginTop: 0 } }}>
+                                                                <Text style={styles.imageClearText}>Upload your images</Text>
+                                                            </View> : null
+                                                    }
+                                                </TouchableOpacity>
+                                            </View>
                                             {
-                                                this.state.image1 == null ?
-                                                    <View style={{ ...styles.addImageView, ...{ width: "75%", marginTop: 0 } }}>
-                                                        {/* <Text style={styles.noteText}>{t("home.note")}</Text> */}
-                                                        <Text style={styles.imageClearText}>Upload your images</Text>
+                                                this.state.image1 ?
+                                                    <View style={styles.addImageViewCol}>
+                                                       
+                                                        <TouchableOpacity onPress={() => {
+                                                            if (this.state.image2 == null) {
+                                                                this.setState({
+                                                                    showPickerModal: true,
+                                                                    currentImageType: "image2"
+                                                                })
+                                                            } else {
+                                                                this.setState({
+                                                                    showImageModal: true,
+                                                                    currentImageUri: this.state.image2.assets[0].uri,
+                                                                    currentImageType: "image2"
+                                                                })
+                                                            }
+                                                        }}>
+                                                            {this.state.image2 != null ?
+                                                                <Image style={styles.addImage} source={{ uri: this.state.image2.assets[0].uri }} />
+                                                                : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/attachment.png")} />
+                                                            }
+                                                        </TouchableOpacity>
+                                                    </View> : null
+                                            }
+                                            {
+                                                this.state.image2 ?
+                                                    <View style={styles.addImageViewCol}>
+                                                       
+                                                        <TouchableOpacity onPress={() => {
+                                                            if (this.state.image3 == null) {
+                                                                this.setState({
+                                                                    showPickerModal: true,
+                                                                    currentImageType: "image3"
+                                                                })
+                                                            } else {
+                                                                this.setState({
+                                                                    showImageModal: true,
+                                                                    currentImageUri: this.state.image3.assets[0].uri,
+                                                                    currentImageType: "image3"
+                                                                })
+                                                            }
+                                                        }}>
+                                                            {this.state.image3 != null ?
+                                                                <Image style={styles.addImage} source={{ uri: this.state.image3.assets[0].uri }} />
+                                                                : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/attachment.png")} />
+                                                            }
+                                                        </TouchableOpacity>
                                                     </View> : null
                                             }
                                         </View>
-                                        {
-                                            this.state.image1 ?
+                                    </View>
+                                   
+                                </View> */}
+
+                                <View style={{ ...styles.cardView, minHeight: 60, marginBottom: 20 }}>
+                                    <TouchableOpacity
+                                        style={{ ...styles.paymentDueRow1, alignItems: 'center' }}
+                                        activeOpacity={1}
+                                    >
+                                        
+                                                <TouchableOpacity onPress={() => {
+                                                    if (this.state.image1 == null) {
+                                                        this.setState({
+                                                            showPickerModal: true,
+                                                            currentImageType: "image1"
+                                                        })
+                                                    } else {
+                                                        this.setState({
+                                                            showImageModal: true,
+                                                            currentImageUri: this.state.image1.assets[0].uri,
+                                                            currentImageType: "image1"
+                                                        })
+                                                    }
+                                                }}>
+                                                    <View style={styles.addImageView}>
+                                                    <View style={{ ...styles.addImageViewCol, flexDirection: "row" }}>
+                                                    {this.state.image1 != null ?
+                                                        <Image style={styles.addImage} source={{ uri: this.state.image1.assets[0].uri }} />
+                                                        :
+                                                        // <Image
+                                                        //     style={{ ...styles.addImage, resizeMode: "contain" }}
+                                                        //     source={require("../../../assets/images/camera2.png")}
+                                                        // />
+                                                        <CameraIcon width={45} height={35} color="#102C4E" />
+                                                    }
+
+
+                                                    {this.state.image1 == null && (
+                                                        <View style={{ ...styles.addImageView, width: "75%" }}>
+                                                            <Text style={styles.imageClearText}>Upload your images</Text>
+                                                        </View>
+                                                    )}
+                                                    </View>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            
+                                        {this.state.image1 && (
+                                            <View style={styles.addImageView}>
                                                 <View style={styles.addImageViewCol}>
-                                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
-                                        (media) => {
-                                            if (!!media && media.assets) {
-                                                this.setState({ image2: media })
-                                            }
-                                        }
-                                    )}> */}
                                                     <TouchableOpacity onPress={() => {
                                                         if (this.state.image2 == null) {
-                                                            // this.handleAttachImages("capture", "emiratesId")
                                                             this.setState({
                                                                 showPickerModal: true,
                                                                 currentImageType: "image2"
@@ -347,46 +433,46 @@ console.log("reqBody", reqBody)
                                                     }}>
                                                         {this.state.image2 != null ?
                                                             <Image style={styles.addImage} source={{ uri: this.state.image2.assets[0].uri }} />
-                                                            : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/attachment.png")} />
+                                                            :
+                                                            <Image
+                                                                style={{ ...styles.addImage, resizeMode: "contain" }}
+                                                                source={require("../../../assets/images/attachment.png")}
+                                                            />
                                                         }
                                                     </TouchableOpacity>
-                                                </View> : null
-                                        }
-                                        {
-                                            this.state.image2 ?
-                                                <View style={styles.addImageViewCol}>
-                                                    {/* <TouchableOpacity onPress={() => launchCamera({ mediaType: "image", maxHeight: 100, includeBase64: true, quality: 0.1 },
-                                        (media) => {
-                                            if (!!media && media.assets) {
-                                                this.setState({ image3: media })
-                                            }
-                                        }
-                                    )}> */}
-                                                    <TouchableOpacity onPress={() => {
-                                                        if (this.state.image3 == null) {
-                                                            // this.handleAttachImages("capture", "emiratesId")
-                                                            this.setState({
-                                                                showPickerModal: true,
-                                                                currentImageType: "image3"
-                                                            })
-                                                        } else {
-                                                            this.setState({
-                                                                showImageModal: true,
-                                                                currentImageUri: this.state.image3.assets[0].uri,
-                                                                currentImageType: "image3"
-                                                            })
-                                                        }
-                                                    }}>
-                                                        {this.state.image3 != null ?
-                                                            <Image style={styles.addImage} source={{ uri: this.state.image3.assets[0].uri }} />
-                                                            : <Image style={{ ...styles.addImage, resizeMode: "contain" }} source={require("../../../assets/images/attachment.png")} />
-                                                        }
-                                                    </TouchableOpacity>
-                                                </View> : null
-                                        }
-                                    </View>
+                                                </View>
+
+                                                {this.state.image2 && (
+                                                    <View style={styles.addImageViewCol}>
+                                                        <TouchableOpacity onPress={() => {
+                                                            if (this.state.image3 == null) {
+                                                                this.setState({
+                                                                    showPickerModal: true,
+                                                                    currentImageType: "image3"
+                                                                })
+                                                            } else {
+                                                                this.setState({
+                                                                    showImageModal: true,
+                                                                    currentImageUri: this.state.image3.assets[0].uri,
+                                                                    currentImageType: "image3"
+                                                                })
+                                                            }
+                                                        }}>
+                                                            {this.state.image3 != null ?
+                                                                <Image style={styles.addImage} source={{ uri: this.state.image3.assets[0].uri }} />
+                                                                :
+                                                                <Image
+                                                                    style={{ ...styles.addImage, resizeMode: "contain" }}
+                                                                    source={require("../../../assets/images/attachment.png")}
+                                                                />
+                                                            }
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                )}
+                                            </View>
+                                        )}
+                                    </TouchableOpacity>
                                 </View>
-                                {/* </View> */}
 
                                 <TouchableOpacity
                                     style={Mainstyles.buttonStyle}
@@ -455,9 +541,9 @@ console.log("reqBody", reqBody)
                                             button2Text: "Pay",
                                             uri: this.state.helpImageUrl,
                                             view: <View style={{ alignItems: 'center', width: "100%" }}>
-                                                <Image style={{ width: 66.34, height: 88, resizeMode: "stretch", marginBottom: 30 }}
-                                                    source={this.state.readingResult == "We will get back to you shortly." ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png")}
-                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/readingFailure.png") }
+                                                <Image style={{ resizeMode: "stretch", marginBottom: 30 }}
+                                                    source={this.state.readingResult == "We will get back to you shortly." ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif")}
+                                                // source={this.state.readingResult == "" ? require("../../../assets/images/Done.gif") : require("../../../assets/images/InternetError.gif") }
                                                 />
 
                                                 <View style={{ ...styles.inputGroupStyle, justifyContent: 'center', alignItems: 'center' }}>
@@ -470,7 +556,7 @@ console.log("reqBody", reqBody)
                                                 {/* <View style={{ flexDirection: 'row', paddingHorizontal: 15 }}> */}
 
                                                 <TouchableOpacity
-                                                    style={{ ...styles.buttonStyle, width: "100%" }}
+                                                    style={{ ...Mainstyles.buttonStyle, width: "100%" }}
                                                     onPress={() => {
                                                         this.setState({
                                                             showModal: false
@@ -479,7 +565,7 @@ console.log("reqBody", reqBody)
                                                     }}
                                                 >
                                                     <Text
-                                                        style={styles.buttonLabelStyle}>{this.state.readingResult !== "We will get back to you shortly." ? "Try Again" : "Done"}</Text>
+                                                        style={Mainstyles.buttonLabelStyle}>{this.state.readingResult !== "We will get back to you shortly." ? "Try Again" : "Done"}</Text>
                                                 </TouchableOpacity>
 
                                                 {/* </View> */}

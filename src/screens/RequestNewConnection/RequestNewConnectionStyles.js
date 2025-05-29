@@ -216,8 +216,9 @@ cardBodyText1: {
   },
   accountNumberText: {
       fontFamily: "Tajawal-Medium",
-      fontSize: 12,
-      color: "#102D4F"
+      fontSize: 14,
+      color: "#102D4FCC",
+      fontWeight: "500",
   },
   noteText: {
     fontFamily: "Tajawal-Bold",
@@ -273,10 +274,10 @@ payBillText: {
     marginBottom: 10
   },
   inputLabelStyle: {
-    color: "#102D4F",
+    color: "#102C4E",
     fontFamily: "Tajawal-Bold",
     fontSize: 18,
-    fontWeight: "600"
+    fontWeight: "800"
   },
   buttonView: {
     paddingHorizontal: 15,
@@ -287,28 +288,31 @@ payBillText: {
     // borderColor: "rgba(110, 149, 213, 0.2)",
     // borderStyle: "solid",
     // borderWidth: 1,
-    borderRadius: 8,
     // flexDirection: "row",
-    alignItems: "center",
-    paddingLeft:20,
     // justifyContent: "center",
-    padding: 0,
+    //padding: 0,
     // alignSelf: "flex-end",
-    width: "95%",
-    height: 40,
     // shadowColor: 'rgba(0,0,0, .4)',
     // shadowOffset: { height: 2, width: 2 }, // IOS
     // shadowOpacity: 1, // IOS
     // shadowRadius: 1, //IOS
     // backgroundColor: '#102D4F',
-    backgroundColor: '#0057A2',
     // elevation: 5,  // Android
+    // width: "95%",
+    backgroundColor: '#102C4E',
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingLeft:20,
+    height: 40,
+
   },
   buttonLabelStyle: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight:"500",
-    fontFamily: "Tajawal-Medium"
+    fontSize: 14,
+    fontWeight:"700",
+    fontFamily: "Tajawal-Medium",
+    alignItems: "center",
     
   },
   registerButtonViewStyle: {

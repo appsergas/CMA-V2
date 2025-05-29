@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
   bodyview: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 24,
     width: '100%',
